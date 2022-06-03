@@ -9,6 +9,23 @@ License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
+Imports: 
+    glue,
+    reticulate,
+    yaml
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Config/reticulate:
+  list(
+    packages = list(
+      list(package = "gdal",  version = "3.4.2", pip = FALSE),
+      list(package = "geopandas", pip = FALSE),
+      list(package = "netCDF4", pip = FALSE),
+      list(package = "rioxarray", pip = FALSE),
+      list(package = "OWSLib", pip = FALSE),
+      list(package = "numba", pip = FALSE),
+      list(package = "rasterio", pip = FALSE),
+      list(package = "ipykernel", pip = FALSE)
+    )
+  )
