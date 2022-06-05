@@ -67,6 +67,58 @@ load_config <- function(x = NULL, pick = 1) {
   return(invisible(config))
 }
 
+
+
+
+
+#' Configure paths to input and output folders and files
+#'
+#' This function changes the values for `inpath`, `outpath` and `infname` in the
+#' data harvester configuration.
+#'
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`.
+#' @param input `chr` path to folder containing input files used to determine
+#'   coordinates and other features to download. If `NULL`, does nothing.
+#' @param output `chr` path to folder to save results. Images, data frames and
+#'   other geospatial data outputs are saved it this folder for easy access. If
+#'   `NULL`, does nothing.
+#' @param in_file `chr` path to specific file used to determine coordinates and
+#'   other features to download. If `NULL`, does nothing.
+#'
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
+#' @export
+#'
+#' @examples
+#' # load template config, then change paths
+#' load_config() %>%
+#'   config_paths(input = "../..testdata", output =  "data/")
+config_paths <- function(x, input = NULL, output = NULL, in_file = NULL) {
+
+  # Reject if not class 'harvester'
+  is_cl_harvester(x)
+
+  # Make changes to input folder, input file or output folder(s)
+  if (!is.null(input)) {
+    before <- x$inpath
+    x$inpath <- input
+    cat("***             inpath --> ", input, "\n", sep = "")
+  }
+  if (!is.null(output)) {
+    before <- x$outpath
+    x$outpath <- output
+    cat("***            outpath --> ", output, "\n", sep = "")
+  }
+  if (!is.null(in_file)) {
+    before <- x$infname
+    x$infname <- in_file
+    cat("***            infname --> ", in_file, "\n", sep = "")
+  }
+  return(invisible(x))
+}
+
+
 # default config ----
 # This config is called by default; otherwise the user normally specifies
 # a config .yaml file.
