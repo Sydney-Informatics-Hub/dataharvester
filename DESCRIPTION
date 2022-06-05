@@ -10,8 +10,12 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
 Imports: 
+    cli,
+    crayon,
+    dplyr,
     glue,
     reticulate,
+    rlang,
     yaml
 Suggests: 
     testthat (>= 3.0.0)
@@ -21,11 +25,14 @@ Config/reticulate:
     packages = list(
       list(package = "gdal",  version = "3.4.2", pip = FALSE),
       list(package = "geopandas", pip = FALSE),
-      list(package = "netCDF4", pip = FALSE),
+      list(package = "netcdf4", pip = FALSE),
       list(package = "rioxarray", pip = FALSE),
-      list(package = "OWSLib", pip = FALSE),
+      list(package = "owslib", pip = FALSE),
       list(package = "numba", pip = FALSE),
       list(package = "rasterio", pip = FALSE),
       list(package = "ipykernel", pip = FALSE)
     )
   )
+Depends: 
+    R (>= 4.10)
+LazyData: true
