@@ -250,6 +250,38 @@ config_res <- function(x, value = NULL) {
 
 
 
+
+#' Define coordinate reference system
+#'
+#' @param x
+#' @param target_crs
+#'
+#' @return
+#' @export
+#'
+#' @examples
+config_crs <- function(x, target_crs = "EPSG:4326") {
+
+  # Reject if not class 'harvester'
+  is_cl_harvester(x)
+
+  # Back to default if not character
+  if (!is.character(target_crs)) {
+    cat("Note: rarget CRS not recognised, using default EPSG:4326\n")
+    new_crs <- "EPSG:4326"
+  } else {
+    new_crs <- target_crs
+  }
+
+  # configure crs
+  x$target_crs <- new_crs
+  cat("***         target_crs --> ", new_crs, "\n", sep = "")
+  return(invisible(x))
+}
+
+
+
+
 # default config ----
 # This config is called by default; otherwise the user normally specifies
 # a config .yaml file.
