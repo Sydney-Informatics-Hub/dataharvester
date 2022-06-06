@@ -168,6 +168,88 @@ config_xy_names <- function(x, xvar = NULL, yvar = NULL) {
 
 
 
+
+
+
+#' Specify bounding box limits as a vector
+#'
+#' Define the bounding box for the data collected. Normally rectangular, since
+#' it is simple/useful for plotting.
+#'
+#' For EPSG:4326 the bounding box is defined by (long_left, lat_bottom,
+#' long_right, lat_top).
+#'
+#' If projected coordinate reference system is used, the bounding box is defined
+#' by: (easting_left, northing_bottom, easting_right, northing_top)
+#'
+#' If `NULL`, the bounding box will be set at a default min/max of point data
+#' +/- 0.05 deg (180 arcsec). arcsec). Also note that if an invalid vector is
+#' provided i.e. not containing 4 values, the default bounding box will apply.
+#'
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param boundaries `num` a vector of 4 numerical values representing the left,
+#'   bottom, right and top coordinates.
+#'
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
+#' @export
+#'
+#' @examples
+config_bbox <- function(x, boundaries = NULL) {
+
+  # Reject if not class 'harvester'
+  is_cl_harvester(x)
+
+  # Check that 4 values are provided as a vector
+  if (!is.null(boundaries) & length(boundaries) != 4) {
+    cat("Note: bounding box provided is not a vector of 4 numeric values\n")
+    boundaries <- NULL
+  }
+  # Configure bounding box value
+  if (is.null(boundaries)) {
+    cat("***        target_bbox --> default\n")
+  } else {
+    x$target_bbox <- boundaries
+    cat("***        target_bbox --> ", boundaries, "\n")
+  }
+  return(invisible(x))
+}
+
+
+
+
+
+#' Define resolution in arcsecs
+#'
+#' @param x
+#' @param value
+#'
+#' @return
+#' @export
+#'
+#' @examples
+config_res <- function(x, value = NULL) {
+
+  # Reject if not class 'harvester'
+  is_cl_harvester(x)
+
+  if (!is.null(value) & !is.numeric(value)) {
+    cat("Note: resolution must be numeric, switching to default for `target_res`\n")
+    value <- NULL
+  }
+
+  # Configure resolution value
+  if (is.null(value)) {
+    x$target_res <- value
+    cat("***         target_res --> default\n")
+  }
+  return(invisible(x))
+}
+
+
+
+
 # default config ----
 # This config is called by default; otherwise the user normally specifies
 # a config .yaml file.
