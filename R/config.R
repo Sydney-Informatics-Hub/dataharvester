@@ -282,6 +282,61 @@ config_crs <- function(x, target_crs = "EPSG:4326") {
 
 
 
+
+
+#' Define download date and times, and summary interval
+#'
+#' @param x
+#' @param dates
+#' @param interval
+#'
+#' @return
+#' @export
+#'
+#' @examples
+config_dates <- function(x, dates = NULL, interval = "year") {
+
+  # Reject if not class 'harvester'
+  is_cl_harvester(x)
+
+  # DATES
+  # TODO: checks for YMD. For now, just check year
+  # dates = as.character(dates)
+
+  # Process
+  # 1. If dates == NULL | config has date, use config date
+  # 2. If dates == NULL | config does not have date, use today
+  # 3. If dates has more than a number, use the first one
+  # 4. If dates has a number, use it
+  if (is.null(dates) & length(x$target_dates) == 1) {
+    selected_date <- x$target_dates
+  } else if (is.null(dates) & length(x$target_dates) < 1) {
+    selected_date <- as.character(format(Sys.Date(), "%Y"))
+  } else if (length(dates) > 1) {
+    selected_date <- as.character(dates[1])
+    cat("More than 1 date provided,",
+        "will select first date for now...\n")
+  } else if (length(dates) == 1) {
+    selected_date <- as.character(dates)
+  }
+  x$target_dates <- selected_date
+  cat("***       target_dates --> ",
+      selected_date, "\n", sep = "")
+
+  # INTERVAL
+  if (interval %in% c("year", "month", "day")) {
+    x$target_aggregation <- interval
+    cat("*** target_aggregation --> ", interval, "\n", sep = "")
+  } else {
+    cat("Data summary interval not recgonised. Using default year'\n")
+  }
+
+
+  return(invisible(x))
+}
+
+
+
 # default config ----
 # This config is called by default; otherwise the user normally specifies
 # a config .yaml file.
