@@ -119,6 +119,55 @@ config_paths <- function(x, input = NULL, output = NULL, in_file = NULL) {
 }
 
 
+
+
+#' Specify the column names of x and y variables in data file
+#'
+#' For the data harvester to work, it needs coordinate data. Different users
+#' will call these x and y coordinates under different names in their data file
+#' e.g. `"Lon"`, `"Long"`, `"x"`, `"Easting"` or `"East"`.
+#'
+#' Changing  allows the data harvester to identify the x and y coordinates
+#' appropriately with the user's help. The values are saved to the options
+#' `colname_lng` and `colname_lat` in the data harvester configuration.
+#'
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`.
+#' @param xvar `chr` column name of x coordinate stored in input data file, will
+#'   replace value in `colname_lng`.
+#' @param yvar `chr` column name of y coordinate stored in input data file, will
+#'   replace value in `colname_lat`.
+#'
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
+#' @export
+#'
+#' @examples
+#' #' # load template config, then select references to coordinate columns
+#' load_config() %>%
+#'   config_xy_names("Long", "Lat")
+config_xy_names <- function(x, xvar = NULL, yvar = NULL) {
+
+  # Reject if not class 'harvester'
+  is_cl_harvester(x)
+
+  # Change xvar if not NULL
+  if (!is.null(xvar) & is.character(xvar)) {
+    before <- x$colname_lng
+    x$colname_lng <- xvar
+    cat("***        colname_lng --> ", xvar, "\n", sep = "")
+  }
+  # Change yvar if not NULL
+  if (!is.null(yvar) & is.character(yvar)) {
+    before <- x$colname_lat
+    x$colname_lat <- yvar
+    cat("***        colname_lat --> ", yvar, "\n", sep = "")
+  }
+  return(invisible(x))
+}
+
+
+
 # default config ----
 # This config is called by default; otherwise the user normally specifies
 # a config .yaml file.
