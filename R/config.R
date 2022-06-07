@@ -337,6 +337,169 @@ config_dates <- function(x, dates = NULL, interval = "year") {
 
 
 
+
+
+#' Configure SLGA resource download settings
+#'
+#' @param x
+#' @param layers
+#' @param summaries
+#'
+#' @return
+#' @export
+#'
+#' @examples
+config_slga <- function(x, layers = NULL, summaries = "mean") {
+
+  # Reject if not class 'harvester'
+  is_cl_harvester(x)
+
+  # Process layers if provided, and warn if a layer is not recognised
+  if (!is.null(layers)) {
+    layers <- is_valid_source("slga", layers)
+  } else {
+    layers <- x$target_sources$SLGA$names
+  }
+
+  # If only one summary is provided, assume it's for all layers
+  if (length(summaries) == 1) {
+    summaries <- rep(summaries, length(layers))
+  }
+  # Warn if length of summaries is not equal to length of layers
+  if (length(summaries) < length(layers)) {
+    warning("SLGA: `length()` of layers must match `length()` of summaries. Downloads might fail.")
+  }
+
+  # Apply settings
+  if (!is.null(layers)) x$target_sources$SLGA$names <- layers
+  cat(
+    "***        SLGA layers -->",
+    paste0('"', paste(layers, collapse = '", "'), '"'), "\n"
+  )
+  x$target_sources$SLGA$agfunctions <- summaries
+  cat(
+    "***         SLGA stats -->",
+    paste0('"', paste(summaries, collapse = '", "'), '"'), "\n"
+  )
+  return(invisible(x))
+}
+
+
+
+#' Configure SILO resource download settings
+#'
+#' @param x
+#' @param layers
+#' @param summaries
+#'
+#' @return
+#' @export
+#'
+#' @examples
+config_silo <- function(x, layers = NULL, summaries = NULL) {
+
+  # Reject if not class 'harvester'
+  is_cl_harvester(x)
+  # Process layers, and warn if a layer is not recognised
+  layers <- is_valid_source("silo", layers)
+  # TODO: warn if summaries not recognised
+  # If only one summary is provided, assume it's for all layers
+  if (length(summaries) == 1) {
+    summaries <- rep(summaries, length(layers))
+  }
+  # Warn if length of summaries is not equal to length of layers
+  if (length(summaries) < length(layers)) {
+    warning("SILO: `length()` of layers must match `length()` of summaries. Downloads might fail.")
+  }
+
+  # Apply settings
+  x$target_sources$SILO$names <- layers
+  cat(
+    "***        SILO layers -->",
+    paste0('"', paste(layers, collapse = '", "'), '"'), "\n"
+  )
+  x$target_sources$SILO$agfunctions <- summaries
+  cat(
+    "***         SILO stats -->",
+    paste0('"', paste(summaries, collapse = '", "'), '"'), "\n"
+  )
+  return(invisible(x))
+}
+
+
+
+
+
+#' Configure DEA resource download settings
+#'
+#' @param x
+#' @param layers
+#' @param summaries
+#'
+#' @return
+#' @export
+#'
+#' @examples
+config_dea <- function(x, layers = NULL, summaries = NULL) {
+
+  # reject if not class 'harvester'
+  is_cl_harvester(x)
+  # Process layers, and warn if a layer is not recognised
+  layers <- is_valid_source("dea", layers)
+  # TODO: warn if summaries not recognised
+  # if only one summary is provided, assume it's for all layers
+  if (length(summaries) == 1) {
+    summaries <- rep(summaries, length(layers))
+  }
+
+  # Apply settings
+  x$target_sources$DEA$names <- layers
+  cat(
+    "***         DEA layers -->",
+    paste0('"', paste(layers, collapse = '", "'), '"'), "\n"
+  )
+  x$target_sources$DEA$agfunctions <- summaries
+  cat(
+    "***          DEA stats -->",
+    paste0('"', paste(summaries, collapse = '", "'), '"'), "\n"
+  )
+  return(invisible(x))
+}
+
+
+
+
+
+#' Configure DEM resource download settings
+#'
+#' @param x
+#' @param layers
+#' @param summaries
+#'
+#' @return
+#' @export
+#'
+#' @examples
+config_dem <- function(x, layers = NULL, summaries = NULL) {
+
+  # reject if not class 'harvester'
+  is_cl_harvester(x)
+  # Process layers, and warn if a layer is not recognised
+  layers <- is_valid_source("dem", layers)
+  # Force summaries to NA since DEM_1s is already summarised
+  if (!is.null(summaries)) {
+    cat("Note: DEM data cannot be summarise further.")
+  }
+  # Apply settings
+  x$target_sources$DEM$names <- layers
+  cat(
+    "***         DEM layers -->",
+    paste0('"', paste(layers, collapse = '", "'), '"'), "\n"
+  )
+  return(invisible(x))
+}
+
+
 # default config ----
 # This config is called by default; otherwise the user normally specifies
 # a config .yaml file.
