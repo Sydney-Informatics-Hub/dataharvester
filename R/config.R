@@ -500,6 +500,198 @@ config_dem <- function(x, layers = NULL, summaries = NULL) {
 }
 
 
+
+
+# asserts ----
+
+
+#' Validate if object is of class harvester
+#' @noRd
+is_cl_harvester <- function(x) {
+  if (!("harvester" %in% class(x))) {
+    stop("`config_*` functions are for data harvester objects only!")
+  }
+}
+
+
+
+#' Validate if value is a date
+#' @noRd
+is_dateformat <- function(x, format = "y") {
+  !is.na(lubridate::parse_date_time(x, orders = "y"))
+  check <- lubridate::parse_date_time(x, orders = "y")
+  if (!is.na(check)) {
+    return(x)
+  } else {
+    return(NULL)
+  }
+}
+
+
+#' Validate if download layers are available from various sources
+#' @noRd
+is_valid_source <- function(source, layers) {
+  slga <- c(
+    "Bulk_Density", "Organic_Carbon", "Clay", "Silt", "Sand", "pH_CaCl2",
+    "Available_Water_Capacity", "Total_Nitrogen", "Total_Phosphorus",
+    "Effective_Cation_Exchange_Capacity", "Depth_of_Regolith", "Depth_of_Soil"
+  )
+
+  silo <- c(
+    "daily_rain", "monthly_rain", "max_temp", "min_temp", "vp", "vp_deficit",
+    "evap_pan", "evap_syn", "evap_comb", "evap_morton_lake", "radiation",
+    "rh_tmax", "rh_tmin", "et_short_crop", "et_tall_crop", "et_morton_actual",
+    "et_morton_potential", "et_morton_potential", "mslp"
+  )
+
+  dea <- c(
+    "ga_ls_ard_3",
+    "s2_nrt_granule_nbar_t",
+    "s2_ard_granule_nbar_t",
+    "ga_ls8c_nbart_gm_cyear_3",
+    "ga_ls7e_nbart_gm_cyear_3",
+    "ga_ls5t_nbart_gm_cyear_3",
+    "ga_ls8c_ard_3",
+    "ga_ls7e_ard_3",
+    "ga_ls5t_nbart_gm_cyear_3",
+    "ga_ls8c_ard_3",
+    "ga_ls7e_ard_3",
+    "ga_ls5t_ard_3",
+    "ga_ls8c_ard_provisional_3",
+    "ga_ls7e_ard_provisional_3",
+    "ga_ls_ard_provisional_3",
+    "s2b_nrt_granule_nbar_t",
+    "s2a_nrt_granule_nbar_t",
+    "s2_nrt_provisional_granule_nbar_t",
+    "s2b_nrt_provisional_granule_nbar_t",
+    "s2a_nrt_provisional_granule_nbar_t",
+    "s2a_ard_granule_nbar_t",
+    "s2b_ard_granule_nbar_t",
+    "ga_ls_landcover",
+    "ga_ls_landcover_descriptors",
+    "ga_ls_fc_3",
+    "fcp_rgb",
+    "fcp_seasonal_rgb",
+    "fcp_green_veg",
+    "fcp_non_green_veg",
+    "fcp_bare_ground",
+    "fcp_seasonal_green_veg",
+    "fcp_seasonal_non_green_veg",
+    "fcp_seasonal_bare_ground",
+    "ls5_fc_albers",
+    "ls7_fc_albers",
+    "ls8_fc_albers",
+    "fc_albers_combined",
+    "mangrove_cover_v2_0_2",
+    "s2_barest_earth",
+    "ls8_barest_earth_mosaic",
+    "landsat_barest_earth",
+    "ga_ls_tcw_percentiles_2",
+    "ga_ls_wo_3",
+    "ga_ls_wo_fq_myear_3",
+    "ga_ls_wo_fq_cyear_3",
+    "ga_ls_wo_fq_apr_oct_3",
+    "ga_ls_wo_fq_nov_mar_3",
+    "wofs_albers",
+    "wofs_annual_summary_statistics",
+    "wofs_annual_summary_clear",
+    "wofs_annual_summary_wet",
+    "wofs_filtered_summary",
+    "wofs_summary_clear",
+    "wofs_summary_wet",
+    "Water Observations from Space Statistics",
+    "wofs_filtered_summary_confidence",
+    "wofs_apr_oct_summary_statistics",
+    "wofs_apr_oct_summary_clear",
+    "wofs_apr_oct_summary_wet",
+    "wofs_nov_mar_summary_statistics",
+    "wofs_nov_mar_summary_clear",
+    "wofs_nov_mar_summary_wet",
+    "ITEM_V2.0.0",
+    "ITEM_V2.0.0_Conf",
+    "NIDEM",
+    "high_tide_composite",
+    "low_tide_composite",
+    "ga_s2_ba_provisional_3",
+    "alos_displacement",
+    "alos_velocity",
+    "envisat_displacement",
+    "envisat_velocity",
+    "radarsat2_displacement",
+    "radarsat2_velocity",
+    "aster_false_colour",
+    "aster_regolith_ratios",
+    "aster_aloh_group_composition",
+    "aster_aloh_group_content",
+    "aster_feoh_group_content",
+    "aster_ferric_oxide_composition",
+    "aster_ferric_oxide_content",
+    "aster_ferrous_iron_content_in_mgoh",
+    "aster_ferrous_iron_index",
+    "aster_green_vegetation",
+    "aster_gypsum_index",
+    "aster_kaolin_group_index",
+    "aster_mgoh_group_composition",
+    "aster_mgoh_group_content",
+    "aster_opaque_index",
+    "aster_silica_index",
+    "aster_quartz_index",
+    "multi_scale_topographic_position",
+    "weathering_intensity",
+    # corrected images
+    "blend_sentinel2_landsat_nbart_daily",
+    "hltc_high",
+    "hltc_low",
+    "item_relative",
+    "item_stddev",
+    "landsat5_nbar_16day",
+    "landsat5_nbar_daily",
+    "landsat5_nbart_16day",
+    "landsat5_nbart_daily",
+    "landsat7_nbar_16day",
+    "landsat7_nbar_daily",
+    "landsat7_nbart_16day",
+    "landsat7_nbart_daily",
+    "landsat8_nbar_16day",
+    "landsat8_nbar_daily",
+    "landsat8_nbart_16day",
+    "landsat8_nbart_daily",
+    "sentinel2_nbart_daily"
+  )
+
+  dem <- c("DEM_1s")
+
+  # select list of products
+  if (grepl(source, "slga", ignore.case = TRUE)) {
+    products <- slga
+  } else if (grepl(source, "silo", ignore.case = TRUE)) {
+    products <- silo
+  } else if (grepl(source, "dea", ignore.case = TRUE)) {
+    products <- dea
+  } else if (grepl(source, "dem", ignore.case = TRUE)) {
+    products <- dem
+  }
+  # perform check
+  # for each item in vector of layers, match to the source list
+  newlayers <- sapply(1:length(layers), function(i) {
+
+    if (layers[i] %in% products) {
+      out <- layers[i]
+    } else {
+      out <- products[agrep(layers[i], products, .1,
+                        ignore.case = TRUE)]
+    }
+    # if unable to match, print warning
+    if (length(out) == 0) {
+      warning(paste0(toupper(source), " layer, '", layers[i],
+        "' cannot be matched. Downloads may fail."), call. = FALSE)
+      out <- layers[i]
+    }
+    return(out)
+  })
+  return(newlayers)
+}
+
 # default config ----
 # This config is called by default; otherwise the user normally specifies
 # a config .yaml file.
