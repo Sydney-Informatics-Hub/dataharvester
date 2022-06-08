@@ -501,6 +501,48 @@ config_dem <- function(x, layers = NULL, summaries = NULL) {
 
 
 
+#' Wrap configuration file to data frame
+#'
+#' @param x
+#' @param config
+#'
+#' @return
+#' @export
+#'
+#' @examples
+wrap_config <- function(x, config) {
+  utils_py <- ee_source_python(system.file("python/utils.py", package = "dataharvestR"))
+  out <- list(df = x, config = config, log = utils_py$init_logtable())
+  class(out) <- append(class(out), "agrefed.wrap")
+  return(invisible(out))
+}
+
+
+
+
+
+#' Write config to file
+#'
+#' @param x
+#' @param name
+#' @param folder
+#'
+#' @return
+#' @export
+#'
+#' @examples
+write_config <- function(x, name = NULL, folder = "../settings/") {
+
+  # Reject if not class 'harvester'
+  is_cl_harvester(x)
+  # Write to folder
+  write_yaml(x, file = paste0(folder, name, ".yaml"))
+  cat("\nConfiguration file '", name, "' saved to folder",
+      folder, "\n", sep = "")
+  return(invisible(x))
+}
+
+
 
 # asserts ----
 
