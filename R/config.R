@@ -544,6 +544,27 @@ write_config <- function(x, name = NULL, folder = "../settings/") {
 
 
 
+
+# S3 ----
+#' Print harvester objects
+#'
+#' @param x
+#'
+#' @return
+#' @export
+#'
+#' @examples
+print.harvester <- function(x) {
+  cat("\nConfiguration\n")
+  cat("=============\n")
+  cat(as.yaml(x), "\n")
+  return(invisible(x))
+}
+
+
+
+
+
 # asserts ----
 
 
