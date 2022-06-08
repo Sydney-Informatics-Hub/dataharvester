@@ -34,5 +34,5 @@ Config/reticulate:
     )
   )
 Depends: 
-    R (>= 4.10)
+    R (>= 4.1.0)
 LazyData: true
