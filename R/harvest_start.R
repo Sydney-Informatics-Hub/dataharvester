@@ -49,3 +49,38 @@ validate_conda <- function(reply = interactive()) {
 }
 
 
+#' Load default conda environment
+#'
+#' @param env `chr` name of conda environment to load. Defaults to `NULL`, which
+#'   automatically searches for the environments `geopy` and `dataharvestR`
+#'
+#' @export
+validate_env <- function(env = NULL) {
+  # Try to search for default conda environments "geopy" or "dataharvesteR"
+  message("Loading default conda environment...")
+  tryCatch(
+    {
+      reticulate::use_condaenv("geopy")
+      message("Conda environment 'geopy' loaded")
+    },
+    error = function(e) {
+      tryCatch(
+        {
+          reticulate::use_condaenv("dataharvestR")
+          message("Conda environment 'dataharvestR' loaded")
+        },
+        error = function(e) {
+          # If both environments are not found, create one for `dataharvestR`
+          message("Conda environment  not found. Creating one on the spot...")
+          reticulate::conda_create("dataharvestR", packages = "python=3.9")
+          reticulate::use_condaenv("dataharvestR")
+          message(paste0("Conda environment 'dataharvestR' loaded"))
+        }
+      )
+    }
+  )
+  # Use py_config() as a means to validate packages
+  ver <- reticulate::py_config()
+  message("Python packages validated")
+}
+
