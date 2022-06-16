@@ -84,3 +84,51 @@ validate_env <- function(env = NULL) {
   message("Python packages validated")
 }
 
+#' Check if required Python packages for Data-Harvester exist.
+#'
+#' Internal function. First, the function checks if all required packages have
+#' been installed. Then it does a quick check to see if gdal is at version
+#' 3.4.2.
+#' @import dplyr
+#' @importFrom rlang .data
+#' @returns `logical`
+#' @export
+validate_py_packages <- function(env = "geopy") {
+  # List required packages
+  py_packages <- c(
+    "gdal",
+    "geopandas",
+    "ipykernel",
+    "netcdf4",
+    "numba",
+    "owslib",
+    "rasterio",
+    "rioxarray"
+  )
+  # Required gdal version
+  gdal_required <- "3.4.2"
+  # Filter package list for checks
+  py_avail_modules <-
+    reticulate::py_list_packages()[, 1:2] |>
+    dplyr::filter(.data$package %in% py_packages)
+  # Check that all packages have been installed
+  check_py_packages <-
+    py_avail_modules |>
+    dplyr::pull(.data$package) |>
+    setequal(py_packages)
+  # Check that gdal version is 3.4.2
+  check_gdal_version <-
+    py_avail_modules |>
+    dplyr::filter(.data$package == "gdal") |>
+    dplyr::pull(.data$version) |>
+    setequal(gdal_required)
+  # If both are TRUE, we are good, otherwise re-install everything to be safe
+  if(check_py_packages & check_gdal_version) {
+    message(paste(crayon::green("\U2713"), " | ", py_packages, "\n"))
+  } else {
+    message(paste0("Cannot validate required Python packages. ",
+                   "Attempting to reinstall all packages to be safe..."))
+    reticulate::conda_install(env, c("gdal == 3.4.2", py_packages[-1]))
+  }
+  return(invisible(TRUE))
+}
