@@ -1,3 +1,20 @@
+
+#' Initialise and validate Data-Harvester and dependencies
+#'
+#' @param env
+#'
+#' @return
+#' @export
+#'
+#' @examples
+harvest_start <- function(env = NULL) {
+  validate_conda()
+  validate_env(env = env)
+  validate_py_packages()
+}
+
+
+
 #' Check if conda is available
 #'
 #' @param reply `logical` if `interactive()`, function will prompt user for
