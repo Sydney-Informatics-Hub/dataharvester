@@ -511,7 +511,7 @@ config_dem <- function(x, layers = NULL, summaries = NULL) {
 #'
 #' @examples
 wrap_config <- function(x, config) {
-  utils_py <- ee_source_python(system.file("python/utils.py", package = "dataharvestR"))
+  utils_py <- dd_source_python("utils", "dataharvestR")
   out <- list(df = x, config = config, log = utils_py$init_logtable())
   class(out) <- append(class(out), "agrefed.wrap")
   return(invisible(out))
