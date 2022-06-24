@@ -74,32 +74,47 @@ validate_conda <- function(reply = interactive()) {
 #' @export
 validate_env <- function(env = NULL) {
   # Try to search for default conda environments "geopy" or "dataharvesteR"
-  message("Loading default conda environment...")
-  tryCatch(
-    {
-      reticulate::use_condaenv("geopy")
-      message("Conda environment 'geopy' loaded")
-    },
-    error = function(e) {
-      tryCatch(
-        {
-          reticulate::use_condaenv("dataharvestR")
-          message("Conda environment 'dataharvestR' loaded")
-        },
-        error = function(e) {
-          # If both environments are not found, create one for `dataharvestR`
-          message("Conda environment  not found. Creating one on the spot...")
-          reticulate::conda_create("dataharvestR", packages = "python=3.9")
-          reticulate::use_condaenv("dataharvestR")
-          message(paste0("Conda environment 'dataharvestR' loaded"))
-        }
-      )
-    }
-  )
-  # Use py_config() as a means to validate packages
-  ver <- reticulate::py_config()
-  message("Python packages validated")
+  if (is.null(env)) {
+    env <- "geopy"
+    tryCatch(
+      {
+        reticulate::use_condaenv(env)
+      },
+      error = function(e) {
+        tryCatch(
+          {
+            env <- "dataharvestR"
+            reticulate::use_condaenv(env)
+          },
+          error = function(e) {
+            # If both environments are not found, create one for `dataharvestR`
+            message("Conda environment  not found. Creating one on the spot...")
+            reticulate::conda_create("dataharvestR", packages = "python=3.9")
+            reticulate::use_condaenv("dataharvestR")
+          }
+        )
+      }
+    )
+  } else {
+    tryCatch(
+      {
+        reticulate::use_condaenv(env)
+      },
+      error = function(e) {
+        message(
+          "Conda env ", env, " does not currently exist, creating one ",
+          "on the spot: "
+        )
+        try(reticulate::conda_remove(env), silent = TRUE)
+        reticulate::conda_create(env, packages = "python=3.9")
+        reticulate::use_condaenv(env)
+      }
+    )
+  }
+  message(crayon::green("\U2713"), " | ", "conda env    : ", env, "\n")
 }
+
+
 
 #' Check if required Python packages for Data-Harvester exist.
 #'
