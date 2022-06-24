@@ -33,7 +33,9 @@ load_config <- function(x = NULL, pick = 1) {
   if (is.null(x)) {
     # current default (will change in the future)
     config <- default_config
-    cat("Default config loaded\n")
+    message(
+      crayon::green("\U2713"), " | ",
+      "Default config loaded")
   }
 
   # Otherwise, check if x points to a yaml file in the following folders:
@@ -511,7 +513,8 @@ config_dem <- function(x, layers = NULL, summaries = NULL) {
 #'
 #' @examples
 wrap_config <- function(x, config) {
-  utils_py <- ee_source_python(system.file("python/utils.py", package = "dataharvestR"))
+  cli::cli_h1("Wrapping configuration to data")
+  utils_py <- dd_source_python("utils", "dataharvestR")
   out <- list(df = x, config = config, log = utils_py$init_logtable())
   class(out) <- append(class(out), "agrefed.wrap")
   return(invisible(out))
@@ -557,7 +560,7 @@ write_config <- function(x, name = NULL, folder = "../settings/") {
 print.harvester <- function(x) {
   cat("\nConfiguration\n")
   cat("=============\n")
-  cat(as.yaml(x), "\n")
+  cat(yaml::as.yaml(x), "\n")
   return(invisible(x))
 }
 

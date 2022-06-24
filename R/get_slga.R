@@ -43,8 +43,7 @@ get_slga <- function(x, config = NULL, ...) {
   } else boundbox <- settings$target_bbox
 
   # Run get_slga_layers()
-  cat("\nFarming SLGA layers...\n")
-  cat("----------------------\n")
+  cli::cli_h1("Farming SLGA layers")
 
   getdata_slga_py <- dd_source_python("getdata_slga", "dataharvestR")
   slga <-

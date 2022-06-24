@@ -8,9 +8,22 @@
 #'
 #' @examples
 harvest_start <- function(env = NULL) {
-  validate_conda()
-  validate_env(env = env)
-  validate_py_packages()
+  cli::cli_h1("Welcome to AgReFed Data-Harvester")
+  message("\nChecking if dataharvesteR has been set up appropriately.")
+  tryCatch(
+    {
+      validate_conda()
+      validate_env(env = env)
+      validate_py_packages(env = env)
+      message("AgReFed Data-Harvester is ready to use")
+      cli::cli_h1("DONE")
+      return(invisible(TRUE))
+    },
+    error = function(e) {
+      message("Something went wrong here.")
+      return(invisible(FALSE))
+    }
+  )
 }
 
 
@@ -23,15 +36,14 @@ harvest_start <- function(env = NULL) {
 #' @export
 validate_conda <- function(reply = interactive()) {
   # Is conda available? If not, install miniconda
+  cli::cli_h2("Check Python/conda install")
   tryCatch(
     {
-      message("Attempting to find a conda installation...",
-              appendLF = FALSE)
       conda_binary <- reticulate::conda_binary()
-      message("done")
-      message(paste("Conda found at path: ", conda_binary))
+      message(crayon::green("\U2713"), " | ", "conda binary: ", conda_binary)
     },
     error = function(e) {
+      message(crayon::red("\U2717"), " | ", "conda binary: NULL")
       text_out <- paste0(
         "Conda binary not detected. You must use Anaconda or  Miniconda to use the AgReFed Data-Harvester. ", crayon::bold("\n\nDownload and install Miniconda. "), "Miniconda is a minimal and open-source installer for Python and conda. For more information see: https://docs.conda.io/en/latest/miniconda.html."
       )
@@ -120,12 +132,12 @@ validate_env <- function(env = NULL) {
 #'
 #' Internal function. First, the function checks if all required packages have
 #' been installed. Then it does a quick check to see if gdal is at version
-#' 3.4.2.
+#' 3.4.2. If any package appears to be missing they will be reinstalled.
 #' @import dplyr
 #' @importFrom rlang .data
 #' @returns `logical`
 #' @export
-validate_py_packages <- function(env = "geopy") {
+validate_py_packages <- function(env = NULL) {
   # List required packages
   py_packages <- c(
     "gdal",
@@ -143,6 +155,7 @@ validate_py_packages <- function(env = "geopy") {
   py_avail_modules <-
     reticulate::py_list_packages()[, 1:2] |>
     dplyr::filter(.data$package %in% py_packages)
+  cli::cli_h2("Checking package versions")
   # Check that all packages have been installed
   check_py_packages <-
     py_avail_modules |>
@@ -155,12 +168,15 @@ validate_py_packages <- function(env = "geopy") {
     dplyr::pull(.data$version) |>
     setequal(gdal_required)
   # If both are TRUE, we are good, otherwise re-install everything to be safe
-  if(check_py_packages & check_gdal_version) {
-    message(paste(crayon::green("\U2713"), " | ", py_packages, "\n"))
+  if (check_py_packages & check_gdal_version) {
+    message(paste(crayon::green("\U2713"), "|", py_packages, "\n"))
   } else {
-    message(paste0("Cannot validate required Python packages. ",
-                   "Attempting to reinstall all packages to be safe..."))
-    reticulate::conda_install(env, c("gdal == 3.4.2", py_packages[-1]))
+    message(paste0(
+      "Cannot validate required Python packages. ",
+      "Attempting to reinstall all packages to be safe..."
+    ))
+    # reticulate::conda_install(env, c("gdal == 3.4.2", py_packages[-1]))
+    pyconfig <- reticulate::py_config()
   }
   return(invisible(TRUE))
 }
