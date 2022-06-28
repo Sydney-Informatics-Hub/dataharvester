@@ -1,12 +1,10 @@
 
 #' Initialise and validate Data-Harvester and dependencies
 #'
-#' @param env
+#' @param env `chr` name of environment. If the environment doesn't currently
+#'   exist, one will be created in the same name using the default conda binary.
 #'
-#' @return
 #' @export
-#'
-#' @examples
 harvest_start <- function(env = NULL) {
   cli::cli_h1("Welcome to AgReFed Data-Harvester")
   message("\nChecking if dataharvesteR has been set up appropriately.")
@@ -133,6 +131,9 @@ validate_env <- function(env = NULL) {
 #' Internal function. First, the function checks if all required packages have
 #' been installed. Then it does a quick check to see if gdal is at version
 #' 3.4.2. If any package appears to be missing they will be reinstalled.
+#'
+#' @param env `chr` name of environment
+#'
 #' @import dplyr
 #' @importFrom rlang .data
 #' @returns `logical`

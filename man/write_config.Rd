@@ -7,7 +7,16 @@
 write_config(x, name = NULL, folder = "../settings/")
 }
 \arguments{
-\item{folder}{}
+\item{x}{\code{harvester} must be an object of this class, which can be created
+using \code{load_config()}}
+
+\item{name}{\code{chr} name of config file to save in .yaml format}
+
+\item{folder}{\code{chr} this is the path where the config file will be saved to}
+}
+\value{
+\verb{list; harvester} a list object with additional class of "harvester".
+This list stores configuration options for the data harvester.
 }
 \description{
 Write config to file

@@ -4,7 +4,10 @@
 \alias{validate_py_packages}
 \title{Check if required Python packages for Data-Harvester exist.}
 \usage{
-validate_py_packages(env = "geopy")
+validate_py_packages(env = NULL)
+}
+\arguments{
+\item{env}{\code{chr} name of environment}
 }
 \value{
 \code{logical}
@@ -12,5 +15,5 @@ validate_py_packages(env = "geopy")
 \description{
 Internal function. First, the function checks if all required packages have
 been installed. Then it does a quick check to see if gdal is at version
-3.4.2.
+3.4.2. If any package appears to be missing they will be reinstalled.
 }

@@ -7,7 +7,8 @@
 harvest_start(env = NULL)
 }
 \arguments{
-\item{env}{}
+\item{env}{\code{chr} name of environment. If the environment doesn't currently
+exist, one will be created in the same name using the default conda binary.}
 }
 \description{
 Initialise and validate Data-Harvester and dependencies

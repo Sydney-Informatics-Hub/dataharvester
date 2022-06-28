@@ -4,10 +4,16 @@
 \alias{print.harvester}
 \title{Print harvester objects}
 \usage{
-\method{print}{harvester}(x)
+\method{print}{harvester}(x, ...)
 }
 \arguments{
-\item{x}{}
+\item{x}{\code{harvester} must be an object of this class, which can be created
+using \code{load_config()}}
+
+\item{...}{other arguments passed to function}
+}
+\value{
+the same input object
 }
 \description{
 Print harvester objects

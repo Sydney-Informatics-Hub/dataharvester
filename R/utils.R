@@ -1,10 +1,5 @@
 #' Source python module stored in Data-Harvester Python folder
-#'
-#' @param modulename
-#' @param rpackage
-#' @param report
-#'
-#' @export
+#' @noRd
 dd_source_python <- function(modulename, rpackage, report = FALSE) {
   filename <- paste0("python/", modulename, ".py")
   path <- dirname(system.file(filename, package = rpackage))

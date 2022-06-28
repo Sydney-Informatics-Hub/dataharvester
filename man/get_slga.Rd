@@ -7,8 +7,19 @@
 get_slga(x, config = NULL, ...)
 }
 \arguments{
-\item{...}{}
+\item{x}{\code{data.frame}, \code{agrefed.wrap} if a data frame object is provided,
+requires \code{"config"} to be pointed to a config file created by
+\code{load_config()} or to a file path leading to a config .yaml file.}
+
+\item{config}{\code{chr} defaults to NULL. Can either be an object of class
+\code{harvester} created by \code{load_config()} or a path to a .yaml config file.}
+
+\item{...}{other arguments passed to function}
+}
+\value{
+a list object of class \code{"agrefed.wrap"} containing the original data
+frame, a copy of the config and a log.
 }
 \description{
-Download from SLGA
+Download data producst from SLGA.
 }

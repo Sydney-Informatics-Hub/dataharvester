@@ -7,7 +7,17 @@
 config_dates(x, dates = NULL, interval = "year")
 }
 \arguments{
-\item{interval}{}
+\item{x}{\code{harvester} must be an object of this class, which can be created
+using \code{load_config()}}
+
+\item{dates}{\code{num} a numeric value or vector of year values, e.g. 2019}
+
+\item{interval}{\code{chr} define the interval for data summary. Use "year",
+"month" or "day"}
+}
+\value{
+\verb{list; harvester} a list object with additional class of "harvester".
+This list stores configuration options for the data harvester.
 }
 \description{
 Define download date and times, and summary interval

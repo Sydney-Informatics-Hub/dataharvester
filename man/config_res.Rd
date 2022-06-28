@@ -7,7 +7,14 @@
 config_res(x, value = NULL)
 }
 \arguments{
-\item{value}{}
+\item{x}{\code{harvester} must be an object of this class, which can be created
+using \code{load_config()}}
+
+\item{value}{\code{num} resolution in arcsecs}
+}
+\value{
+\verb{list; harvester} a list object with additional class of "harvester".
+This list stores configuration options for the data harvester.
 }
 \description{
 Define resolution in arcsecs
