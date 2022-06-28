@@ -7,7 +7,19 @@
 config_silo(x, layers = NULL, summaries = NULL)
 }
 \arguments{
-\item{summaries}{}
+\item{x}{\code{harvester} must be an object of this class, which can be created
+using \code{load_config()}}
+
+\item{layers}{\code{chr} name of layer. This is very specific to the SLGA list of
+layers that can be downloaded.}
+
+\item{summaries}{\code{chr} for each layer specified, a summary needs to be paired
+to it. If only one summary value is provided, the function will assume that
+it is for all layers}
+}
+\value{
+\verb{list; harvester} a list object with additional class of "harvester".
+This list stores configuration options for the data harvester.
 }
 \description{
 Configure SILO resource download settings

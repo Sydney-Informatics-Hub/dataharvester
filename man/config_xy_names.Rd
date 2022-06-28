@@ -30,8 +30,3 @@ Changing  allows the data harvester to identify the x and y coordinates
 appropriately with the user's help. The values are saved to the options
 \code{colname_lng} and \code{colname_lat} in the data harvester configuration.
 }
-\examples{
-#' # load template config, then select references to coordinate columns
-load_config() \%>\%
-  config_xy_names("Long", "Lat")
-}

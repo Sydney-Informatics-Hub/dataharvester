@@ -7,7 +7,14 @@
 config_crs(x, target_crs = "EPSG:4326")
 }
 \arguments{
-\item{target_crs}{}
+\item{x}{\code{harvester} must be an object of this class, which can be created
+using \code{load_config()}}
+
+\item{target_crs}{\code{chr} coordinate reference system (CRS) e.g. "EPSG:4326"}
+}
+\value{
+\verb{list; harvester} a list object with additional class of "harvester".
+This list stores configuration options for the data harvester.
 }
 \description{
 Define coordinate reference system

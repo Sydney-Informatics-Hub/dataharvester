@@ -1,3 +1,7 @@
+^README.Rmd
 ^dataharvestR\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^\.ccache$
+^\.github$
+^tic\.R$

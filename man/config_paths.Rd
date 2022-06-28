@@ -28,8 +28,3 @@ This list stores configuration options for the data harvester.
 This function changes the values for \code{inpath}, \code{outpath} and \code{infname} in the
 data harvester configuration.
 }
-\examples{
-# load template config, then change paths
-load_config() \%>\%
-  config_paths(input = "../..testdata", output =  "data/")
-}

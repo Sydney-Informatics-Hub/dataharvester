@@ -1,13 +1,18 @@
 #' Download from SLGA
 #'
-#' @param x
-#' @param config
-#' @param ...
+#' Download data producst from SLGA.
 #'
-#' @return
+#' @importFrom yaml read_yaml
+#' @param x `data.frame`, `agrefed.wrap` if a data frame object is provided,
+#'   requires `"config"` to be pointed to a config file created by
+#'   `load_config()` or to a file path leading to a config .yaml file.
+#' @param config `chr` defaults to NULL. Can either be an object of class
+#'   `harvester` created by `load_config()` or a path to a .yaml config file.
+#' @param ... other arguments passed to function
+#'
+#' @return a list object of class `"agrefed.wrap"` containing the original data
+#'   frame, a copy of the config and a log.
 #' @export
-#'
-#' @examples
 get_slga <- function(x, config = NULL, ...) {
 
   # Is object pased on by wrap_config()? If yes, settings can be extracted
@@ -43,8 +48,7 @@ get_slga <- function(x, config = NULL, ...) {
   } else boundbox <- settings$target_bbox
 
   # Run get_slga_layers()
-  cat("\nFarming SLGA layers...\n")
-  cat("----------------------\n")
+  cli::cli_h1("Farming SLGA layers")
 
   getdata_slga_py <- dd_source_python("getdata_slga", "dataharvestR")
   slga <-

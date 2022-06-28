@@ -14,6 +14,8 @@
 #'
 #' If a file path is provided, it will load the file from the path.
 #'
+#' @importFrom yaml read_yaml
+#'
 #' @param x `chr` name of a config file (no .extenson), or path to ".yaml"
 #'   config file. If NULL, loads a default config file used as a template to
 #'   demonstrate the use of the data harvester.
@@ -33,7 +35,9 @@ load_config <- function(x = NULL, pick = 1) {
   if (is.null(x)) {
     # current default (will change in the future)
     config <- default_config
-    cat("Default config loaded\n")
+    message(
+      crayon::green("\U2713"), " | ",
+      "Default config loaded")
   }
 
   # Otherwise, check if x points to a yaml file in the following folders:
@@ -53,7 +57,7 @@ load_config <- function(x = NULL, pick = 1) {
     } else stop("Config file does not exist, please check name or path")
   } else if (length(valid_paths) == 1) {
     config <- read_yaml(valid_paths)
-    cat("Config imported from", valid_path, "\n")
+    cat("Config imported from", valid_paths, "\n")
   } else if (length(valid_paths) > 1) {
     config <- read_yaml(valid_paths[pick])
     cat("More than one config .yaml found. \n",
@@ -89,11 +93,6 @@ load_config <- function(x = NULL, pick = 1) {
 #' @return `list; harvester` a list object with additional class of "harvester".
 #'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
-#' # load template config, then change paths
-#' load_config() %>%
-#'   config_paths(input = "../..testdata", output =  "data/")
 config_paths <- function(x, input = NULL, output = NULL, in_file = NULL) {
 
   # Reject if not class 'harvester'
@@ -141,11 +140,6 @@ config_paths <- function(x, input = NULL, output = NULL, in_file = NULL) {
 #' @return `list; harvester` a list object with additional class of "harvester".
 #'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
-#' #' # load template config, then select references to coordinate columns
-#' load_config() %>%
-#'   config_xy_names("Long", "Lat")
 config_xy_names <- function(x, xvar = NULL, yvar = NULL) {
 
   # Reject if not class 'harvester'
@@ -194,8 +188,6 @@ config_xy_names <- function(x, xvar = NULL, yvar = NULL) {
 #' @return `list; harvester` a list object with additional class of "harvester".
 #'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
 config_bbox <- function(x, boundaries = NULL) {
 
   # Reject if not class 'harvester'
@@ -222,13 +214,13 @@ config_bbox <- function(x, boundaries = NULL) {
 
 #' Define resolution in arcsecs
 #'
-#' @param x
-#' @param value
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param value `num` resolution in arcsecs
 #'
-#' @return
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
 config_res <- function(x, value = NULL) {
 
   # Reject if not class 'harvester'
@@ -253,13 +245,13 @@ config_res <- function(x, value = NULL) {
 
 #' Define coordinate reference system
 #'
-#' @param x
-#' @param target_crs
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param target_crs `chr` coordinate reference system (CRS) e.g. "EPSG:4326"
 #'
-#' @return
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
 config_crs <- function(x, target_crs = "EPSG:4326") {
 
   # Reject if not class 'harvester'
@@ -281,19 +273,17 @@ config_crs <- function(x, target_crs = "EPSG:4326") {
 
 
 
-
-
-
 #' Define download date and times, and summary interval
 #'
-#' @param x
-#' @param dates
-#' @param interval
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param dates `num` a numeric value or vector of year values, e.g. 2019
+#' @param interval `chr` define the interval for data summary. Use "year",
+#'   "month" or "day"
 #'
-#' @return
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
 config_dates <- function(x, dates = NULL, interval = "year") {
 
   # Reject if not class 'harvester'
@@ -341,14 +331,17 @@ config_dates <- function(x, dates = NULL, interval = "year") {
 
 #' Configure SLGA resource download settings
 #'
-#' @param x
-#' @param layers
-#' @param summaries
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param layers `chr` name of layer. This is very specific to the SLGA list of
+#'   layers that can be downloaded.
+#' @param summaries `chr` for each layer specified, a summary needs to be paired
+#'   to it. If only one summary value is provided, the function will assume that
+#'   it is for all layers
 #'
-#' @return
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
 config_slga <- function(x, layers = NULL, summaries = "mean") {
 
   # Reject if not class 'harvester'
@@ -388,14 +381,17 @@ config_slga <- function(x, layers = NULL, summaries = "mean") {
 
 #' Configure SILO resource download settings
 #'
-#' @param x
-#' @param layers
-#' @param summaries
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param layers `chr` name of layer. This is very specific to the SLGA list of
+#'   layers that can be downloaded.
+#' @param summaries `chr` for each layer specified, a summary needs to be paired
+#'   to it. If only one summary value is provided, the function will assume that
+#'   it is for all layers
 #'
-#' @return
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
 config_silo <- function(x, layers = NULL, summaries = NULL) {
 
   # Reject if not class 'harvester'
@@ -432,14 +428,17 @@ config_silo <- function(x, layers = NULL, summaries = NULL) {
 
 #' Configure DEA resource download settings
 #'
-#' @param x
-#' @param layers
-#' @param summaries
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param layers `chr` name of layer. This is very specific to the SLGA list of
+#'   layers that can be downloaded.
+#' @param summaries `chr` for each layer specified, a summary needs to be paired
+#'   to it. If only one summary value is provided, the function will assume that
+#'   it is for all layers
 #'
-#' @return
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
 config_dea <- function(x, layers = NULL, summaries = NULL) {
 
   # reject if not class 'harvester'
@@ -472,14 +471,17 @@ config_dea <- function(x, layers = NULL, summaries = NULL) {
 
 #' Configure DEM resource download settings
 #'
-#' @param x
-#' @param layers
-#' @param summaries
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param layers `chr` name of layer. This is very specific to the SLGA list of
+#'   layers that can be downloaded.
+#' @param summaries `chr` for each layer specified, a summary needs to be paired
+#'   to it. If only one summary value is provided, the function will assume that
+#'   it is for all layers
 #'
-#' @return
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
 config_dem <- function(x, layers = NULL, summaries = NULL) {
 
   # reject if not class 'harvester'
@@ -503,16 +505,18 @@ config_dem <- function(x, layers = NULL, summaries = NULL) {
 
 #' Wrap configuration file to data frame
 #'
-#' @param x
-#' @param config
+#' @param df `data.frame` source data, containing x and y variables, usually as
+#'   a data frame object
+#' @param config `chr` name of config file
 #'
-#' @return
+#' @return `list; harvester` a list object with additional class of
+#'   "agrefed.wrap". This list stores both the configuration options and the
+#'   source datafor the data harvester.
 #' @export
-#'
-#' @examples
-wrap_config <- function(x, config) {
+wrap_config <- function(df, config) {
+  cli::cli_h1("Wrapping configuration to data")
   utils_py <- dd_source_python("utils", "dataharvestR")
-  out <- list(df = x, config = config, log = utils_py$init_logtable())
+  out <- list(df = df, config = config, log = utils_py$init_logtable())
   class(out) <- append(class(out), "agrefed.wrap")
   return(invisible(out))
 }
@@ -523,14 +527,16 @@ wrap_config <- function(x, config) {
 
 #' Write config to file
 #'
-#' @param x
-#' @param name
-#' @param folder
+#' @importFrom yaml write_yaml
 #'
-#' @return
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param name `chr` name of config file to save in .yaml format
+#' @param folder `chr` this is the path where the config file will be saved to
+#'
+#' @return `list; harvester` a list object with additional class of "harvester".
+#'   This list stores configuration options for the data harvester.
 #' @export
-#'
-#' @examples
 write_config <- function(x, name = NULL, folder = "../settings/") {
 
   # Reject if not class 'harvester'
@@ -548,16 +554,16 @@ write_config <- function(x, name = NULL, folder = "../settings/") {
 # S3 ----
 #' Print harvester objects
 #'
-#' @param x
+#' @param x `harvester` must be an object of this class, which can be created
+#'   using `load_config()`
+#' @param ... other arguments passed to function
 #'
-#' @return
+#' @return the same input object
 #' @export
-#'
-#' @examples
-print.harvester <- function(x) {
+print.harvester <- function(x, ...) {
   cat("\nConfiguration\n")
   cat("=============\n")
-  cat(as.yaml(x), "\n")
+  cat(yaml::as.yaml(x), "\n")
   return(invisible(x))
 }
 
@@ -565,13 +571,15 @@ print.harvester <- function(x) {
 
 
 
-# asserts ----
+# checks ----
 
 
 #' Validate if object is of class harvester
 #' @noRd
 is_cl_harvester <- function(x) {
-  if (!("harvester" %in% class(x))) {
+  if ("agrefed.wrap" %in% class(x)) {
+    stop("Cannot change configuration after `wrap_config()` is called.")
+  } else if (!("harvester" %in% class(x))) {
     stop("`config_*` functions are for data harvester objects only!")
   }
 }
@@ -579,6 +587,7 @@ is_cl_harvester <- function(x) {
 
 
 #' Validate if value is a date
+#' @importFrom lubridate parse_date_time
 #' @noRd
 is_dateformat <- function(x, format = "y") {
   !is.na(lubridate::parse_date_time(x, orders = "y"))
