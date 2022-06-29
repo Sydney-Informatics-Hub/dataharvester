@@ -4,6 +4,9 @@
 # dataharvestR
 
 <!-- badges: start -->
+
+[![Codacy
+Badge](https://app.codacy.com/project/badge/Grade/e715df42acef461bac6f4e0d6ba8181b)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=januarharianto/dataharvestR&utm_campaign=Badge_Grade)
 <!-- badges: end -->
 
 The `dataharvestR` package is the R interface to the AgReFed

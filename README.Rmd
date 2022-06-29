@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # dataharvestR
 
 <!-- badges: start -->
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e715df42acef461bac6f4e0d6ba8181b)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=januarharianto/dataharvestR&amp;utm_campaign=Badge_Grade)
 <!-- badges: end -->
 
 The `dataharvestR` package is the R interface to the AgReFed Data-Harvester project.
