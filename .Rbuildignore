@@ -5,3 +5,4 @@
 ^\.ccache$
 ^\.github$
 ^tic\.R$
+^playground$
