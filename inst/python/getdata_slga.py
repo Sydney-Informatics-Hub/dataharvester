@@ -192,7 +192,10 @@ def get_wcsmap(url, identifier, crs, bbox, resolution, outfname):
     """
     # Create WCS object
     if os.path.exists(outfname):
-        logging.warning(f"{outfname} already exists")
+        filename = outfname.split(os.sep)[-1]
+        logging.warning(f"\u25b2 | Download skipped: {filename} already exists")
+        logging.info(f"  | Location: {outfname}")
+
         return False
     else:
         wcs = WebCoverageService(url, version="1.0.0")
@@ -254,6 +257,38 @@ def depth2identifier(depth_min, depth_max):
     )
 
 
+def identifier2depthbounds(depths):
+    """
+    Get min and max depth of list of depth strings
+
+    Parameters
+    ----------
+    depth_list: list of depth
+
+    Returns
+    -------
+    min depth
+    max depth
+    """
+    depth_options = ["0-5cm", "5-15cm", "15-30cm", "30-60cm", "60-100cm", "100-200cm"]
+    depth_intervals = [0, 5, 15, 30, 60, 100, 200]
+    # Check first if entries valid
+    for depth in depth_options:
+        assert (
+            depth in depth_options
+        ), f"depth should be one of the following options {depth_options}"
+    # find min and max depth
+    ncount = 0
+    for i in range(len(depth_options)):
+        if depth_options[i] in depths:
+            depth_max = depth_intervals[i + 1]
+            if ncount == 0:
+                depth_min = depth_intervals[i]
+            ncount += 1
+    assert ncount == len(depths), f"ncount = {ncount}"
+    return depth_min, depth_max
+
+
 def get_slga_layers(
     layernames,
     bbox,
@@ -283,11 +318,11 @@ def get_slga_layers(
     TBD: check that Request image size does not exceeds allowed limit. Set Timeout?
     """
 
-    # Determine how much info to print to user
-    if verbose is False:
-        write_logs.setup()
-    else:
+    # Logger setup
+    if verbose:
         write_logs.setup(level="info")
+    else:
+        write_logs.setup()
 
     # Check if layernames is a list
     if not isinstance(layernames, list):
@@ -335,8 +370,8 @@ def get_slga_layers(
             # download data
             dl = get_wcsmap(layer_url, identifier, crs, bbox, resolution_deg, fname_out)
             if dl is True:
-                logging.print(f"✓ {layer_depth_name}")
-                logging.info(f"saved to: {fname_out}")
+                logging.print(f"✔ | {layer_depth_name}")
+                logging.info(f"  | saved to: {fname_out}")
             fnames_out.append(fname_out)
         if get_ci:
             logging.info(f"Downloading confidence intervals for {layername}...")
@@ -366,8 +401,9 @@ def get_slga_layers(
                     layer_url, identifier, crs, bbox, resolution_deg, fname_out
                 )
                 if dl is True:
-                    logging.print(f"✓ {layer_depth_name} CIs")
-    logging.print("SLGA downloads complete.")
+                    logging.print(f"✔ | {layer_depth_name} CIs")
+                    logging.info(f"  | saved to: {outpath}")
+    logging.print("SLGA download(s) complete")
     return fnames_out
 
 

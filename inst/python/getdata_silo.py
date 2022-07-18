@@ -6,13 +6,15 @@ Functionalities:
 - clip data to custom bounding box
 - save data as multi-band geotiff or netCDF
 
-The SILO climate layers are described as dictionary in the module function get_layerdict()
+The SILO climate layers are described as dictionary in the module function get_silodict()
 and the SILO licensing and attribution are availabe with the module function getdict_license()
 
 More details on the SILO climate variables can be found here:
 https://www.longpaddock.qld.gov.au/silo/about/climate-variables/
 and more details about the gridded data structure here:
 https://www.longpaddock.qld.gov.au/silo/gridded-data/
+and a data index:
+https://s3-ap-southeast-2.amazonaws.com/silo-open-data/Official/annual/index.html
 
 This package is part of the Data Harvester project developed for the Agricultural Research Federation (AgReFed).
 
@@ -29,9 +31,11 @@ import datetime
 import requests
 
 # from urllib import request
-from netCDF4 import Dataset
-import rasterio
-import rioxarray as rio
+from pathlib import Path
+
+# from netCDF4 import Dataset
+# import rasterio
+# import rioxarray as rio
 import xarray
 
 # logger setup
@@ -53,8 +57,11 @@ def download_file(url, outpath="."):
     file : str
     """
     local_filename = os.path.join(outpath, url.split("/")[-1])
+    filename_only = Path(outpath).name
     if os.path.exists(local_filename):
-        logging.warning(f"{local_filename} already exists")
+        logging.warning(f"▲ | Download skipped: {filename_only} already exists")
+        logging.info(f"  | Location: {local_filename}")
+
         return local_filename
     with requests.get(url, stream=True) as r:
         with open(local_filename, "wb") as f:
@@ -67,7 +74,7 @@ def download_file(url, outpath="."):
     return local_filename
 
 
-def get_layerdict():
+def get_silodict():
     """
     Get dictionary of available layers and meta data
 
@@ -226,18 +233,18 @@ def get_SILO_raster(
     https://www.longpaddock.qld.gov.au/silo/gridded-data/
 
     SILO url structure:
-    url = "https://s3-ap-southeast-2.amazonaws.com/silo-open-data/annual/<variable>/<year>.<variable>.nc
-    e.g. url = "https://s3-ap-southeast-2.amazonaws.com/silo-open-data/annual/monthly_rain/2005.monthly_rain.nc"
+    url = "https://s3-ap-southeast-2.amazonaws.com/silo-open-data/Official/annual/<variable>/<year>.<variable>.nc
+    e.g. url = "https://s3-ap-southeast-2.amazonaws.com/silo-open-data/Official/annual/monthly_rain/2005.monthly_rain.nc"
     """
 
-    # Determine how much info to print to user
-    if verbose is False:
-        write_logs.setup()
-    else:
+    # Logger setup
+    if verbose:
         write_logs.setup(level="info")
+    else:
+        write_logs.setup()
 
     # Check if layername is valid
-    silodict = get_layerdict()
+    silodict = get_silodict()
     layerdict = silodict["layernames"]
     if layername not in layerdict:
         raise ValueError("Layer name not valid. Choose from: " + str(layerdict.keys()))
@@ -246,7 +253,7 @@ def get_SILO_raster(
     os.makedirs(outpath, exist_ok=True)
 
     # Check if years are valid
-    if not isinstance(years, list):
+    if not (isinstance(years, tuple) | isinstance(years, list)):
         # If not a list, make it a list
         years = [years]
     # Get current year from datetime
@@ -261,30 +268,32 @@ def get_SILO_raster(
     url_info = "https://www.longpaddock.qld.gov.au/silo/gridded-data/"
     for year in years:
         if year > current_year:
-            logging.error(f"Choose years <= {current_year}")
+            logging.error(f"! | Choose years <= {current_year}")
             raise ValueError(f"Choose years <= {current_year}")
             return False
         if year < 1889:
             logging.error(
-                f"data is not available for years < 1889. ",
+                "! | data is not available for years < 1889. ",
                 f"see for more details: {url_info}",
             )
             return False
         if (year < 1970) & (layername == "evap_pan"):
             logging.error(
-                f"{layername} is not available for years < 1970. Automatically set to evap_comb"
+                f"! | {layername} is not available for years < 1970. Automatically set to evap_comb"
             )
             logging.error(f"see for more details: {url_info}")
             layername = "evap_comb"
         if (year < 1957) & (layername == "mslp"):
             logging.error(
-                f"{layername} is not available for years < 1957.",
+                f"! | {layername} is not available for years < 1957.",
                 f"see for more details: {url_info}",
             )
             return False
 
     # Silo base url
-    silo_baseurl = "https://s3-ap-southeast-2.amazonaws.com/silo-open-data/annual/"
+    silo_baseurl = (
+        "https://s3-ap-southeast-2.amazonaws.com/silo-open-data/Official/annual/"
+    )
     logging.print(f"Processing {layername} (SILO)...")
     fnames_out = []
     # Download data for each year and save as geotif
@@ -295,6 +304,8 @@ def get_SILO_raster(
         logging.info(f"Downloading data from {url} ...")
         if os.path.exists(os.path.join(outpath, url.split("/")[-1])):
             file_exists = True
+        else:
+            file_exists = False
         filename = download_file(url, outpath)
         # Open file in Xarray
         ds = xarray.open_dataset(filename)
@@ -317,9 +328,10 @@ def get_SILO_raster(
         if delete_temp:
             os.remove(filename)
         if not file_exists:
-            logging.print("✓ " + layername + "; year: " + str(year))
-            logging.info("Saved as geotif: " + os.path.join(outpath, outfname))
+            logging.print(f"✔ | {layername} for year: {str(year)}")
+            logging.info(f"  | Saved as geotif: {os.path.join(outpath, outfname)}")
         fnames_out.append(os.path.join(outpath, outfname))
+    logging.print(f"SILO download(s) complete: {layername}")
     # Convert netcdf to geotif
     # nc_to_geotif(filename, outpath, layername, year)
     # https://pratiman-91.github.io/2020/08/01/NetCDF-to-GeoTIFF-using-Python.html
@@ -333,7 +345,7 @@ def test_get_SILO_raster():
     """
     test script
     """
-    layername = "monthly_rain"
+    layername = "daily_rain"
     years = 2019
     outpath = "silo_test"
     bbox = (130, -44, 153.9, -11)
