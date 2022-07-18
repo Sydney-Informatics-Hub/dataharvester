@@ -10,25 +10,27 @@
 #' search folders relative to the working folder for a file with the same name,
 #' including common folders such as "data" and "config". Where multiple files
 #' are found, the user can choose the right file to load by specifying it using
-#' the argument `pick`.
+#' the argument `choose`.
 #'
 #' If a file path is provided, it will load the file from the path.
 #'
 #' @importFrom yaml read_yaml
 #'
-#' @param x `chr` name of a config file (no .extenson), or path to ".yaml"
-#'   config file. If NULL, loads a default config file used as a template to
-#'   demonstrate the use of the data harvester.
-#' @param pick `int` where more than one config file is found, this argument can
-#'   be used to select a specific file. Otherwise, the first file found is used.
+#' @param x Name of a config file (no .extenson), or path to ".yaml" config
+#'   file. If NULL, loads a default config file normally used to demonstrate the
+#'   use of the data harvester. This default configuration can also be used as a
+#'   template.
+#' @param choose If more than one file with the same name is found, this
+#'   argument can be used to select the desired file by position. Defaults to
+#'   the first file listed.
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 #'
 #' @examples
 #' load_config() # loads template config as a start
-load_config <- function(x = NULL, pick = 1) {
+load_config <- function(x = NULL, choose = 1) {
 
   # If x is NULL, load default; note: this folder might change in the future if
   # we create an R package
@@ -59,7 +61,7 @@ load_config <- function(x = NULL, pick = 1) {
     config <- read_yaml(valid_paths)
     cat("Config imported from", valid_paths, "\n")
   } else if (length(valid_paths) > 1) {
-    config <- read_yaml(valid_paths[pick])
+    config <- read_yaml(valid_paths[choose])
     cat("More than one config .yaml found. \n",
         "Loaded [1] ", valid_paths[1],
         ". Use `which` argument to select a different file:", "\n", sep = "")
@@ -77,21 +79,23 @@ load_config <- function(x = NULL, pick = 1) {
 
 #' Configure paths to input and output folders and files
 #'
-#' This function changes the values for `inpath`, `outpath` and `infname` in the
+#' This function changes the values for 'inpath', 'outpath' and 'infname' in the
 #' data harvester configuration.
 #'
-#' @param x `harvester` must be an object of this class, which can be created
-#'   using `load_config()`.
-#' @param input `chr` path to folder containing input files used to determine
-#'   coordinates and other features to download. If `NULL`, does nothing.
-#' @param output `chr` path to folder to save results. Images, data frames and
-#'   other geospatial data outputs are saved it this folder for easy access. If
-#'   `NULL`, does nothing.
-#' @param in_file `chr` path to specific file used to determine coordinates and
-#'   other features to download. If `NULL`, does nothing.
+#' @param x Data object of class `harvester`, created by `load_config()`. The
+#'   function will not accept any other data object that has not been processed
+#'   this way.
+#' @param input Path to folder containing input files used to determine
+#'   coordinates and other features to download. If `NULL`, will not update any
+#'   existing value.
+#' @param output Path to folder to save results. Images, data frames and other
+#'   geospatial data outputs are saved it this folder for easy access. If
+#'   `NULL`, will not update any existing value.
+#' @param in_file Path to specific file used to determine coordinates and other
+#'   features to download. If `NULL`, will not update the existing value.
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_paths <- function(x, input = NULL, output = NULL, in_file = NULL) {
 
@@ -137,8 +141,8 @@ config_paths <- function(x, input = NULL, output = NULL, in_file = NULL) {
 #' @param yvar `chr` column name of y coordinate stored in input data file, will
 #'   replace value in `colname_lat`.
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_xy_names <- function(x, xvar = NULL, yvar = NULL) {
 
@@ -185,8 +189,8 @@ config_xy_names <- function(x, xvar = NULL, yvar = NULL) {
 #' @param boundaries `num` a vector of 4 numerical values representing the left,
 #'   bottom, right and top coordinates.
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_bbox <- function(x, boundaries = NULL) {
 
@@ -218,8 +222,8 @@ config_bbox <- function(x, boundaries = NULL) {
 #'   using `load_config()`
 #' @param value `num` resolution in arcsecs
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_res <- function(x, value = NULL) {
 
@@ -249,8 +253,8 @@ config_res <- function(x, value = NULL) {
 #'   using `load_config()`
 #' @param target_crs `chr` coordinate reference system (CRS) e.g. "EPSG:4326"
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_crs <- function(x, target_crs = "EPSG:4326") {
 
@@ -281,8 +285,8 @@ config_crs <- function(x, target_crs = "EPSG:4326") {
 #' @param interval `chr` define the interval for data summary. Use "year",
 #'   "month" or "day"
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_dates <- function(x, dates = NULL, interval = "year") {
 
@@ -339,8 +343,8 @@ config_dates <- function(x, dates = NULL, interval = "year") {
 #'   to it. If only one summary value is provided, the function will assume that
 #'   it is for all layers
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_slga <- function(x, layers = NULL, summaries = "mean") {
 
@@ -389,8 +393,8 @@ config_slga <- function(x, layers = NULL, summaries = "mean") {
 #'   to it. If only one summary value is provided, the function will assume that
 #'   it is for all layers
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_silo <- function(x, layers = NULL, summaries = NULL) {
 
@@ -436,8 +440,8 @@ config_silo <- function(x, layers = NULL, summaries = NULL) {
 #'   to it. If only one summary value is provided, the function will assume that
 #'   it is for all layers
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_dea <- function(x, layers = NULL, summaries = NULL) {
 
@@ -479,8 +483,8 @@ config_dea <- function(x, layers = NULL, summaries = NULL) {
 #'   to it. If only one summary value is provided, the function will assume that
 #'   it is for all layers
 #'
-#' @return `list; harvester` a list object with additional class of "harvester".
-#'   This list stores configuration options for the data harvester.
+#' @return A list object which stores configuration options for the data
+#'   harvester.
 #' @export
 config_dem <- function(x, layers = NULL, summaries = NULL) {
 
@@ -509,9 +513,9 @@ config_dem <- function(x, layers = NULL, summaries = NULL) {
 #'   a data frame object
 #' @param config `chr` name of config file
 #'
-#' @return `list; harvester` a list object with additional class of
-#'   "agrefed.wrap". This list stores both the configuration options and the
-#'   source datafor the data harvester.
+#' @return A list object with additional class of `"agrefed.wrap"`. This list
+#'   stores both the configuration options and the source data for the data
+#'   harvester.
 #' @export
 wrap_config <- function(df, config) {
   cli::cli_h1("Wrapping configuration to data")
@@ -543,8 +547,8 @@ write_config <- function(x, name = NULL, folder = "../settings/") {
   is_cl_harvester(x)
   # Write to folder
   write_yaml(x, file = paste0(folder, name, ".yaml"))
-  cat("\nConfiguration file '", name, "' saved to folder",
-      folder, "\n", sep = "")
+  cat("\nConfiguration file '", name, "' saved to folder '",
+      folder, "'\n", sep = "")
   return(invisible(x))
 }
 
