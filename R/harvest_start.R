@@ -2,27 +2,33 @@
 #' Initialise and validate Data-Harvester and dependencies
 #'
 #' @param env `chr` name of environment. If the environment doesn't currently
-#'   exist, one will be created in the same name using the default conda binary.
+#'   exist, one will be created in the same name using the default conda binary
+#' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
 #'
 #' @export
-harvest_start <- function(env = NULL) {
+initialise <- function(env = NULL, earthengine = FALSE) {
   cli::cli_h1("Welcome to AgReFed Data-Harvester")
-  message("\nChecking if dataharvesteR has been set up appropriately.")
+  message("\n\u2139 Checking if dataharvesteR has been set up appropriately")
   tryCatch(
     {
       validate_conda()
       validate_env(env = env)
       validate_py_packages(env = env)
-      message("AgReFed Data-Harvester is ready to use")
-      cli::cli_h1("DONE")
-      return(invisible(TRUE))
     },
     error = function(e) {
       message("Something went wrong here.")
       return(invisible(FALSE))
     }
   )
+  # Initialise Earth Engine is set
+  if (earthengine) {
+    message("\u2139 Set up Earth Engine API access")
+    eepy <- dd_source_python("getdata_ee", "dataharvestR")
+    eepy$initialise()
+  }
+  return(invisible(TRUE))
 }
+
 
 
 
