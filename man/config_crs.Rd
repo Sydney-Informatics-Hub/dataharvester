@@ -13,8 +13,8 @@ using \code{load_config()}}
 \item{target_crs}{\code{chr} coordinate reference system (CRS) e.g. "EPSG:4326"}
 }
 \value{
-\verb{list; harvester} a list object with additional class of "harvester".
-This list stores configuration options for the data harvester.
+A list object which stores configuration options for the data
+harvester.
 }
 \description{
 Define coordinate reference system

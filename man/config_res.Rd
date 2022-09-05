@@ -13,8 +13,8 @@ using \code{load_config()}}
 \item{value}{\code{num} resolution in arcsecs}
 }
 \value{
-\verb{list; harvester} a list object with additional class of "harvester".
-This list stores configuration options for the data harvester.
+A list object which stores configuration options for the data
+harvester.
 }
 \description{
 Define resolution in arcsecs

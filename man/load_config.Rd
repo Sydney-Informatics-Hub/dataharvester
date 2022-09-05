@@ -4,19 +4,21 @@
 \alias{load_config}
 \title{Load a configuration file for data harvester}
 \usage{
-load_config(x = NULL, pick = 1)
+load_config(x = NULL, choose = 1)
 }
 \arguments{
-\item{x}{\code{chr} name of a config file (no .extenson), or path to ".yaml"
-config file. If NULL, loads a default config file used as a template to
-demonstrate the use of the data harvester.}
+\item{x}{Name of a config file (no .extenson), or path to ".yaml" config
+file. If NULL, loads a default config file normally used to demonstrate the
+use of the data harvester. This default configuration can also be used as a
+template.}
 
-\item{pick}{\code{int} where more than one config file is found, this argument can
-be used to select a specific file. Otherwise, the first file found is used.}
+\item{choose}{If more than one file with the same name is found, this
+argument can be used to select the desired file by position. Defaults to
+the first file listed.}
 }
 \value{
-\verb{list; harvester} a list object with additional class of "harvester".
-This list stores configuration options for the data harvester.
+A list object which stores configuration options for the data
+harvester.
 }
 \description{
 This function performs a sequence of checks to read a \code{.yaml} configuration
@@ -30,7 +32,7 @@ If only a config name is provided (without paths or extension), it will
 search folders relative to the working folder for a file with the same name,
 including common folders such as "data" and "config". Where multiple files
 are found, the user can choose the right file to load by specifying it using
-the argument \code{pick}.
+the argument \code{choose}.
 
 If a file path is provided, it will load the file from the path.
 }

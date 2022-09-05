@@ -17,8 +17,8 @@ replace value in \code{colname_lng}.}
 replace value in \code{colname_lat}.}
 }
 \value{
-\verb{list; harvester} a list object with additional class of "harvester".
-This list stores configuration options for the data harvester.
+A list object which stores configuration options for the data
+harvester.
 }
 \description{
 For the data harvester to work, it needs coordinate data. Different users

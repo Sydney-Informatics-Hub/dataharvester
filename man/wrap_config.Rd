@@ -13,9 +13,9 @@ a data frame object}
 \item{config}{\code{chr} name of config file}
 }
 \value{
-\verb{list; harvester} a list object with additional class of
-"agrefed.wrap". This list stores both the configuration options and the
-source datafor the data harvester.
+A list object with additional class of \code{"agrefed.wrap"}. This list
+stores both the configuration options and the source data for the data
+harvester.
 }
 \description{
 Wrap configuration file to data frame
