@@ -1,14 +1,15 @@
-Package: dataharvestR
+Package: dataharvester
 Title: R interface to the AgReFed Data-Harvester
 Version: 0.0.0.9000
 Authors@R: 
-    person("Januar", "Harianto", , "januar.harianto@sydney.edu.au", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-4803-108X"))
-Description: What the package does (one paragraph).
+    person("Januar", "Harianto", , "januar.harianto@sydney.edu.au", 
+    role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0002-4803-108X"))
+Description: An R interface to the AgReFed Data Harvester
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Imports: 
     cli,
     crayon,
@@ -16,6 +17,7 @@ Imports:
     lubridate,
     reticulate,
     rlang,
+    rstudioapi,
     yaml
 Suggests: 
     testthat (>= 3.0.0)
@@ -30,9 +32,20 @@ Config/reticulate:
       list(package = "owslib", pip = FALSE),
       list(package = "numba", pip = FALSE),
       list(package = "rasterio", pip = FALSE),
-      list(package = "ipykernel", pip = FALSE)
+      list(package = "ipykernel", pip = FALSE),
+      list(package = "eemont", pip = FALSE),
+      list(package = "localtileserver", pip = FALSE),
+      list(package = "earthengine-api", pip = FALSE),
+      list(package = "pygis", pip = TRUE),
+      list(package = "geemap", pip = TRUE),
+      list(package = "wxee", pip = FALSE),
+      list(package = "pyyaml", pip = TRUE),
+      list(package = "termcolor", pip = TRUE),
+      list(package = "tqdm", pip = TRUE),
+      list(package = "alive-progress", pip = TRUE)
     )
   )
 Depends: 
     R (>= 4.1.0)
 LazyData: true
+URL: https://januarharianto.github.io/dataharvestR/
