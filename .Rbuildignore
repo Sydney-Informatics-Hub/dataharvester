@@ -5,3 +5,7 @@
 ^\.ccache$
 ^\.github$
 ^tic\.R$
+^playground$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

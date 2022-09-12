@@ -7,24 +7,26 @@
 config_paths(x, input = NULL, output = NULL, in_file = NULL)
 }
 \arguments{
-\item{x}{\code{harvester} must be an object of this class, which can be created
-using \code{load_config()}.}
+\item{x}{Data object of class \code{harvester}, created by \code{load_config()}. The
+function will not accept any other data object that has not been processed
+this way.}
 
-\item{input}{\code{chr} path to folder containing input files used to determine
-coordinates and other features to download. If \code{NULL}, does nothing.}
+\item{input}{Path to folder containing input files used to determine
+coordinates and other features to download. If \code{NULL}, will not update any
+existing value.}
 
-\item{output}{\code{chr} path to folder to save results. Images, data frames and
-other geospatial data outputs are saved it this folder for easy access. If
-\code{NULL}, does nothing.}
+\item{output}{Path to folder to save results. Images, data frames and other
+geospatial data outputs are saved it this folder for easy access. If
+\code{NULL}, will not update any existing value.}
 
-\item{in_file}{\code{chr} path to specific file used to determine coordinates and
-other features to download. If \code{NULL}, does nothing.}
+\item{in_file}{Path to specific file used to determine coordinates and other
+features to download. If \code{NULL}, will not update the existing value.}
 }
 \value{
-\verb{list; harvester} a list object with additional class of "harvester".
-This list stores configuration options for the data harvester.
+A list object which stores configuration options for the data
+harvester.
 }
 \description{
-This function changes the values for \code{inpath}, \code{outpath} and \code{infname} in the
+This function changes the values for 'inpath', 'outpath' and 'infname' in the
 data harvester configuration.
 }

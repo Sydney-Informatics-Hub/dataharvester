@@ -36,6 +36,11 @@ from owslib.wcs import WebCoverageService
 import rasterio
 from rasterio.plot import show
 from datetime import datetime, timezone
+
+# logger setup
+import write_logs
+import logging
+
 try:
     from osgeo import gdal
 except ImportError:
@@ -51,12 +56,20 @@ def get_metadict():
         dictionary of meta data
     """
     demdict = {}
-    demdict['title'] = 'DEM 1 Second Grid'
-    demdict['description'] = 'Digital Elevation Model (DEM) of Australia derived from STRM with 1 Second Grid - Hydrologically Enforced.'
-    demdict['crs'] = 'EPSG:4326'
-    demdict['bbox'] = [112.99986111100009, -44.0001388895483, 153.9998611116614, -10.000138888999906]
-    demdict['resolution_arcsec'] = 1
+    demdict["title"] = "DEM 1 Second Grid"
+    demdict[
+        "description"
+    ] = "Digital Elevation Model (DEM) of Australia derived from STRM with 1 Second Grid - Hydrologically Enforced."
+    demdict["crs"] = "EPSG:4326"
+    demdict["bbox"] = [
+        112.99986111100009,
+        -44.0001388895483,
+        153.9998611116614,
+        -10.000138888999906,
+    ]
+    demdict["resolution_arcsec"] = 1
     return demdict
+
 
 def getdict_license():
     """
@@ -70,8 +83,9 @@ def getdict_license():
         "license_url": "https://creativecommons.org/licenses/by/4.0/",
         "copyright": "© Copyright 2017-2022, Geoscience Australia",
         "attribution": "Commonwealth of Australia (Geoscience Australia) ",
-        }
+    }
     return dict
+
 
 def get_capabilities(url):
     """
@@ -94,35 +108,40 @@ def get_capabilities(url):
         layer bounding boxes
     """
 
-     # Create WCS object
-    wcs = WebCoverageService(url, version='1.0.0', timeout=300)
+    # Create WCS object
+    wcs = WebCoverageService(url, version="1.0.0", timeout=300)
 
     # Get coverages and content dict keys
     content = wcs.contents
     keys = content.keys()
 
-    print('Following data layers are available:')
+    print("Following data layers are available:")
     title_list = []
     description_list = []
     bbox_list = []
     for key in keys:
-        print(f'key: {key}')
-        print(f'title: {wcs[key].title}')
+        print(f"key: {key}")
+        print(f"title: {wcs[key].title}")
         title_list.append(wcs[key].title)
-        print(f'{wcs[key].abstract}')
+        print(f"{wcs[key].abstract}")
         description_list.append(wcs[key].abstract)
-        print(f'bounding box: {wcs[key].boundingBoxWGS84}')
+        print(f"bounding box: {wcs[key].boundingBoxWGS84}")
         bbox_list.append(wcs[key].boundingBoxWGS84)
-        print('')
+        print("")
 
     return keys, title_list, description_list, bbox_list
 
 
-def getwcs_dem(outpath, bbox, resolution = 1,
-    url = 'https://services.ga.gov.au/site_9/services/DEM_SRTM_1Second_Hydro_Enforced/MapServer/WCSServer?request=GetCapabilities&service=WCS',
-    crs = 'EPSG:4326'):
+def getwcs_dem(
+    outpath,
+    bbox,
+    resolution=1,
+    url="https://services.ga.gov.au/site_9/services/DEM_SRTM_1Second_Hydro_Enforced/MapServer/WCSServer?request=GetCapabilities&service=WCS",
+    crs="EPSG:4326",
+    verbose=False,
+):
     """
-    Main function to download and save geotiff from WCS layer.
+    Function to download and save geotiff from WCS layer.
     Default downloads the DEM 1 arc second grid from Geoscience Australia using the folllwing WCS url:
     Url = https://services.ga.gov.au/site_9/services/DEM_SRTM_1Second_Hydro_Enforced/MapServer/WCSServer?request=GetCapabilities&service=WCS
 
@@ -150,36 +169,94 @@ def getwcs_dem(outpath, bbox, resolution = 1,
     # nheight = int(height / resolution * 3600)
 
     # If the resolution passed is None, set to native resolution of datasource
+
+    # Logger setup
+    if verbose:
+        write_logs.setup(level="info")
+    else:
+        write_logs.setup()
+
     if resolution is None:
-        resolution = get_metadict()['resolution_arcsec']
+        resolution = get_metadict()["resolution_arcsec"]
 
     os.makedirs(outpath, exist_ok=True)
     # Create WCS object and get data
     try:
-        wcs = WebCoverageService(url, version='1.0.0', timeout= 300)
-        layername = wcs['1'].title
-        date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
-        fname_out = layername.replace(' ', '_') + '_' + date + '.tif'
+        wcs = WebCoverageService(url, version="1.0.0", timeout=300)
+        layername = wcs["1"].title
+        date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        fname_out = layername.replace(" ", "_") + "_" + date + ".tif"
         outfname = os.path.join(outpath, fname_out)
+        logging.print(f"Downloading {layername}...")
         if os.path.exists(outfname):
-            print(f'{outfname} already exists')
+            logging.warning(f"▲ | Download skipped: {layername} already exists.")
+            logging.info(f"  | Location: {outfname}")
         else:
-            data = wcs.getCoverage(identifier = '1',
+            data = wcs.getCoverage(
+                identifier="1",
                 bbox=bbox,
-                format='GeoTIFF',
+                format="GeoTIFF",
                 crs=crs,
                 resx=resolution / 3600,
                 resy=resolution / 3600,
-                Styles='tc'
-                )
+                Styles="tc",
+            )
             # Save data to file
-            with open(outfname, 'wb') as f:
+            with open(outfname, "wb") as f:
                 f.write(data.read())
-            print("DEM downloaded to:", outfname)
+            logging(f"✔ | {layername}")
+            logging.info(f"  | Location: {outfname}")
     except:
-        print('Download failed')
+        logging.error("✘ | Download failed")
         return False
     return outfname
+
+
+def get_dem_layers(layernames, outpath, bbox, resolution=1, crs="EPSG:4326"):
+    """
+    Wrapper funtion to get the layers from the Geoscience Australia DEM 1 arc second grid
+    and to calculate slope and aspect layers
+
+    Parameters
+    ----------
+    layernames : list
+        list of layer names to download
+        ['DEM', 'Slope', 'Aspect']
+    outpath : str
+        output directory for the downloaded file
+    bbox : list
+        layer bounding box
+    resolution : int
+        layer resolution in arcsec (default 1)
+    crs: str
+        crs default 'EPSG:4326'
+
+    Return
+    ------
+    Output outnames: lits of output filenames
+    """
+    outfnames = []
+    dem_ok = False
+    for layername in layernames:
+        if layername == "DEM":
+            outfname = outfname_dem = getwcs_dem(outpath, bbox, resolution, crs=crs)
+            dem_ok = True
+        elif layername == "Slope":
+            if not dem_ok:
+                outfname_dem = getwcs_dem(outpath, bbox, resolution, crs=crs)
+                dem_ok = True
+            outfname = dem2slope(outfname_dem)
+        elif layername == "Aspect":
+            if not dem_ok:
+                outfname_dem = getwcs_dem(outpath, bbox, resolution, crs=crs)
+                dem_ok = True
+            outfname = dem2aspect(outfname_dem)
+        else:
+            print.warning(f"▲ | Layername {layername} not recognised")
+            outfname = None
+        outfnames.append(outfname)
+    logging.print("DEM download(s) complete")
+    return outfnames
 
 
 def plot_raster(infname):
@@ -195,7 +272,6 @@ def plot_raster(infname):
     show(data)
 
 
-
 def dem2slope(fname_dem):
     """
     Calculate slope from DEM and save as geotiff
@@ -209,10 +285,13 @@ def dem2slope(fname_dem):
     fname = os.path.basename(fname_dem)
     # Get path for output
     path = os.path.dirname(fname_dem)
-    fname_out = os.path.join(path,'Slope_' + fname)
-    gdal.DEMProcessing(fname_out , fname_dem, 'slope')
-    print("DEM slope from:", fname_dem, " saved to:", fname_out)
+    fname_out = os.path.join(path, "Slope_" + fname)
+    gdal.DEMProcessing(fname_out, fname_dem, "slope")
+    logging.print(f"✔ | Slope from {fname}")
+    logging.info(f"  | DEM from: {fname_dem}")
+    logging.info(f"  | Slope saved to: {fname_out}")
     return fname_out
+
 
 def dem2aspect(fname_dem):
     """
@@ -227,27 +306,29 @@ def dem2aspect(fname_dem):
     fname = os.path.basename(fname_dem)
     # Get path for output
     path = os.path.dirname(fname_dem)
-    fname_out = os.path.join(path,'Aspect_' + fname)
-    gdal.DEMProcessing(fname_out , fname_dem, 'aspect')
-    print("DEM aspect from:", fname_dem, " saved to:", fname_out)
+    fname_out = os.path.join(path, "Aspect_" + fname)
+    gdal.DEMProcessing(fname_out, fname_dem, "aspect")
+    logging.print(f"✔ | Aspect extracted from: {fname}")
+    logging.info(f"  | DEM aspect from: {fname_dem}")
+    logging.info(f"  | Aspect saved to: {fname_out}")
     return fname_out
 
 
-def test_getwcs_dem(outpath = './test_DEM/'):
+def test_getwcs_dem(outpath="./test_DEM/"):
     """
     Test script
     """
     bbox = (114, -44, 153.9, -11)
     resolution = 100
-    url = 'https://services.ga.gov.au/site_9/services/DEM_SRTM_1Second_Hydro_Enforced/MapServer/WCSServer?request=GetCapabilities&service=WCS'
-    crs = 'EPSG:4326'
+    url = "https://services.ga.gov.au/site_9/services/DEM_SRTM_1Second_Hydro_Enforced/MapServer/WCSServer?request=GetCapabilities&service=WCS"
+    crs = "EPSG:4326"
     # get capabilities
     keys, title_list, description_list, bbox_list = get_capabilities(url)
     # get data
-    print('Retrieving data from Geoscience Australia DEM 1 arc second grid...')
+    print("Retrieving data from Geoscience Australia DEM 1 arc second grid...")
     outfname = getwcs_dem(outpath, bbox, resolution, url, crs)
     # Convert to slope and aspect
-    print('Convert to slope and aspect...')
+    print("Convert to slope and aspect...")
     dem2slope(outfname)
     dem2aspect(outfname)
     # plot DEM

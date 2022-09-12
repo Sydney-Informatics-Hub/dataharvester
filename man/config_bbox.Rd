@@ -14,8 +14,8 @@ using \code{load_config()}}
 bottom, right and top coordinates.}
 }
 \value{
-\verb{list; harvester} a list object with additional class of "harvester".
-This list stores configuration options for the data harvester.
+A list object which stores configuration options for the data
+harvester.
 }
 \description{
 Define the bounding box for the data collected. Normally rectangular, since

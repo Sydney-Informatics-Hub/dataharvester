@@ -18,8 +18,8 @@ to it. If only one summary value is provided, the function will assume that
 it is for all layers}
 }
 \value{
-\verb{list; harvester} a list object with additional class of "harvester".
-This list stores configuration options for the data harvester.
+A list object which stores configuration options for the data
+harvester.
 }
 \description{
 Configure SLGA resource download settings

@@ -2,27 +2,33 @@
 #' Initialise and validate Data-Harvester and dependencies
 #'
 #' @param env `chr` name of environment. If the environment doesn't currently
-#'   exist, one will be created in the same name using the default conda binary.
+#'   exist, one will be created in the same name using the default conda binary
+#' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
 #'
 #' @export
-harvest_start <- function(env = NULL) {
+initialise <- function(env = NULL, earthengine = FALSE) {
   cli::cli_h1("Welcome to AgReFed Data-Harvester")
-  message("\nChecking if dataharvesteR has been set up appropriately.")
+  message("\n\u2139 Checking if dataharvesteR has been set up appropriately")
   tryCatch(
     {
       validate_conda()
       validate_env(env = env)
       validate_py_packages(env = env)
-      message("AgReFed Data-Harvester is ready to use")
-      cli::cli_h1("DONE")
-      return(invisible(TRUE))
     },
     error = function(e) {
       message("Something went wrong here.")
       return(invisible(FALSE))
     }
   )
+  # Initialise Earth Engine is set
+  if (earthengine) {
+    message("\u2139 Set up Earth Engine API access")
+    eepy <- dd_source_python("getdata_ee", "dataharvestR")
+    eepy$initialise()
+  }
+  return(invisible(TRUE))
 }
+
 
 
 
@@ -34,14 +40,14 @@ harvest_start <- function(env = NULL) {
 #' @export
 validate_conda <- function(reply = interactive()) {
   # Is conda available? If not, install miniconda
-  cli::cli_h2("Check Python/conda install")
+  message("\u2139 Check Python/conda install")
   tryCatch(
     {
       conda_binary <- reticulate::conda_binary()
-      message(crayon::green("\U2713"), " | ", "conda binary: ", conda_binary)
+      message(crayon::green("✔ "), "conda binary: ", conda_binary)
     },
     error = function(e) {
-      message(crayon::red("\U2717"), " | ", "conda binary: NULL")
+      message(crayon::red("\U2717"), "conda binary: NULL")
       text_out <- paste0(
         "Conda binary not detected. You must use Anaconda or  Miniconda to use the AgReFed Data-Harvester. ", crayon::bold("\n\nDownload and install Miniconda. "), "Miniconda is a minimal and open-source installer for Python and conda. For more information see: https://docs.conda.io/en/latest/miniconda.html."
       )
@@ -83,7 +89,7 @@ validate_conda <- function(reply = interactive()) {
 #'
 #' @export
 validate_env <- function(env = NULL) {
-  # Try to search for default conda environments "geopy" or "dataharvesteR"
+  # Try to search for default conda environments "geopy" or "dataharvester"
   if (is.null(env)) {
     env <- "geopy"
     tryCatch(
@@ -93,14 +99,14 @@ validate_env <- function(env = NULL) {
       error = function(e) {
         tryCatch(
           {
-            env <- "dataharvestR"
+            env <- "dataharvester"
             reticulate::use_condaenv(env)
           },
           error = function(e) {
-            # If both environments are not found, create one for `dataharvestR`
+            # If both environments are not found, create one for `dataharvester`
             message("Conda environment  not found. Creating one on the spot...")
-            reticulate::conda_create("dataharvestR", packages = "python=3.9")
-            reticulate::use_condaenv("dataharvestR")
+            reticulate::conda_create("dataharvester", packages = "python=3.9")
+            reticulate::use_condaenv("dataharvester")
           }
         )
       }
@@ -121,7 +127,7 @@ validate_env <- function(env = NULL) {
       }
     )
   }
-  message(crayon::green("\U2713"), " | ", "conda env    : ", env, "\n")
+  message(crayon::green("✔ "), "conda env: ", env, "\n")
 }
 
 
@@ -148,7 +154,14 @@ validate_py_packages <- function(env = NULL) {
     "numba",
     "owslib",
     "rasterio",
-    "rioxarray"
+    "rioxarray",
+    "eemont",
+    "geemap",
+    "pygis",
+    "localtileserver",
+    "earthengine-api",
+    "geemap",
+    "alive-progress"
   )
   # Required gdal version
   gdal_required <- "3.4.2"
@@ -156,7 +169,7 @@ validate_py_packages <- function(env = NULL) {
   py_avail_modules <-
     reticulate::py_list_packages()[, 1:2] |>
     dplyr::filter(.data$package %in% py_packages)
-  cli::cli_h2("Checking package versions")
+  message("\u2139 Checking package versions")
   # Check that all packages have been installed
   check_py_packages <-
     py_avail_modules |>
@@ -170,7 +183,8 @@ validate_py_packages <- function(env = NULL) {
     setequal(gdal_required)
   # If both are TRUE, we are good, otherwise re-install everything to be safe
   if (check_py_packages & check_gdal_version) {
-    message(paste(crayon::green("\U2713"), "|", py_packages, "\n"))
+    # message(paste(crayon::green("✔"), py_packages, " | "))
+    message(paste(crayon::green("✔ all packages validated")))
   } else {
     message(paste0(
       "Cannot validate required Python packages. ",

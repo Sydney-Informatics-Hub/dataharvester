@@ -16,8 +16,8 @@ using \code{load_config()}}
 "month" or "day"}
 }
 \value{
-\verb{list; harvester} a list object with additional class of "harvester".
-This list stores configuration options for the data harvester.
+A list object which stores configuration options for the data
+harvester.
 }
 \description{
 Define download date and times, and summary interval
