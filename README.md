@@ -49,27 +49,23 @@ remotes::install_github("januarharianto/dataharvester")
 library(dataharvester) # load package
 ```
 
-## `start_harvester()`
+## `initialise()`
 
-The heart *and* soul of `dataharvester`, `start_harvester()` helps you
-initialise the package, verifies package dependenies and connect to the
+The heart *and* soul of `dataharvester`, `intialise()` helps you
+initialise the package, verifies package dependencies and connect to the
 Earth Engine API. The [online documentation]() provides a detailed
 outlook on what the function does.
 
 ## Example
 
 ``` r
-library(dataharvester)
-start_harvester(earthengine = TRUE)
+# library(dataharvester)
+# initialise(earthengine = TRUE)
 
 # todo
 ```
 
 ## Acknowledgments
-
-This software was developed by the Sydney Informatics Hub, a core
-research facility of the University of Sydney, as part of the Data
-Harvesting project for the Agricultural Research Federation (AgReFed).
 
 Acknowledgements are an important way for us to demonstrate the value we
 bring to your research. Your research outcomes are vital for ongoing
@@ -82,16 +78,12 @@ for your research project, please include the following acknowledgement:
 
 # Attribution
 
+This software was developed by the Sydney Informatics Hub, a core
+research facility of the University of Sydney, as part of the Data
+Harvesting project for the Agricultural Research Federation (AgReFed).
 AgReFed is supported by the Australian Research Data Commons (ARDC) and
 the Australian Government through the National Collaborative Research
 Infrastructure Strategy (NCRIS).
-
-`dataharvester` would not be where it is today without the help of
-Python packages that have done the bulk of the work. These include:
-
--   eemont
--   geemap
--   
 
 ## License
 
