@@ -53,7 +53,7 @@ logging_addLevel("PRINT", logging.INFO + 5)
 # =============================================================================
 
 
-def setup(path="data/log", level="print"):
+def setup(path="data/debug", level="print"):
     """Set up the logging system for the AgReFed Data Harvester.
 
     Note that because this function is custom, 3 levels can be selected: "info", "print",
