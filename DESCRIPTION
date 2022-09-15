@@ -39,13 +39,11 @@ Config/reticulate:
       list(package = "pygis", pip = TRUE),
       list(package = "geemap", pip = TRUE),
       list(package = "wxee", pip = FALSE),
-      list(package = "pyyaml", pip = TRUE),
       list(package = "termcolor", pip = TRUE),
-      list(package = "tqdm", pip = TRUE),
       list(package = "alive-progress", pip = TRUE)
     )
   )
 Depends: 
     R (>= 4.1.0)
 LazyData: true
-URL: https://januarharianto.github.io/dataharvestR/
+URL: https://januarharianto.github.io/dataharvester/
