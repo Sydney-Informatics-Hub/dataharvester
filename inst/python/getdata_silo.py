@@ -43,9 +43,24 @@ import write_logs
 import logging
 
 # from datacube.utils.cog import write_cog
+from termcolor import cprint, colored
+from alive_progress import alive_bar, config_handler
+
+config_handler.set_global(
+    force_tty=True,
+    bar=None,
+    spinner="waves",
+    monitor=False,
+    stats=False,
+    receipt=True,
+    elapsed="{elapsed}",
+)
+def spin(message=None, colour=None):
+    """Spin animation as a progress inidicator"""
+    return alive_bar(1, title=colored(f"{message} ", colour))
 
 
-def download_file(url, outpath="."):
+def download_file(url, year, outpath="."):
     """
     download file from url
 
@@ -59,13 +74,14 @@ def download_file(url, outpath="."):
     local_filename = os.path.join(outpath, url.split("/")[-1])
     filename_only = Path(outpath).name
     if os.path.exists(local_filename):
-        logging.warning(f"▲ | Download skipped: {filename_only} already exists")
-        logging.info(f"  | Location: {local_filename}")
-
+        cprint(f"⚑ {filename_only} already exists, skipping download", "yellow")
+        # logging.info(f"  | Location: {local_filename}")
         return local_filename
-    with requests.get(url, stream=True) as r:
-        with open(local_filename, "wb") as f:
-            shutil.copyfileobj(r.raw, f)
+    with spin(f"⇩ {filename_only} for year: {str(year)}", "blue") as s:
+        with requests.get(url, stream=True) as r:
+            with open(local_filename, "wb") as f:
+                shutil.copyfileobj(r.raw, f)
+        s(1)
 
     # with request.urlopen(url) as response:
     #     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -294,19 +310,19 @@ def get_SILO_raster(
     silo_baseurl = (
         "https://s3-ap-southeast-2.amazonaws.com/silo-open-data/Official/annual/"
     )
-    logging.print(f"Processing {layername} (SILO)...")
+    # print(f"Processing {layername} (SILO)...")
     fnames_out = []
     # Download data for each year and save as geotif
     for year in years:
         # Get url
         url = silo_baseurl + layername + "/" + str(year) + "." + layername + ".nc"
         # Download file
-        logging.info(f"Downloading data from {url} ...")
+        # logging.info(f"Downloading data from {url} ...")
         if os.path.exists(os.path.join(outpath, url.split("/")[-1])):
             file_exists = True
         else:
             file_exists = False
-        filename = download_file(url, outpath)
+        filename = download_file(url, year, outpath)
         # Open file in Xarray
         ds = xarray.open_dataset(filename)
         # select data in bbox:
@@ -327,11 +343,11 @@ def get_SILO_raster(
         # Remove file
         if delete_temp:
             os.remove(filename)
-        if not file_exists:
-            logging.print(f"✔ | {layername} for year: {str(year)}")
-            logging.info(f"  | Saved as geotif: {os.path.join(outpath, outfname)}")
+        # if not file_exists:
+        #     print(f"⇩ {layername} for year: {str(year)}")
+        # logging.info(f"  | Saved as geotif: {os.path.join(outpath, outfname)}")
         fnames_out.append(os.path.join(outpath, outfname))
-    logging.print(f"SILO download(s) complete: {layername}")
+    # logging.print(f"SILO download(s) complete: {layername}")
     # Convert netcdf to geotif
     # nc_to_geotif(filename, outpath, layername, year)
     # https://pratiman-91.github.io/2020/08/01/NetCDF-to-GeoTIFF-using-Python.html

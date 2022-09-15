@@ -33,6 +33,24 @@ import matplotlib.pyplot as plt
 import write_logs
 import logging
 
+from termcolor import cprint, colored
+from alive_progress import alive_bar, config_handler
+
+config_handler.set_global(
+    force_tty=True,
+    bar=None,
+    spinner="waves",
+    monitor=False,
+    stats=False,
+    receipt=True,
+    elapsed="{elapsed}",
+)
+
+
+def spin(message=None, colour=None):
+    """Spin animation as a progress inidicator"""
+    return alive_bar(1, title=colored(f"{message} ", colour))
+
 
 def get_slgadict():
     """
@@ -191,24 +209,27 @@ def get_wcsmap(url, identifier, crs, bbox, resolution, outfname):
 
     """
     # Create WCS object
+    filename = outfname.split(os.sep)[-1]
     if os.path.exists(outfname):
-        filename = outfname.split(os.sep)[-1]
-        logging.warning(f"\u25b2 | Download skipped: {filename} already exists")
-        logging.info(f"  | Location: {outfname}")
+        cprint(f"⚑ {filename} already exists, skipping download", "yellow")
+        # logging.warning(f"\u25b2 Download skipped: {filename} already exists")
+        # logging.info(f"  Location: {outfname}")
 
         return False
     else:
-        wcs = WebCoverageService(url, version="1.0.0")
-        # Get data
-        data = wcs.getCoverage(
-            identifier,
-            format="GEOTIFF",
-            bbox=bbox,
-            crs=crs,
-            resx=resolution,
-            resy=resolution,
-        )
-        # timeout=30)
+        with spin(f"⇩ {filename}", "blue") as s:
+            wcs = WebCoverageService(url, version="1.0.0")
+            # Get data
+            data = wcs.getCoverage(
+                identifier,
+                format="GEOTIFF",
+                bbox=bbox,
+                crs=crs,
+                resx=resolution,
+                resy=resolution,
+            )
+            # timeout=30)
+            s(1)
 
         # Save data
         with open(outfname, "wb") as f:
@@ -356,11 +377,10 @@ def get_slga_layers(
 
     fnames_out = []
     # Loop over layers
-    logging.print("Processing SLGA... (please wait until complete)")
     for layername in layernames:
         # Get layer url
         layer_url = layers_url[layername]
-        logging.print(f"Downloading {layername}...")
+        # logging.print(f"Downloading {layername}...")
         for i in range(len(identifiers)):
             identifier = identifiers[i]
             # Get layer name
@@ -369,12 +389,13 @@ def get_slga_layers(
             fname_out = os.path.join(outpath, layer_depth_name + ".tif")
             # download data
             dl = get_wcsmap(layer_url, identifier, crs, bbox, resolution_deg, fname_out)
-            if dl is True:
-                logging.print(f"✔ | {layer_depth_name}")
-                logging.info(f"  | saved to: {fname_out}")
+            # if dl is True:
+            #     print(f"✔ {layer_depth_name}")
+            # logging.print(f"✔ | {layer_depth_name}")
+            # logging.info(f"  | saved to: {fname_out}")
             fnames_out.append(fname_out)
         if get_ci:
-            logging.info(f"Downloading confidence intervals for {layername}...")
+            # logging.info(f"Downloading confidence intervals for {layername}...")
             for i in range(len(identifiers)):
                 # 5th percentile
                 identifier = identifiers_ci_5pc[i]
@@ -400,10 +421,11 @@ def get_slga_layers(
                 dl = get_wcsmap(
                     layer_url, identifier, crs, bbox, resolution_deg, fname_out
                 )
-                if dl is True:
-                    logging.print(f"✔ | {layer_depth_name} CIs")
-                    logging.info(f"  | saved to: {outpath}")
-    logging.print("SLGA download(s) complete")
+                # if dl is True:
+                # print(f"✔ {layer_depth_name} CIs")
+                # logging.print(f"✔ {layer_depth_name} CIs")
+                # logging.info(f"  saved to: {outpath}")
+    # logging.print("SLGA download(s) complete")
     return fnames_out
 
 

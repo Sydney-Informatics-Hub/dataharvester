@@ -46,10 +46,29 @@ from owslib.wcs import WebCoverageService
 import rasterio
 from rasterio.plot import show
 from datetime import datetime, timezone
+from termcolor import cprint, colored
+from alive_progress import alive_bar, config_handler
+
 
 # logger setup
 import write_logs
 import logging
+
+# Progress bar config for alive-progress
+config_handler.set_global(
+    force_tty=True,
+    bar=None,
+    spinner="waves",
+    monitor=False,
+    stats=False,
+    receipt=True,
+    elapsed="{elapsed}",
+)
+
+
+def spin(message=None, colour=None):
+    """Spin animation as a progress inidicator"""
+    return alive_bar(1, title=colored(f"{message} ", colour))
 
 
 def get_deadict():
@@ -326,32 +345,35 @@ def get_wcsmap(
     nheight = int(height / resolution * 3600)
     # Get data
     if os.path.exists(outfname):
-        logging.warning(f"▲ | Download skipped: {layername} already exists")
-        logging.info(f"  | Location: {outfname}")
+        cprint(f"⚑ {layername}.tif already exists, skipping download", "yellow")
+        # logging.warning(f"▲ | Download skipped: {layername} already exists")
+        # logging.info(f"  | Location: {outfname}")
     else:
         try:
-            wcs = WebCoverageService(url, version="1.0.0", timeout=300)
-            if date == "None":
-                data = wcs.getCoverage(
-                    identifier=layername,
-                    bbox=bbox,
-                    format=format_out,
-                    crs=crs,
-                    width=nwidth,
-                    height=nheight,
-                    Styles="tc",
-                )
-            else:
-                data = wcs.getCoverage(
-                    identifier=layername,
-                    time=[date],
-                    bbox=bbox,
-                    format=format_out,
-                    crs=crs,
-                    width=nwidth,
-                    height=nheight,
-                    Styles="tc",
-                )
+            with spin(f"⇩ {layername}.tif for date: {date}", "blue") as s:
+                wcs = WebCoverageService(url, version="1.0.0", timeout=300)
+                if date == "None":
+                    data = wcs.getCoverage(
+                        identifier=layername,
+                        bbox=bbox,
+                        format=format_out,
+                        crs=crs,
+                        width=nwidth,
+                        height=nheight,
+                        Styles="tc",
+                    )
+                else:
+                    data = wcs.getCoverage(
+                        identifier=layername,
+                        time=[date],
+                        bbox=bbox,
+                        format=format_out,
+                        crs=crs,
+                        width=nwidth,
+                        height=nheight,
+                        Styles="tc",
+                    )
+                s(1)
         except:
             print("Download failed")
             return False
@@ -408,7 +430,7 @@ def get_dea_layers(
     if not (isinstance(layernames, tuple) | isinstance(layernames, list)):
         layernames = [layernames]
     # Loop over layernames
-    logging.print("Processing DEA...")
+    # logging.print("Processing DEA...")
     fnames_out = []
     for layername in layernames:
         # save for each layer
@@ -424,7 +446,7 @@ def get_dea_layers(
                 format_out=format_out,
             )
         fnames_out.append(outfnames)
-    logging.print(f"DEA download(s) complete (saved to: {outpath})")
+    # logging.print(f"DEA download(s) complete (saved to: {outpath})")
     return fnames_out
 
 
@@ -496,11 +518,11 @@ def get_dea_images(
         if datetime.fromisoformat(time[:-1]).astimezone(timezone.utc).year == year:
             datetimes.append(datetime.fromisoformat(time[:-1]).astimezone(timezone.utc))
             dates.append(time)
-    logging.print(f"Number of images for {year} found: {len(dates)}")
-    if len(dates) == 0:
-        logging.warning(
-            f"No dates found for year {year}. Trying to download without date..."
-        )
+        # logging.print(f"Number of images for {year} found: {len(dates)}")
+        # if len(dates) == 0:
+        #     logging.warning(
+        #         f"No dates found for year {year}. Trying to download without date..."
+        #     )
         dates = ["None"]
     # Download images for all dates in year
     outfnames = []
@@ -521,12 +543,8 @@ def get_dea_images(
             fname_out = f"{layername}_{datestring.year}-{datestring.month}-{datestring.day}{fname_end}"
         outfname = os.path.join(outpath, fname_out)
         if os.path.exists(outfname):
-            exists = True
             outfnames.append(outfname)
-        else:
-            exists = False
         # Get data
-        logging.info(f"Downloading {layername} for date {date}...")
         download_ok = get_wcsmap(
             outfname,
             layername,
@@ -539,17 +557,10 @@ def get_dea_images(
         )
         # Log download success message if file does not already exist
         if download_ok:
-            if not exists:
-                if len(date) == 0:
-                    logging.print(f"✔ | {layername}")
-                else:
-                    logging.print(f"✔ | {layername} for date: {date}")
             outfnames.append(outfname)
         else:
-            if len(dates) == 0:
-                logging.print(f"✘ | {layername} failed to download")
-            else:
-                logging.print(f"✘ | {layername} for date {date} failed to download")
+            cprint(f"✘ {layername} for date {date} failed to download", "red")
+    # return [item for sublist in outfnames for item in sublist]
     return outfnames
 
 
