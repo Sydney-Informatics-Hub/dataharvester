@@ -2,9 +2,20 @@ Package: dataharvester
 Title: R interface to the AgReFed Data-Harvester
 Version: 0.0.1
 Authors@R: 
-    person("Januar", "Harianto", , "januar.harianto@sydney.edu.au", 
-    role = c("aut", "cre"),
-    comment = c(ORCID = "0000-0002-4803-108X"))
+    c(person("Januar", 
+             "Harianto",
+             email = "januar.harianto@sydney.edu.au", 
+             role = c("aut", "cre", "trl"),
+             comment = c(ORCID = "0000-0002-4803-108X")),
+      person("Sebastian", 
+             "Haan",
+             email = "sebastian.haan@sydney.edu.au", 
+             role = c("aut")),
+      person("Nathaniel", 
+             "Butterworth",
+             email = "nathaniel.butterworth@sydney.edu.au", 
+             role = c("aut"))
+             )
 Description: An R interface to the AgReFed Data Harvester
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -46,4 +57,5 @@ Config/reticulate:
 Depends: 
     R (>= 4.1.0)
 LazyData: true
-URL: https://januarharianto.github.io/dataharvester/
+URL: https://sydney-informatics-hub.github.io/dataharvester/,
+    https://januarharianto.github.io/dataharvester/
