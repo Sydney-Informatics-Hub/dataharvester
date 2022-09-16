@@ -1,5 +1,5 @@
 """
-This script is used to run the headless version of the data harvester.
+This script is used to run the headless version of the data harvester
 """
 
 import os
