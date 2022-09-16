@@ -57,3 +57,71 @@ match_multi <- function(arg) {
     ))
   }
 }
+
+#' Create a dataframe to store raster download and processing information
+#'
+#' This functions does not have any arguments. The dataframe can be updated with
+#' the [update_logtable()] function.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+init_logtable <- function() {
+  # Import module
+  path <- system.file("python", package = "dataharvester")
+  utils <- reticulate::import_from_path("utils",
+    path = path,
+    delay_load = TRUE
+  )
+  # Run
+  out <- utils$init_logtable()
+  return(out)
+}
+
+#' Update download and processing dataframe
+#'
+#' Update the dataframe table with the information from the raster download or
+#' processing. The dataframe is simultaneoulsy saved to a csv file in default
+#' output directory.
+#'
+#' @param logname
+#' @param file_name
+#' @param layer
+#' @param source
+#' @param settings
+#' @param layertitles
+#' @param agfunctions
+#' @param loginfos
+#'
+#' @return
+#' @export
+#'
+#' @examples
+update_logtable <- function(logname,
+                                file_name,
+                                layer,
+                                source,
+                                settings,
+                                layertitles = list(),
+                                agfunctions = list(),
+                                loginfos = list()) {
+  # Import module
+  path <- system.file("python", package = "dataharvester")
+  utils <- reticulate::import_from_path("utils",
+    path = path,
+    delay_load = TRUE
+  )
+  # Run
+  out <- utils$update_logtable(df_log,
+    filenames,
+    layernames,
+    datasource,
+    settings,
+    layertitles,
+    agfunctions,
+    loginfos)
+  return(out)
+}
+
+
