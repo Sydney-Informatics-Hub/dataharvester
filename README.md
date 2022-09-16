@@ -39,6 +39,11 @@ perform basic operations to filter, reduce, visualise and download data.
 
 ## Installation
 
+**Important**: `dataharvester` is currently still under early
+development. **Many things are broken** and this repository is public so
+that our community developers can access it. **Do not download this
+package unless you are a developer and love to break things!**
+
 Download the development version of this package from GitHub using
 `install_github()`:
 
@@ -49,12 +54,12 @@ remotes::install_github("januarharianto/dataharvester")
 library(dataharvester) # load package
 ```
 
-## `initialise()`
+## `initialise_harvester()`
 
-The heart *and* soul of `dataharvester`, `intialise()` helps you
-initialise the package, verifies package dependencies and connect to the
-Earth Engine API. The [online documentation]() provides a detailed
-outlook on what the function does.
+The heart *and* soul of `dataharvester`, `intialise_harvester()` helps
+you initialise the package, verifies package dependencies and connect to
+the Earth Engine API. The [online documentation]() (currently not
+available) provides a detailed outlook on what the function does.
 
 ## Example
 
@@ -84,6 +89,13 @@ Harvesting project for the Agricultural Research Federation (AgReFed).
 AgReFed is supported by the Australian Research Data Commons (ARDC) and
 the Australian Government through the National Collaborative Research
 Infrastructure Strategy (NCRIS).
+
+We would also like to acknowledge the use of the following Python
+packages in `dataharvester`:
+
+-   (geemap)\[<https://github.com/giswqs/geemap>\]
+-   (wxee)\[<https://github.com/aazuspan/wxee>\]
+-   (eemont)\[<https://github.com/davemlz/eemont>\]
 
 ## License
 
