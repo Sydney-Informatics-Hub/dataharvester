@@ -52,6 +52,7 @@ download images for all other \verb{*_ee()} functions
 Define Google Earth Engine data to collect
 }
 \examples{
+NULL
 
 collect_ee(
   collection = "LANDSAT/LC09/C02/T1_L2",

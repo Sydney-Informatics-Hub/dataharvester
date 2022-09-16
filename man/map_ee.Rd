@@ -4,14 +4,35 @@
 \alias{map_ee}
 \title{Visualise an Earth Engine Image or Image Collection on an interactive map}
 \usage{
-map_ee(object, bands, minmax = NULL, palette = NULL)
+map_ee(object, bands = NULL, minmax = NULL, palette = NULL)
 }
 \arguments{
-\item{object}{\code{object}: a data object produced by \code{\link[=collect_ee]{collect_ee()}}}
+\item{object}{\code{object}: a data object produced by \code{\link[=collect_e]{collect_e()}}}
 
-\item{palette}{}
+\item{bands}{\code{string}, \code{optional}: a string or list of strings representing
+the bands to be visualised. If NULL, will present a list of available bands
+to visualise}
+
+\item{minmax}{\code{numeric}, \code{optional}: A list of two integers representing the
+minimum and maximum values for image pixel colours in single-band images.
+If set to NULL, the min and max values are automatically calculated
+Defaults to NULL}
+
+\item{palette}{\code{string}, \code{optional}: A string representing the name of a
+palette to be used for map colors. Names are accessed from Matplotlib
+Colourmaps as described in
+https://matplotlib.org/stable/tutorials/colors/colormaps.html. In addition,
+"ndvi", "ndwi" and "terrain" palettes are available. If set to None,
+"viridis" is used. Defaults to NULL}
+}
+\value{
+an updated \code{\link[=collect_ee]{collect_ee()}} object that can be passed on to
+\code{\link[=aggregate_ee]{aggregate_ee()}} or \code{\link[=download_ee]{download_ee()}}
 }
 \description{
 A \href{http://python-visualization.github.io/folium/}{folium} map is produced and
 image(s) collected so far are displayed as layer(s) on top of the map.
+}
+\examples{
+NULL
 }

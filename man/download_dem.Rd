@@ -7,9 +7,9 @@
 download_dem(layer, out_path, bounding_box, zresolution = 1)
 }
 \arguments{
-\item{layer}{\code{string}: list of layer names to download}
+\item{layer}{\code{string}: layer name(s) to download}
 
-\item{out_path}{\code{string}:}
+\item{out_path}{\code{string}: path to output folder e.g. 'downloads/'}
 
 \item{bounding_box}{\code{numeric}:}
 
@@ -21,4 +21,7 @@ a list of output filenames
 \description{
 Wrapper funtion to get the layers from the Geoscience Australia DEM 1 arc
 second grid.
+}
+\examples{
+NULL
 }

@@ -15,7 +15,7 @@ aggregate_ee(object, frequency = "month", reduce_by = NULL)
 aggregated data. If NULL (default), will calculate the mean per period}
 }
 \value{
-an updated \code{\link[=collect_ee]{collect_ee()}} object that can be passed on to \code{\link[=map_ee]{map_ee()}},
+an updated \code{\link[=collect_ee]{collect_ee()}} object that can be passed on to \code{\link[=map_ee]{map_ee()}}
 or \code{\link[=download_ee]{download_ee()}}
 }
 \description{

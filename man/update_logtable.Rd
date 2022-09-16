@@ -16,10 +16,33 @@ update_logtable(
 )
 }
 \arguments{
-\item{loginfos}{}
+\item{logname}{\code{string}: name of data frame object created from
+\code{\link[=init_logfile]{init_logfile()}}}
+
+\item{file_name}{\code{string}: file name(s) to add to the data frame}
+
+\item{layer}{\code{string}: layer name(s) to add to the data frame}
+
+\item{source}{\code{string}: the download source, abbreviated. For example, "DEA"}
+
+\item{settings}{\code{object}: a settings object}
+
+\item{layertitles}{\code{string} : layer title(s) to add to the data frame, used
+in certain situations e.g. labels for summary plots}
+
+\item{agfunctions}{aggregation/summary functions used (e.g. mean) or an
+specified aggregation requested (e.g. 0-5 m) for the layer}
+
+\item{loginfos}{\code{string}: status of layer, e.g. "processed"}
+}
+\value{
+a data frame object
 }
 \description{
 Update the dataframe table with the information from the raster download or
 processing. The dataframe is simultaneoulsy saved to a csv file in default
 output directory.
+}
+\examples{
+NULL
 }

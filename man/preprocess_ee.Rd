@@ -46,6 +46,7 @@ cloud/shadow masking may not be available. Must be used on an object created
 by the function, \code{\link[=collect_ee]{collect_ee()}}
 }
 \examples{
+NULL
 
 img <- collect_ee(
   collection = "LANDSAT/LC09/C02/T1_L2",

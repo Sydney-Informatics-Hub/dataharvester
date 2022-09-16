@@ -8,17 +8,34 @@ download_ee(
   object,
   bands = NULL,
   scale = NULL,
-  outpath = NULL,
+  out_path = NULL,
   out_format = NULL,
   overwrite = TRUE
 )
 }
 \arguments{
-\item{object}{(object) a data object produced by \code{collect_ee()}}
+\item{object}{\code{object}: a data object produced by \code{\link[=collect_e]{collect_e()}}}
 
-\item{overwrite}{}
+\item{bands}{\code{string}: a string or list of strings representing the bands to
+be downloaded}
+
+\item{scale}{\code{numeric}, \code{optional}: a number represeting the scale of a pixel
+in metres. If set to NULL, will use a scale of 100 m. Defaults to NULL}
+
+\item{out_path}{\code{string}, \code{optional}: a string representing the path to the
+output directory. If set to NULL, will use the current working directory
+and add a "downloads/" folder. Defaults to NULL}
+
+\item{out_format}{\code{string}, \code{optional}: Save image as GeoTIFF (.tif), JPEG
+(.jpg) or PNG (.png). Defaults to .tif}
+
+\item{overwrite}{\code{logical}, \code{optional}: overwrite existing file if it already
+exists. Defaults to NULL}
 }
 \description{
 Images are saved as GeoTIFF (.tif) files containing geospatial data, unless
 otherwise specified in \code{out_format}.
+}
+\examples{
+NULL
 }

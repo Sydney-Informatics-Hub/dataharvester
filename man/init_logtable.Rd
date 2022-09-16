@@ -6,6 +6,9 @@
 \usage{
 init_logtable()
 }
+\value{
+a data frame object
+}
 \description{
 This functions does not have any arguments. The dataframe can be updated with
 the \code{\link[=update_logtable]{update_logtable()}} function.
