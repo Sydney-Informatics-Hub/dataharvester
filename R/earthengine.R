@@ -149,14 +149,12 @@ ee_aggregate <- function(object, frequency = "month", reduce_by = NULL) {
 #' @examples
 ee_map <- function(object, bands, minmax = NULL, palette = NULL) {
   # Generate filename for html
-  if (dir.exists(dir <- file.path(tempdir(), "geemap"))) {
-    unlink(dir, recursive = TRUE)
-  }
-  dir.create(dir1 <- file.path(tempdir(), "geemap"))
-  file.create(htmlfile <- tempfile(tmpdir = dir1, fileext = ".html"))
+  tempDir <- tempfile()
+  dir.create(tempDir)
+  htmlfile <- file.path(tempDir, "index.html")
   object$map(bands, minmax, palette, save_to = htmlfile)
   rstudioapi::viewer(htmlfile)
-  unlink(dir, recursive = TRUE)
+  return(object)
 }
 
 
