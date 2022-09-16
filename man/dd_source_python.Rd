@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{dd_source_python}
 \alias{dd_source_python}
-\title{Source python module stored in Data-Harvester Python folder}
+\title{(Internal) Source module stored in python folder}
 \usage{
 dd_source_python(modulename, rpackage, report = FALSE)
 }
@@ -10,5 +10,5 @@ dd_source_python(modulename, rpackage, report = FALSE)
 \item{report}{}
 }
 \description{
-Source python module stored in Data-Harvester Python folder
+(Internal) Source module stored in python folder
 }

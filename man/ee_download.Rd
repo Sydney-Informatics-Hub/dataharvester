@@ -2,7 +2,7 @@
 % Please edit documentation in R/earthengine.R
 \name{ee_download}
 \alias{ee_download}
-\title{Title}
+\title{Download an Earth Engine Image or Image Collection}
 \usage{
 ee_download(
   object,
@@ -14,8 +14,11 @@ ee_download(
 )
 }
 \arguments{
+\item{object}{(object) a data object produced by \code{ee_collect()}}
+
 \item{overwrite}{}
 }
 \description{
-Title
+Images are saved as GeoTIFF (.tif) files containing geospatial data, unless
+otherwise specified in \code{out_format}.
 }

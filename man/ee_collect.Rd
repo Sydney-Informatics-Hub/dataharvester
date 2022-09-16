@@ -15,33 +15,34 @@ ee_collect(
 )
 }
 \arguments{
-\item{collection}{(str) A Google Earth Engine collection. Collections can be
-found on https://developers.google.com/earth-engine/datasets}
+\item{collection}{\code{string}: name of a Google Earth Engine collection.
+Collections can be found on the \href{https://developers.google.com/earth-engine/datasets}{Google Earth Engine Catalog}}
 
-\item{coords}{(list of dbl) GPS coordinates in WGS84 \link{East, North}. Minimum
-of one set of coordinates should be provided to create a point coordinate.
-If more than one set of coordinates is provided, a polygon will be created}
+\item{coords}{\code{numeric}: GPS coordinates in WGS84 [East, North]. Minimum of
+one set of coordinates should be provided to create a point coordinate. If
+more than one set of coordinates is provided, a polygon will be created}
 
-\item{date}{(str) Start date of image(s) to be collected in YYYY-MM-DD or
+\item{date}{\code{string}: Start date of image(s) to be collected in YYYY-MM-DD or
 YYYY format. If YYY-MM-DD is provided, will search the specific date only
 (which may not contain an image), unless \code{end_date} is also provided, which
 will collect images between the two dates. If YYYY is provided, all images
 within the specified year will be included in the collection}
 
-\item{end_date}{(str, optional) When paired with \code{date} argument, can define
-a date range in YYYY-MM-DD or YYYY format}
+\item{end_date}{\code{string}, \code{optional}:  When paired with \code{date} argument, can
+define a date range in YYYY-MM-DD or YYYY format}
 
-\item{buffer}{(int, optional) If \code{coords} is a single point, \code{buffer} can be
-used to create a circular buffer with the specific radius in metres. If
-\code{coords} contains more than one set of coordinates, this argument does
+\item{buffer}{\code{integer}, \code{optional}: If \code{coords} is a single point, \code{buffer}
+can be used to create a circular buffer with the specific radius in metres.
+If \code{coords} contains more than one set of coordinates, this argument does
 nothing}
 
-\item{bound}{(logical, optional) If TRUE and \code{buffer} is set, will convert
-circular buffer to a bounding box instead. Defaults to FALSE}
+\item{bound}{\code{logical}, \code{optional}: If \code{buffer} contains an integer value,
+this agrument will convert the circular buffer to a bounding box instead.
+Defaults to FALSE}
 
-\item{config}{(str, optional) Path to a configuration file in .yaml format.
-When this is provided, all arguments are ignored and the function will
-refer to the configuration file to determine argument values}
+\item{config}{\code{string}, \code{optional}: Path to a configuration file in .yaml
+format. When this is provided, all arguments are ignored and the function
+will refer to the configuration file to determine argument values}
 }
 \value{
 an object containing attributes necessary to preprocess and and
@@ -52,9 +53,11 @@ Define Google Earth Engine data to collect
 }
 \examples{
 
-ee_collect(collection = "LANDSAT/LC09/C02/T1_L2",
-           coords = c(149.769345,-30.335861, 149.949173,-30.206271),
-           date = "2021-06-01",
-           end_date = "2022-06-01")
+ee_collect(
+  collection = "LANDSAT/LC09/C02/T1_L2",
+  coords = c(149.769345, -30.335861, 149.949173, -30.206271),
+  date = "2021-06-01",
+  end_date = "2022-06-01"
+)
 
 }

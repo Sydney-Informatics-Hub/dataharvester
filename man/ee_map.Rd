@@ -2,13 +2,16 @@
 % Please edit documentation in R/earthengine.R
 \name{ee_map}
 \alias{ee_map}
-\title{Visualise an Earth Engine Image or ImageCollection on an interactive map}
+\title{Visualise an Earth Engine Image or Image Collection on an interactive map}
 \usage{
 ee_map(object, bands, minmax = NULL, palette = NULL)
 }
 \arguments{
-\item{save_to}{}
+\item{object}{\code{object}: a data object produced by \code{\link[=ee_collect]{ee_collect()}}}
+
+\item{palette}{}
 }
 \description{
-Visualise an Earth Engine Image or ImageCollection on an interactive map
+A \href{http://python-visualization.github.io/folium/}{folium} map is produced and
+image(s) collected so far are displayed as layer(s) on top of the map.
 }

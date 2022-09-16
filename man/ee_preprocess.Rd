@@ -13,24 +13,26 @@ ee_preprocess(
 )
 }
 \arguments{
-\item{object}{(object) a data object produced by \code{ee_collect()}}
+\item{object}{\code{object}: a data object produced by \code{\link[=ee_collect]{ee_collect()}}}
 
-\item{mask_clouds}{(logical, optional) if TRUE, will perform cloud and shadow
-masking on image(s). Defaults to TRUE}
+\item{mask_clouds}{\code{logical}, \code{optional}: perform cloud and shadow masking on
+image(s). Defaults to TRUE}
 
-\item{reduce}{(str, optional) Summary technique used to reduce an image
+\item{reduce}{\code{string}, \code{optional}: summary technique used to reduce an image
 collection to a single composite. Defaults to "median"}
 
-\item{spectral}{(logical, optional) If TRUE, will automatically calculate
-spectral index based on \href{https://github.com/awesome-spectral-indices/awesome-spectral-indices}{Awesome Spectral Indices}.
-If required bands are not available, the calculation will be skipped.
-Defaults to NULL}
+\item{spectral}{\code{logical}, \code{optional}: automatically calculate spectral index
+based on \href{https://is.gd/T1ogFV}{Awesome Spectral Indices}. If required
+bands are not available, the calculation will be skipped. Defaults to NULL}
 
-\item{clip}{(logical, optional)}
+\item{clip}{\code{logical}, \code{optional}: clip the image (removing surrounding
+data). This mostly affects visualisation - the final download will always
+respect the bounding box set by \code{coords}, regardless of this value.
+Defaults to TRUE}
 }
 \value{
-an updated \code{ee_collect()} object that can be passed on to \code{ee_map()},
-\code{ee_aggregate()} or \code{ee_download()}
+an updated \code{\link[=ee_collect]{ee_collect()}} object that can be passed on to \code{\link[=ee_map]{ee_map()}},
+\code{\link[=ee_aggregate]{ee_aggregate()}} or \code{\link[=ee_download]{ee_download()}}
 }
 \description{
 Obtain image stacks from a Google Earth Engine catalog collection for
@@ -45,10 +47,12 @@ by the function, \code{ee_collect()}
 }
 \examples{
 
-img <- ee_collect(collection = "LANDSAT/LC09/C02/T1_L2",
-                  coords = c(149.769345,-30.335861, 149.949173,-30.206271),
-                  date = "2021-06-01",
-                  end_date = "2022-06-01")
+img <- ee_collect(
+  collection = "LANDSAT/LC09/C02/T1_L2",
+  coords = c(149.769345, -30.335861, 149.949173, -30.206271),
+  date = "2021-06-01",
+  end_date = "2022-06-01"
+)
 
 ee_preprocess(img, spectral = "NDVI")
 

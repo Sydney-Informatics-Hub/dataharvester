@@ -7,12 +7,16 @@
 ee_aggregate(object, frequency = "month", reduce_by = NULL)
 }
 \arguments{
-\item{object}{(object) a data object produced by \code{ee_collect()}}
+\item{object}{\code{object}: a data object produced by \code{\link[=ee_collect]{ee_collect()}}}
 
-\item{frequency}{(str, optional) either \code{"month"} or \code{"year"} are accepted}
+\item{frequency}{\code{str}, \code{optional}: either \code{"month"} or \code{"year"} are accepted}
 
-\item{reduce_by}{(str, optional) summary statistic or technique to perform on
+\item{reduce_by}{\code{str}, \code{optional}: summary statistic or technique to perform on
 aggregated data. If NULL (default), will calculate the mean per period}
+}
+\value{
+an updated \code{\link[=ee_collect]{ee_collect()}} object that can be passed on to \code{\link[=ee_map]{ee_map()}},
+or \code{\link[=ee_download]{ee_download()}}
 }
 \description{
 Performs simple temporal aggregation of Earth Engine Image collections by
@@ -20,4 +24,17 @@ month or year. For example, it can calculate the maximum normalized
 difference vegetation index (NDVI) of an area of interest for each year. Note
 that processing times can increase substantially with an increased number of
 images.
+}
+\examples{
+
+img <- ee_collect(
+  collection = "LANDSAT/LC09/C02/T1_L2",
+  coords = c(149.769345, -30.335861, 149.949173, -30.206271),
+  date = "2021-06-01",
+  end_date = "2022-06-01"
+)
+
+ee_preprocess(img, spectral = "NDVI")
+# ee_aggregate(img, reduce_by = "median")
+
 }
