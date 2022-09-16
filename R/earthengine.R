@@ -25,19 +25,19 @@
 #'   will refer to the configuration file to determine argument values
 #'
 #' @return an object containing attributes necessary to preprocess and and
-#'   download images for all other `ee_*()` functions
+#'   download images for all other `*_ee()` functions
 #' @export
 #'
 #' @examples
 #'
-#' ee_collect(
+#' collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
 #'   date = "2021-06-01",
 #'   end_date = "2022-06-01"
 #' )
 #'
-ee_collect <- function(collection = NULL, coords = NULL, date = NULL,
+collect_ee <- function(collection = NULL, coords = NULL, date = NULL,
                        end_date = NULL, buffer = NULL, bound = FALSE,
                        config = NULL) {
   path <- system.file("python", package = "dataharvester")
@@ -62,9 +62,9 @@ ee_collect <- function(collection = NULL, coords = NULL, date = NULL,
 #' max, mean, quantile or standard deviation of the images. For unsupported
 #' collections, certain functions like scaling, offsetting, spectral indices and
 #' cloud/shadow masking may not be available. Must be used on an object created
-#' by the function, `ee_collect()`
+#' by the function, [collect_ee()]
 #'
-#' @param object `object`: a data object produced by [ee_collect()]
+#' @param object `object`: a data object produced by [collect_ee()]
 #' @param mask_clouds `logical`, `optional`: perform cloud and shadow masking on
 #'   image(s). Defaults to TRUE
 #' @param reduce `string`, `optional`: summary technique used to reduce an image
@@ -77,23 +77,23 @@ ee_collect <- function(collection = NULL, coords = NULL, date = NULL,
 #'   respect the bounding box set by `coords`, regardless of this value.
 #'   Defaults to TRUE
 #'
-#' @return an updated [ee_collect()] object that can be passed on to [ee_map()],
-#'   [ee_aggregate()] or [ee_download()]
+#' @return an updated [collect_ee()] object that can be passed on to [map_ee()],
+#'   [aggregate_ee()] or [download_ee()]
 #'
 #' @export
 #'
 #' @examples
 #'
-#' img <- ee_collect(
+#' img <- collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
 #'   date = "2021-06-01",
 #'   end_date = "2022-06-01"
 #' )
 #'
-#' ee_preprocess(img, spectral = "NDVI")
+#' preprocess_ee(img, spectral = "NDVI")
 #'
-ee_preprocess <- function(object, mask_clouds = TRUE, reduce = "median",
+preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
                           spectral = NULL, clip = TRUE) {
   object$preprocess(mask_clouds, reduce, spectral, clip)
   return(object)
@@ -107,28 +107,28 @@ ee_preprocess <- function(object, mask_clouds = TRUE, reduce = "median",
 #' that processing times can increase substantially with an increased number of
 #' images.
 #'
-#' @param object `object`: a data object produced by [ee_collect()]
+#' @param object `object`: a data object produced by [collect_e()]
 #' @param frequency `str`, `optional`: either `"month"` or `"year"` are accepted
 #' @param reduce_by `str`, `optional`: summary statistic or technique to perform on
 #'   aggregated data. If NULL (default), will calculate the mean per period
 #'
-#' @return an updated [ee_collect()] object that can be passed on to [ee_map()],
-#'   or [ee_download()]
+#' @return an updated [collect_ee()] object that can be passed on to [map_ee()],
+#'   or [download_ee()]
 #' @export
 #'
 #' @examples
 #'
-#' img <- ee_collect(
+#' img <- collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
 #'   date = "2021-06-01",
 #'   end_date = "2022-06-01"
 #' )
 #'
-#' ee_preprocess(img, spectral = "NDVI")
-#' # ee_aggregate(img, reduce_by = "median")
+#' preprocess_ee(img, spectral = "NDVI")
+#' # aggregate_ee(img, reduce_by = "median")
 #'
-ee_aggregate <- function(object, frequency = "month", reduce_by = NULL) {
+aggregate_ee <- function(object, frequency = "month", reduce_by = NULL) {
   object$aggregate(frequency, reduce_by)
   return(object)
 }
@@ -138,7 +138,7 @@ ee_aggregate <- function(object, frequency = "month", reduce_by = NULL) {
 #' A [folium](http://python-visualization.github.io/folium/) map is produced and
 #' image(s) collected so far are displayed as layer(s) on top of the map.
 #'
-#' @param object `object`: a data object produced by [ee_collect()]
+#' @param object `object`: a data object produced by [collect_ee()]
 #' @param bands
 #' @param minmax
 #' @param palette
@@ -147,7 +147,7 @@ ee_aggregate <- function(object, frequency = "month", reduce_by = NULL) {
 #' @export
 #'
 #' @examples
-ee_map <- function(object, bands, minmax = NULL, palette = NULL) {
+map_ee <- function(object, bands, minmax = NULL, palette = NULL) {
   # Generate filename for html
   tempDir <- tempfile()
   dir.create(tempDir)
@@ -163,7 +163,7 @@ ee_map <- function(object, bands, minmax = NULL, palette = NULL) {
 #' Images are saved as GeoTIFF (.tif) files containing geospatial data, unless
 #' otherwise specified in `out_format`.
 #'
-#' @param object (object) a data object produced by `ee_collect()`
+#' @param object (object) a data object produced by `collect_ee()`
 #' @param bands
 #' @param scale
 #' @param outpath
@@ -174,7 +174,7 @@ ee_map <- function(object, bands, minmax = NULL, palette = NULL) {
 #' @export
 #'
 #' @examples
-ee_download <- function(object, bands = NULL, scale = NULL, outpath = NULL,
+download_ee <- function(object, bands = NULL, scale = NULL, outpath = NULL,
                         out_format = NULL, overwrite = TRUE) {
   object$download(bands, scale, outpath, out_format, overwrite)
   return(object)
