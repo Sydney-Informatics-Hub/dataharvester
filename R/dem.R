@@ -3,8 +3,8 @@
 #' Wrapper funtion to get the layers from the Geoscience Australia DEM 1 arc
 #' second grid.
 #'
-#' @param layer `string`: list of layer names to download
-#' @param out_path `string`:
+#' @param layer `string`: layer name(s) to download
+#' @param out_path `string`: path to output folder e.g. 'downloads/'
 #' @param bounding_box `numeric`:
 #' @param resolution `integer`, `optional`:
 #'
@@ -12,6 +12,7 @@
 #' @export
 #'
 #' @examples
+#' NULL
 download_dem <- function(layer,
                          out_path,
                          bounding_box, zresolution = 1) {

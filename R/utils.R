@@ -1,10 +1,7 @@
 #' (Internal) Source module stored in python folder
 #'
-#' @param modulename
-#' @param rpackage
-#' @param report
-#'
 #' @export
+#' @noRd
 dd_source_python <- function(modulename, rpackage, report = FALSE) {
   filename <- paste0("python/", modulename, ".py")
   path <- dirname(system.file(filename, package = rpackage))
@@ -14,11 +11,9 @@ dd_source_python <- function(modulename, rpackage, report = FALSE) {
   reticulate::import_from_path(modulename, path, convert = FALSE)
 }
 
-#' Match to one value in a function's argument
+#' (Internal) Match to one value in a function's argument
 #'
-#' @param arg
-#'
-#' @return
+#' @export
 #' @noRd
 match_single <- function(arg) {
   # credit: https://stackoverflow.com/a/72438444
@@ -36,11 +31,9 @@ match_single <- function(arg) {
   }
 }
 
-#' Match to multiple values in a function's argument
+#' (Internal) Match to multiple values in a function's argument
 #'
-#' @param arg
-#'
-#' @return
+#' @export
 #' @noRd
 match_multi <- function(arg) {
   # credit: https://stackoverflow.com/a/72438444
@@ -63,10 +56,8 @@ match_multi <- function(arg) {
 #' This functions does not have any arguments. The dataframe can be updated with
 #' the [update_logtable()] function.
 #'
-#' @return
+#' @return a data frame object
 #' @export
-#'
-#' @examples
 init_logtable <- function() {
   # Import module
   path <- system.file("python", package = "dataharvester")
@@ -85,19 +76,23 @@ init_logtable <- function() {
 #' processing. The dataframe is simultaneoulsy saved to a csv file in default
 #' output directory.
 #'
-#' @param logname
-#' @param file_name
-#' @param layer
-#' @param source
-#' @param settings
-#' @param layertitles
-#' @param agfunctions
-#' @param loginfos
+#' @param logname `string`: name of data frame object created from
+#'   [init_logfile()]
+#' @param file_name `string`: file name(s) to add to the data frame
+#' @param layer `string`: layer name(s) to add to the data frame
+#' @param source `string`: the download source, abbreviated. For example, "DEA"
+#' @param settings `object`: a settings object
+#' @param layertitles `string` : layer title(s) to add to the data frame, used
+#'   in certain situations e.g. labels for summary plots
+#' @param agfunctions aggregation/summary functions used (e.g. mean) or an
+#'   specified aggregation requested (e.g. 0-5 m) for the layer
+#' @param loginfos `string`: status of layer, e.g. "processed"
 #'
-#' @return
+#' @return a data frame object
 #' @export
 #'
 #' @examples
+#' NULL
 update_logtable <- function(logname,
                                 file_name,
                                 layer,

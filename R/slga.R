@@ -1,18 +1,25 @@
 #' Download layers from SLGA data server
 #'
-#' @param layer
-#' @param bounding_box
-#' @param out_path
-#' @param resolution
-#' @param depth_min
-#' @param depth_max
-#' @param get_ci
-#' @param verbose
+#' @param layer `string`: layer name(s) to download
+#' @param bounding_box `numeric`: coordinates in EPSG:4326 use to generate a
+#'   bounding box around are of interest, i.e. `c(min_x, min_y, max_x, max_y)`
+#' @param out_path `string`: path to output folder e.g. 'downloads/'
+#' @param resolution `numeric`, `optional`: resolution in arcsec. Defaults to 3
+#'   arcsec (~ 90 m), which is the native resolution of SLGA data
+#' @param depth_min `integer`, `optional`: SLGA layers are aggregated by depth.
+#'   Use `depth_min` and `depth_max` to define specific depths to collect
+#' @param depth_max `integer`, `optional`: SLGA layers are aggregated by depth.
+#'   Use `depth_min` and `depth_max` to define specific depths to collect
+#' @param get_ci `logical`, `optional`: download upper and lower 95% confidence
+#'   limits with the the layer. Defaults to TRUE
+#' @param verbose `logical`, `optional`: print as much information as possible
+#'   to the debug log. Defaults to FALSE
 #'
-#' @return
+#' @return path name(s) of layer(s) downloaded
 #' @export
 #'
 #' @examples
+#' NULL
 download_slga <- function(layer,
                           bounding_box,
                           out_path,

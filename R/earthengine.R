@@ -29,6 +29,7 @@
 #' @export
 #'
 #' @examples
+#' NULL
 #'
 #' collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
@@ -83,6 +84,7 @@ collect_ee <- function(collection = NULL, coords = NULL, date = NULL,
 #' @export
 #'
 #' @examples
+#' NULL
 #'
 #' img <- collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
@@ -112,7 +114,7 @@ preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
 #' @param reduce_by `str`, `optional`: summary statistic or technique to perform on
 #'   aggregated data. If NULL (default), will calculate the mean per period
 #'
-#' @return an updated [collect_ee()] object that can be passed on to [map_ee()],
+#' @return an updated [collect_ee()] object that can be passed on to [map_ee()]
 #'   or [download_ee()]
 #' @export
 #'
@@ -138,16 +140,28 @@ aggregate_ee <- function(object, frequency = "month", reduce_by = NULL) {
 #' A [folium](http://python-visualization.github.io/folium/) map is produced and
 #' image(s) collected so far are displayed as layer(s) on top of the map.
 #'
-#' @param object `object`: a data object produced by [collect_ee()]
-#' @param bands
-#' @param minmax
-#' @param palette
+#' @param object `object`: a data object produced by [collect_e()]
+#' @param bands `string`, `optional`: a string or list of strings representing
+#'   the bands to be visualised. If NULL, will present a list of available bands
+#'   to visualise
+#' @param minmax `numeric`, `optional`: A list of two integers representing the
+#'   minimum and maximum values for image pixel colours in single-band images.
+#'   If set to NULL, the min and max values are automatically calculated
+#'   Defaults to NULL
+#' @param palette `string`, `optional`: A string representing the name of a
+#'   palette to be used for map colors. Names are accessed from Matplotlib
+#'   Colourmaps as described in
+#'   https://matplotlib.org/stable/tutorials/colors/colormaps.html. In addition,
+#'   "ndvi", "ndwi" and "terrain" palettes are available. If set to None,
+#'   "viridis" is used. Defaults to NULL
 #'
-#' @return
+#' @return an updated [collect_ee()] object that can be passed on to
+#'   [aggregate_ee()] or [download_ee()]
 #' @export
 #'
 #' @examples
-map_ee <- function(object, bands, minmax = NULL, palette = NULL) {
+#' NULL
+map_ee <- function(object, bands = NULL, minmax = NULL, palette = NULL) {
   # Generate filename for html
   tempDir <- tempfile()
   dir.create(tempDir)
@@ -163,19 +177,25 @@ map_ee <- function(object, bands, minmax = NULL, palette = NULL) {
 #' Images are saved as GeoTIFF (.tif) files containing geospatial data, unless
 #' otherwise specified in `out_format`.
 #'
-#' @param object (object) a data object produced by `collect_ee()`
-#' @param bands
-#' @param scale
-#' @param outpath
-#' @param out_format
-#' @param overwrite
+#' @param object `object`: a data object produced by [collect_e()]
+#' @param bands `string`: a string or list of strings representing the bands to
+#'   be downloaded
+#' @param scale `numeric`, `optional`: a number represeting the scale of a pixel
+#'   in metres. If set to NULL, will use a scale of 100 m. Defaults to NULL
+#' @param out_path `string`, `optional`: a string representing the path to the
+#'   output directory. If set to NULL, will use the current working directory
+#'   and add a "downloads/" folder. Defaults to NULL
+#' @param out_format `string`, `optional`: Save image as GeoTIFF (.tif), JPEG
+#'   (.jpg) or PNG (.png). Defaults to .tif
+#' @param overwrite `logical`, `optional`: overwrite existing file if it already
+#'   exists. Defaults to NULL
 #'
-#' @return
 #' @export
 #'
 #' @examples
-download_ee <- function(object, bands = NULL, scale = NULL, outpath = NULL,
+#' NULL
+download_ee <- function(object, bands = NULL, scale = NULL, out_path = NULL,
                         out_format = NULL, overwrite = TRUE) {
-  object$download(bands, scale, outpath, out_format, overwrite)
+  object$download(bands, scale, out_path, out_format, overwrite)
   return(object)
 }
