@@ -6,7 +6,7 @@
 #' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
 #'
 #' @export
-initialise <- function(env = NULL, earthengine = FALSE) {
+initialise_harvester <- function(env = NULL, earthengine = FALSE) {
   cli::cli_h1("Welcome to AgReFed Data-Harvester")
   message("\n\u2139 Checking if dataharvesteR has been set up appropriately")
   tryCatch(
@@ -23,7 +23,7 @@ initialise <- function(env = NULL, earthengine = FALSE) {
   # Initialise Earth Engine is set
   if (earthengine) {
     message("\u2139 Set up Earth Engine API access")
-    eepy <- dd_source_python("getdata_ee", "dataharvestR")
+    eepy <- dd_source_python("getdata_ee", "dataharvester")
     eepy$initialise()
   }
   return(invisible(TRUE))

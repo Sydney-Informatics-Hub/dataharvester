@@ -31,16 +31,20 @@ source software is released under the LGPL-3.0 License.
 
 """
 import datetime
+import dateutil
 import ee
 import eemont  # trunk-ignore(flake8/F401)
-import geemap as geemap
+import geemap.foliumap as geemap
 import geemap.colormaps as cm
 import math
 import os
 import requests
 import rioxarray
 import subprocess
+import wxee  # trunk-ignore(flake8/F401)
 import yaml
+import urllib
+import json
 
 from alive_progress import alive_bar
 from alive_progress import config_handler
@@ -52,9 +56,11 @@ from termcolor import colored
 from termcolor import cprint
 from tqdm.notebook import tqdm
 
+import settingshandler as sh
+
 # Not used yet (but used during development, might be useful later)
 # import warnings
-# import wxee
+
 # from IPython.display import Image
 # import traceback
 # from datetime import datetime
@@ -97,39 +103,42 @@ def initialise():
     try:
         if not ee.data._credentials:
             with alive_bar(
-                total=1, title=colored("\u2139 Initialising Earth Engine...", "blue")
+                total=1, title=colored("• Initialising Earth Engine...", "blue")
             ) as bar:
                 ee.Initialize()
                 bar(1)
         else:
-            print(colored("\u2139 Initialising Earth Engine...", "blue"))
-            print(colored("✔ Earth Engine API already authenticated", "green"))
+            cprint("• Initialising Earth Engine...", "blue")
+            cprint("✔ Earth Engine API already authenticated", "blue")
             return
-        print(colored("✔ Earth Engine authenticated", "green"))
+        cprint("✔ Earth Engine authenticated", "blue")
     # If error pops up, it is likely that user has not performed Earth Engine
     # authentication in CLI. Prompt them to do so (faster than Python
     # ee.Authenticate)
     except ee.EEException:
         print(
             colored(
-                "\u2139 Unable to authorise access to your Google Earth Engine account",
+                "✘ Unable to authorise access to your Google Earth Engine account",
                 "red",
             )
         )
-        print("Running `earthengine authenticate`...")
+        print("ⓘ Running `earthengine authenticate`...")
         bashCommand = "earthengine authenticate"
         subprocess.run(bashCommand, shell=True)
 
 
-class harvest_ee:
+class collect:
     """
     A class to manipulate Google Earth Engine objects
 
     This class brings additional packages into the mix to manipulate Earth
-    Engine objects, especially images.
+    Engine objects, specifically images.
 
     Attributes
     ----------
+    config: str
+        Path string to a YAML configuration file. A default configuration file
+        can be generated for editing using `template()` method.
     collection: str
         A Google Earth Engine collection. Collections can be found on
         https://developers.google.com/earth-engine/datasets
@@ -150,44 +159,54 @@ class harvest_ee:
 
     Methods
     -------
-    preprocess(): filter, mask, buffer, reduce and/or clip an image collection
-    aggregate(): perform temporal aggregation on an image collection map():
-    preview an image or image collection download(): download an image or image
-    collection
+    preprocess():
+        filter, mask, buffer, reduce and/or clip an image collection
+    aggregate():
+        perform temporal aggregation on an image collection
+    map():
+        preview an image or image collection
+    download():
+        download an image or image collection in tif, png or csv format
     """
 
     def __init__(
         self,
-        config=None,
         collection=None,
         coords=None,
         date=None,
         end_date=None,
         buffer=None,
         bound=False,
+        config=None,
     ):
-        # TODO: complete config file option
+        # Stop if minimum requirements are not met
         if config is None and any(a is None for a in [collection, coords, date]):
             raise ValueError(
-                "Please provide path to a config file. Otherwise, at least "
-                + "collection, coordinates and date must be provided"
+                "Please supply either a path to a YAML file in 'config', or "
+                + "fill in all the required arguments for at least "
+                + "'collection', 'coords' and 'date'"
             )
         elif config is not None:
-            cprint(
-                "• Config file provided - all attributes will be obtained "
-                + "from the .yaml file",
-                "blue",
-            )
+            # Open and aggregate configuration settings into groups
             with open(config, "r") as f:
+                # TODO: put into kwargs at some point to clean this up
                 yaml_vals = yaml.load(f, Loader=yaml.SafeLoader)
                 gee_config = yaml_vals["target_sources"]["GEE"]
                 gee_process = gee_config["process"]
                 gee_aggregate = gee_config["aggregate"]
                 gee_download = gee_config["download"]
+                # Class attributes:
                 collection = gee_process["collection"]
-                coords = gee_process["coords"]
-                date = gee_process["date"]
-                end_date = gee_process["end_date"]
+                if coords is not None:
+                    coords = gee_process["coords"]
+                # If target_dates has 1 entry we could use it
+                # TODO: add support for multiple dates on top of range in GEE config
+                if len(yaml_vals["target_dates"]) == 1 and gee_process["date"] is None:
+                    date = yaml_vals["target_dates"]
+                    end_date = None
+                else:
+                    date = gee_process["date"]
+                    end_date = gee_process["end_date"]
                 buffer = gee_process["buffer"]
                 bound = gee_process["bound"]
                 # check dates
@@ -195,11 +214,16 @@ class harvest_ee:
                     date = date.strftime("%Y-%m-%d")
                 if isinstance(end_date, datetime.date):
                     end_date = end_date.strftime("%Y-%m-%d")
+                # cprint("ⓘ Configuration file parsed")
+            # Ok, store method-specific settings
+            self.yaml_vals = yaml_vals
             self.gee_config = gee_config
             self.gee_process = gee_process
             self.gee_aggregate = gee_aggregate
             self.gee_download = gee_download
-        # Set attributes from config file
+        # check that collection exists in GEE catalog
+        valid = validate_collection(collection)
+        # Finalise
         self.collection = collection
         self.coords = coords
         self.date = date
@@ -215,6 +239,7 @@ class harvest_ee:
         self.scale = None
         self.minmax = None
         self.image_count = 1
+        self.valid = valid
 
     def preprocess(
         self,
@@ -262,7 +287,7 @@ class harvest_ee:
             An Earth Engine object which can be further manipulated should the
             user not choose to use other methods in the class.
         """
-        cprint("  Running preprocess()", None, attrs=["bold"])
+        cprint("\n⏱ Running preprocess()")
         # Check if user has provided a config file
         if self.hasconfig is True:
             mask_clouds = self.gee_process["mask_clouds"]
@@ -273,20 +298,27 @@ class harvest_ee:
             aoi = ee.Geometry.Rectangle(self.coords)
         elif len(self.coords) == 2:
             aoi = ee.Geometry.Point(self.coords)
-        # Is there a buffer?
-        if self.buffer is not None:
+        # Is there a buffer? Is a point supplied? Then buffer it
+        if self.buffer is not None and len(self.coords) == 2:
             aoi = aoi.buffer(self.buffer)
-        if self.bound is True:
+        if self.bound is True and self.buffer is not None:
             aoi = aoi.bounds()
         # Filter dates
         img = ee.ImageCollection(self.collection).filterBounds(aoi)
         img = img.filterDate(self.date, self.end_date)
+        # Check if there are any images by verifying that image bands exist
+        try:
+            img.first().bandNames().getInfo()
+        except ee.EEException:
+            cprint(
+                "✘ No images - please verify date range. Processing cancelled",
+                "red",
+                attrs=["bold"],
+            )
         # Count images if reduce is None:
         if reduce is False or reduce is None:
             reduce = None
-            with spin(
-                "•", "Image collection requested, counting images...", "blue"
-            ) as s:
+            with spin("• Image collection requested, counting images...", "blue") as s:
                 image_count = int(img.size().getInfo())
                 if image_count > 0:
                     self.image_count = image_count  # store for later use
@@ -301,17 +333,33 @@ class harvest_ee:
             pass
         if mask_clouds:
             try:
-                with spin(
-                    "•", "Applying scale, offset and cloud masks...", "blue"
-                ) as s:
+                with spin("• Applying scale, offset and cloud masks...", "blue") as s:
                     img = img.maskClouds()
                     s(1)
             except Exception:
                 pass
         # Spectral index
+        # Validation: check if spectral index is supported
+        full_list = list(get_indices().keys())
+        spectral_list = [spectral] if isinstance(spectral, str) else spectral
+        if not set(spectral_list).issubset(full_list):
+            raise Exception(
+                cprint(
+                    "✘ At least one of your spectral indices is not valid. "
+                    "Please check the list of available indices at "
+                    "https://awesome-ee-spectral-indices.readthedocs.io/en/latest/."
+                    " Processing cancelled",
+                    "red",
+                    attrs=["bold"],
+                )
+            )
+
         if spectral is not None:
-            with spin("•", f"Computing spectral index: {spectral}", "blue") as s:
-                img = img.spectralIndices(spectral, online=True)
+            with spin(f"• Computing spectral index: {spectral}", "blue") as s:
+                try:
+                    img = img.spectralIndices(spectral, online=True)
+                except Exception:
+                    pass
                 s(1)
         # Function to map to collection
         def clip_collection(image):
@@ -326,7 +374,7 @@ class harvest_ee:
         if reduce is None:
             cprint(f"• Selected {image_count} image(s) without aggregation", "blue")
         elif reduce in reducers:
-            with spin("•", f"Reducing image pixels by {reduce}", "blue") as s:
+            with spin(f"• Reducing image pixels by {reduce}", "blue") as s:
                 func = getattr(img, reduce)
                 img = func()
                 s(1)
@@ -336,22 +384,36 @@ class harvest_ee:
         self.spectral = spectral
         self.ee_sample = ee_sample
         self.ee_image = img
-        print(
-            colored(
-                "✔ Done",
-                "green",
-            )
-        )
+        cprint("✔ Google Earth Engine preprocessing complete", "blue")
         return img
 
-    def aggregate(self, frequency="month", **kwargs):
+    def aggregate(self, frequency="month", reduce_by=None, **kwargs):
+        """
+        Aggregate an Earth Engine Image or ImageCollection by period
+
+        Parameters
+        ----------
+        frequency : str, optional
+            aggregation frequency, either by "day". "week" or "month", by
+            default "month"
+        """
+        cprint("\n⏱ Running aggregate()")
+        if reduce_by is None:
+            reducer = ee.Reducer.mean()
+        # Check if user has provided a config file
+        if self.hasconfig is True:
+            frequency = self.gee_aggregate["frequency"]
+            reduce_by = self.gee_aggregate["reduce_by"]
+            cprint(f"Using ee.Reducer.{reduce_by}", "yellow")
         img = self.ee_image
+        # Convert to wxee object
         ts = img.wx.to_time_series()
-        print("BEFORE....")
+        cprint("\u2139 Initial aggregate", "blue")
         ts.describe()
-        out = ts.aggregate_time(frequency=frequency)
-        print("AFTER... WOOOT")
-        out.describe()
+        out = ts.aggregate_time(frequency=frequency, reducer=reducer)
+        with spin("• Calculating new temporal aggregate...", "blue") as s:
+            out.describe()
+            s(1)
         self.ee_image = out
 
     def map(self, bands, minmax=None, palette=None, save_to=None, **kwargs):
@@ -384,7 +446,7 @@ class harvest_ee:
         ValueError
             If the bands are not valid or not present in the image.
         """
-        cprint("  Running map()", None, attrs=["bold"])
+        cprint("\n⏱ Running map()")
         # Check that preprocess() has been called
         img = self.ee_image
         if img is None:
@@ -419,7 +481,7 @@ class harvest_ee:
             )
         # Create min and max parameters for map
         if minmax is None:
-            with spin("•", "Detecting band min and max parameters...", "blue") as s:
+            with spin("• Detecting band min and max parameters...", "blue") as s:
                 # Scale here is just for visualisation purposes
                 if len(bands) == 1:
                     minmax = stretch_minmax(
@@ -486,12 +548,12 @@ class harvest_ee:
         bands=None,
         scale=None,
         outpath=None,
-        image_format=None,
-        preview=False,
+        out_format=None,
+        overwrite=True,
         **kwargs,
     ):
         """
-        Download an Earth Engine Image or ImageCollection to disk
+        Download an Earth Engine asset to disk and update logtable
 
         Parameters
         ----------
@@ -507,11 +569,9 @@ class harvest_ee:
             A string representing the path to the output directory. If set to
             None, will use the current working directory and add a "downloads"
             folder, by default None
-        image_format : str, optional
+        out_format : str, optional
             One of the following strings: "png", "jpg", "tif". If set to None,
             will use "tif", by default None
-        preview : bool, optional
-            Generate a preview of the image after downloadning, by default False
 
         Returns
         -------
@@ -521,15 +581,16 @@ class harvest_ee:
         Raises
         ------
         ValueError
-            If image_format is not one of 'png', 'jpg', 'tif'.
+            If out_format is not one of 'png', 'jpg', 'tif'.
         """
-        cprint("  Running get()", None, attrs=["bold"])
+        cprint("\n⏱ Running download()")
         # Check if user has provided a config file
         if self.hasconfig is True:
             bands = self.gee_download["bands"]
             scale = self.gee_download["scale"]
-            outpath = self.gee_download["outpath"]
-            image_format = self.gee_download["image_format"]
+            outpath = self.yaml_vals["outpath"]
+            out_format = self.gee_download["out_format"]
+            overwrite = self.gee_download["overwrite"]
         # Check that preprocess() has been called
         img = self.ee_image
         if img is None:
@@ -538,19 +599,19 @@ class harvest_ee:
         # Stop if image is a pixel
         if self.aoi.getInfo()["type"] == "Point":
             cprint(
-                "\u2139 Single pixel selected. Did you set a buffer in `harvest_ee()`?",
+                "\u2139 Single pixel selected. Did you set a buffer in `collect()`?",
                 "yellow",
             )
             cprint("✘ Download cancelled", "red")
             return
-        # Stop if image_format is not png, jpg or tif
-        if image_format is None:
-            cprint(
-                "• `image_format` is set to None, downloading as GEOTIFF, 'tif'", "blue"
-            )
-            image_format = "tif"
-        elif image_format not in ["png", "jpg", "tif"]:
-            raise ValueError("image_format must be one of 'png', 'jpg' or 'tif'")
+        # Stop if out_format is not png, jpg or tif
+        if out_format is None:
+            # cprint(
+            #     "• `out_format` is set to None, downloading as GEOTIFF, 'tif'", "blue"
+            # )
+            out_format = "tif"
+        elif out_format not in ["png", "jpg", "tif"]:
+            raise ValueError("out_format must be one of 'png', 'jpg' or 'tif'")
         # Validate that at least one band is selected
         if bands is None:
             try:
@@ -562,7 +623,7 @@ class harvest_ee:
                 print(all_bands)
                 return None
         img = img.select(bands)
-        cprint(f"• Band(s) selected:{bands}", "blue")
+        cprint(f"• Band(s) selected: {bands}", "blue")
         # Throw error if scale is None, i.e. force user to set scale again
         if scale is None:
             cprint("\u2139 Scale not set, using scale=100", "yellow")
@@ -580,30 +641,125 @@ class harvest_ee:
             bands,
             self.reduce,
             scale,
-            image_format,
+            out_format,
         )
         fullpath = make_path(outpath, pathstring)
         # Download file(s)
-        is_tif = image_format.replace(".", "").lower() in ["tif", "tiff"]
-        cprint(f"• Downloading to {outpath}...", "blue")
+        is_tif = out_format.replace(".", "").lower() in ["tif", "tiff"]
+        # cprint(f"• Downloading to {outpath}...", "blue")
         if is_tif:
-            download_tif(img, self.aoi, fullpath, scale)
-            if preview:
-                preview_tif(img, bands, fullpath)
-        cprint("✔ Download(s) complete", "green")
+            filenames = download_tif(img, self.aoi, fullpath, scale, overwrite)
+            self.filenames = filenames
+        cprint("✔ Google Earth Engine download(s) complete", "blue")
         return None
 
 
+def harvest(obj, **kwargs):
+    """
+    Preprocess, aggregate and download Earth Engine assets by config file
+    """
+    # TODO: Validate that config file is present
+    if obj.hasconfig is False:
+        raise Exception("This function requires a config file supplied in `collect()`")
+    # Replace coordinates if needed
+    if kwargs["coords"] is not None:
+        obj.coords = kwargs["coords"]
+    obj.preprocess()
+    # try:
+    #     obj.aggregate()
+    # except Exception as e:
+    #     print(e)
+    obj.download()
+    return obj
+
+
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-# Common functions
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# Common functions -----------------------------------------------------------
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
-def spin(symbol=None, message=None, colour=None):
+def get_indices() -> dict:
+    """
+    Returns a dictionary of available indices from Awesome Spectral Indices
+    """
+    with urllib.request.urlopen(
+        "https://raw.githubusercontent.com/awesome-spectral-indices/awesome-spectral-indices/main/output/spectral-indices-dict.json"
+    ) as url:
+        try:
+            indices = json.loads(url.read().decode())
+        except Exception as e:
+            print(e)
+    return indices["SpectralIndices"]
+
+
+def extract_ids(img_collection):
+    """
+    Extracts the image IDs from an Earth Engine image collection
+    """
+    with spin("• Collecting image ids...", "blue") as s:
+        count = img_collection.size().getInfo()
+        tif_list = []
+        for i in range(0, count):
+            image = ee.Image(img_collection.toList(count).get(i))
+            name = image.get("system:index").getInfo() + ".tif"
+            tif_list.append(name)
+        s(1)
+    return tif_list
+
+
+def validate_collection(collection):
+    """
+    Checks whether collection ID string is a STAC in the GEE catalog
+
+    Parameters
+    ----------
+    collection : string
+        A string representing the collection ID
+
+    Returns
+    -------
+    boolean
+        True if collection is in the GEE catalog, False otherwise
+    """
+    stac_list = sh.ee_stac()
+    supported = supported_collections()
+    # Check if collection is in STAC and supported
+    if collection in stac_list and collection in list(supported.keys()):
+        return True
+    # If in STAC but not supported, print info and continue
+    elif collection in stac_list and collection not in list(supported.keys()):
+        cprint(
+            f"\u2139 Collection {collection} is not officially supported.",
+            "yellow",
+        )
+        cprint(
+            "  Some preprocessing and aggregation steps are not available",
+            "yellow",
+        )
+        return True
+    else:
+        errmsg = (
+            f"✘ Collection {collection} not found in GEE STAC. Please "
+            + "check spelling. Processing cancelled"
+        )
+        cprint(errmsg, "red", attrs=["bold"])
+        return False
+
+
+def spin(message=None, colour=None):
     """
     Spin animation as a progress inidicator
     """
-    return alive_bar(1, title=colored(f"{symbol} {message} ", colour))
+    return alive_bar(1, title=colored(f"{message} ", colour))
 
 
 def supported_collections():
@@ -631,8 +787,7 @@ def match_collection(collection):
         img.first().get("system:id").getInfo()
     except ee.EEException:
         cprint(
-            f"✘ The collection {collection} does not exist. Make sure it is "
-            + "one of below:",
+            f"✘ The collection {collection} does not exist",
             "red",
             attrs=["bold"],
         )
@@ -790,7 +945,7 @@ def generate_path_string(
     bands=None,
     reduce=None,
     scale=None,
-    ext=".tif",
+    ext="tif",
 ):
     """
     Generate a string to name a file or folder for Earth Engine downloads
@@ -810,7 +965,11 @@ def generate_path_string(
     scale = "".join([str(scale), "m"])
     # The only difference is whether to add extension to string, or not
     if isinstance(ee_image, ee.image.Image):
-        out = "_".join(filter(None, [name, date, end_date, bands, reduce, scale])) + ext
+        out = (
+            "_".join(filter(None, ["ee", name, date, end_date, bands, reduce, scale]))
+            + "."
+            + ext
+        )
     else:
         out = "_".join(filter(None, [name, date, end_date, bands, reduce, scale]))
 
@@ -911,7 +1070,7 @@ def convert_size(size_bytes):
     return "%s %s" % (s, size_name[i])
 
 
-def download_tif(image, region, path, scale, crs="EPSG:4326"):
+def download_tif(image, region, path, scale, crs="EPSG:4326", overwrite=True):
     """
     Download image to local folder as GeoTIFF
 
@@ -929,19 +1088,31 @@ def download_tif(image, region, path, scale, crs="EPSG:4326"):
         Coordinate reference system, by default "EPSG:4326"
     """
     if isinstance(image, ee.image.Image):
+        filename = os.path.basename(path)
+        # Check if path already exists and don't download if it does
+        if os.path.exists(path) and overwrite:
+            cprint(f"⚑ {filename} already exists, skipping download", "yellow")
+            return filename
+        # Otherwise download image
         with suppress():
-            # suppress tqdm if disable=True
-            tqdm.__init__ = partialmethod(tqdm.__init__, disable=False)
-            geemap.download_ee_image(
-                image=image,
-                region=region,
-                filename=path,
-                crs=crs,
-                scale=scale,
-            )
-            final_size = convert_size(os.path.getsize(path))
-            cprint(f"✔ File saved as {path} [final size {final_size}]", "green")
+            # hide tqdm if disable=True
+            tqdm.__init__ = partialmethod(tqdm.__init__, disable=True)
+            # Get filename from path
+
+            with spin(f"⇩ Downloading {filename}...", "blue") as s:
+                geemap.download_ee_image(
+                    image=image,
+                    region=region,
+                    filename=path,
+                    crs="EPSG:4326",
+                    scale=scale,
+                )
+                s(1)
+        final_size = convert_size(os.path.getsize(path))
+        cprint(f"✔ File saved as {path} [final size {final_size}]", "green")
+        return filename
     else:
+        file_list = extract_ids(image)
         geemap.download_ee_image_collection(
             collection=image,
             out_dir=path,
@@ -949,8 +1120,8 @@ def download_tif(image, region, path, scale, crs="EPSG:4326"):
             crs="EPSG:4326",
             scale=scale,
         )
-        print(f"✔ Files saved to {path}", "green")
-    return None
+        cprint(f"✔ Files saved to {path}", "green")
+    return file_list
 
 
 def preview_tif(image, bands, path, **kwargs):

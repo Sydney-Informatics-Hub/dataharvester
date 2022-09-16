@@ -31,23 +31,44 @@ This open-source software is released under the LGPL-3.0 License.
 Author: Sebastian Haan
 """
 
+import logging
 import os
-from owslib.wcs import WebCoverageService
-import rasterio
-from rasterio.plot import show
 from datetime import datetime, timezone
+
+import rasterio
 
 # logger setup
 import write_logs
-import logging
+from alive_progress import alive_bar, config_handler
+from owslib.wcs import WebCoverageService
+from rasterio.plot import show
+from termcolor import cprint, colored
 
 try:
     from osgeo import gdal
 except ImportError:
     import gdal
 
+# Progress bar config for alive-progress
+config_handler.set_global(
+    force_tty=True,
+    bar=None,
+    spinner="waves",
+    monitor=False,
+    stats=False,
+    receipt=True,
+    elapsed="{elapsed}",
+)
 
-def get_metadict():
+
+def spin(message=None, colour=None):
+    """
+    Spin animation as a progress inidicator
+    """
+    return alive_bar(1, title=colored(f"{message} ", colour))
+
+
+def get_demdict():
     """
     Get dictionary of meta data
 
@@ -68,6 +89,11 @@ def get_metadict():
         -10.000138888999906,
     ]
     demdict["resolution_arcsec"] = 1
+    demdict["layernames"] = {
+        'DEM': 'Digital Elevation Model',  
+        'Slope': 'Slope',
+        'Aspect': 'Aspect Ratio',
+    }
     return demdict
 
 
@@ -177,37 +203,39 @@ def getwcs_dem(
         write_logs.setup()
 
     if resolution is None:
-        resolution = get_metadict()["resolution_arcsec"]
+        resolution = get_demdict()["resolution_arcsec"]
 
     os.makedirs(outpath, exist_ok=True)
     # Create WCS object and get data
     try:
-        wcs = WebCoverageService(url, version="1.0.0", timeout=300)
+        with spin("• Retrieving coverage from WCS server", "blue") as s:
+            wcs = WebCoverageService(url, version="1.0.0", timeout=300)
+            s(1)
         layername = wcs["1"].title
         date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         fname_out = layername.replace(" ", "_") + "_" + date + ".tif"
         outfname = os.path.join(outpath, fname_out)
-        logging.print(f"Downloading {layername}...")
         if os.path.exists(outfname):
-            logging.warning(f"▲ | Download skipped: {layername} already exists.")
-            logging.info(f"  | Location: {outfname}")
+            cprint(f"⚑ {fname_out} already exists, skipping download", "yellow")
+            # logging.warning(f"△ | download skipped: {outfname} already exists")
         else:
-            data = wcs.getCoverage(
-                identifier="1",
-                bbox=bbox,
-                format="GeoTIFF",
-                crs=crs,
-                resx=resolution / 3600,
-                resy=resolution / 3600,
-                Styles="tc",
-            )
+            with spin(f"⇩ Downloading {fname_out}", "blue") as s:
+                data = wcs.getCoverage(
+                    identifier="1",
+                    bbox=bbox,
+                    format="GeoTIFF",
+                    crs=crs,
+                    resx=resolution / 3600,
+                    resy=resolution / 3600,
+                    Styles="tc",
+                )
+                s(1)
             # Save data to file
             with open(outfname, "wb") as f:
                 f.write(data.read())
-            logging(f"✔ | {layername}")
-            logging.info(f"  | Location: {outfname}")
+            # logging.print(f"✓ | DEM downloaded to: {outfname}")
     except:
-        logging.error("✘ | Download failed")
+        logging.error("Download failed")
         return False
     return outfname
 
@@ -252,10 +280,9 @@ def get_dem_layers(layernames, outpath, bbox, resolution=1, crs="EPSG:4326"):
                 dem_ok = True
             outfname = dem2aspect(outfname_dem)
         else:
-            print.warning(f"▲ | Layername {layername} not recognised")
+            print(f"layername {layername} not recognised")
             outfname = None
         outfnames.append(outfname)
-    logging.print("DEM download(s) complete")
     return outfnames
 
 
@@ -287,9 +314,8 @@ def dem2slope(fname_dem):
     path = os.path.dirname(fname_dem)
     fname_out = os.path.join(path, "Slope_" + fname)
     gdal.DEMProcessing(fname_out, fname_dem, "slope")
-    logging.print(f"✔ | Slope from {fname}")
-    logging.info(f"  | DEM from: {fname_dem}")
-    logging.info(f"  | Slope saved to: {fname_out}")
+    logging.info(f"✓ | DEM slope from: {fname_dem}")
+    logging.print(f"✓ | DEM slope generated at: {fname_out}")
     return fname_out
 
 
@@ -308,9 +334,8 @@ def dem2aspect(fname_dem):
     path = os.path.dirname(fname_dem)
     fname_out = os.path.join(path, "Aspect_" + fname)
     gdal.DEMProcessing(fname_out, fname_dem, "aspect")
-    logging.print(f"✔ | Aspect extracted from: {fname}")
-    logging.info(f"  | DEM aspect from: {fname_dem}")
-    logging.info(f"  | Aspect saved to: {fname_out}")
+    logging.info(f"✓ | DEM aspect from: {fname_dem}")
+    logging.print(f"✓ | DEM aspect generated at: {fname_out}")
     return fname_out
 
 

@@ -1,6 +1,8 @@
 # Settings Reader
 
 import yaml
+import urllib
+import json
 import os
 from types import SimpleNamespace  
 
@@ -23,3 +25,17 @@ def main(fname_settings = _fname_settings):
     settings = SimpleNamespace(**settings)
 
     return settings
+
+def ee_stac():
+    """
+    Returns full list of STAC IDs from the Earth Engine Data Catalog
+    """
+    try:
+        stac_url = "https://raw.githubusercontent.com/samapriya/Earth-Engine-Datasets-List/master/gee_catalog.json"
+        datasets = []
+        with urllib.request.urlopen(stac_url) as url:
+            data = json.loads(url.read().decode())
+            datasets = [item["id"] for item in data]
+        return datasets
+    except Exception as e:
+        raise Exception(e)
