@@ -15,8 +15,23 @@ download_silo(
 )
 }
 \arguments{
-\item{verbose}{}
+\item{layername}{NULL}
+
+\item{years}{NULL}
+
+\item{format_out}{NULL}
+
+\item{delete_temp}{NULL}
+
+\item{verbose}{NULL}
+
+\item{outpath}{NULL}
+
+\item{bbox}{NULL}
 }
 \description{
 Download Australian climate data from SILO
+}
+\examples{
+NULL
 }
