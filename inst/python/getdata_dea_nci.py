@@ -37,6 +37,10 @@ import rasterio
 from rasterio.plot import show
 from datetime import datetime, timezone
 
+# logger setup
+import write_logs
+import logging
+
 
 def get_deadict():
     """
@@ -44,29 +48,32 @@ def get_deadict():
 
     To update manually please run get_capabilities() to retrieve all current layer details
     """
-    deadict = {'resolution_arcsec': 1,
-    'layernames': {
-        "blend_sentinel2_landsat_nbart_daily": "Multi-sensor (Landsat and Sentinel 2) surface reflectance (Beta)",
-        "hltc_high": "DEA High Tide Composite 25m v2.0",
-        "hltc_low": "DEA Low Tide Composite 25m v2.0",
-        "item_relative": "DEA Intertidal Extents Model Relative Layer 25m v2.0",
-        "item_stddev": "DEA Intertidal Extents Model Confidence Layer 25m v2.0",
-        "landsat5_nbar_16day": "16-day DEA Landsat 5 surface reflectance",
-        "landsat5_nbar_daily": "Daily DEA Landsat 5 surface reflectance",
-        "landsat5_nbart_16day": "16-day DEA Landsat 5 terrain corrected surface reflectance",
-        "landsat5_nbart_daily": "Daily DEA Landsat 5 terrain corrected surface reflectance",
-        "landsat7_nbar_16day": "16-day DEA Landsat 7 surface reflectance",
-        "landsat7_nbar_daily": "Daily DEA Landsat 7 surface reflectance",
-        "landsat7_nbart_16day": "16-day DEA Landsat 7 terrain corrected surface reflectance",
-        "landsat7_nbart_daily": "Daily DEA Landsat 7 terrain corrected surface reflectance",
-        "landsat8_nbar_16day": "16-day DEA Landsat 8 surface reflectance",
-        "landsat8_nbar_daily": "Daily DEA Landsat 8 surface reflectance",
-        "landsat8_nbart_16day": "16-day DEA Landsat 8 terrain corrected surface reflectance",
-        "landsat8_nbart_daily": "Daily DEA Landsat 8 terrain corrected surface reflectance",
-        "sentinel2_nbart_daily": "Sentinel 2 Analysis Ready Data",
-        "wofs": "DEA Water Observation Feature Layer"}
-        }
+    deadict = {
+        "resolution_arcsec": 1,
+        "layernames": {
+            "blend_sentinel2_landsat_nbart_daily": "Multi-sensor (Landsat and Sentinel 2) surface reflectance (Beta)",
+            "hltc_high": "DEA High Tide Composite 25m v2.0",
+            "hltc_low": "DEA Low Tide Composite 25m v2.0",
+            "item_relative": "DEA Intertidal Extents Model Relative Layer 25m v2.0",
+            "item_stddev": "DEA Intertidal Extents Model Confidence Layer 25m v2.0",
+            "landsat5_nbar_16day": "16-day DEA Landsat 5 surface reflectance",
+            "landsat5_nbar_daily": "Daily DEA Landsat 5 surface reflectance",
+            "landsat5_nbart_16day": "16-day DEA Landsat 5 terrain corrected surface reflectance",
+            "landsat5_nbart_daily": "Daily DEA Landsat 5 terrain corrected surface reflectance",
+            "landsat7_nbar_16day": "16-day DEA Landsat 7 surface reflectance",
+            "landsat7_nbar_daily": "Daily DEA Landsat 7 surface reflectance",
+            "landsat7_nbart_16day": "16-day DEA Landsat 7 terrain corrected surface reflectance",
+            "landsat7_nbart_daily": "Daily DEA Landsat 7 terrain corrected surface reflectance",
+            "landsat8_nbar_16day": "16-day DEA Landsat 8 surface reflectance",
+            "landsat8_nbar_daily": "Daily DEA Landsat 8 surface reflectance",
+            "landsat8_nbart_16day": "16-day DEA Landsat 8 terrain corrected surface reflectance",
+            "landsat8_nbart_daily": "Daily DEA Landsat 8 terrain corrected surface reflectance",
+            "sentinel2_nbart_daily": "Sentinel 2 Analysis Ready Data",
+            "wofs": "DEA Water Observation Feature Layer",
+        },
+    }
     return deadict
+
 
 def getdict_license():
     """
@@ -82,8 +89,9 @@ def getdict_license():
         "attribution": " The data products are produced using Digital Earth Australia. \
 The WCS service relies on GSKY - A Scalable, Distributed Geospatial Data Service \
 from the National Centre for Environmental Information (NCI).",
-        }
+    }
     return dict
+
 
 def plot_raster(infname):
     """
@@ -96,6 +104,7 @@ def plot_raster(infname):
     data = rasterio.open(infname)
     # show image
     show(data)
+
 
 def get_capabilities(url):
     """
@@ -118,31 +127,31 @@ def get_capabilities(url):
         layer bounding boxes
     """
 
-     # Create WCS object
-    wcs = WebCoverageService(url, version='1.0.0', timeout=300)
+    # Create WCS object
+    wcs = WebCoverageService(url, version="1.0.0", timeout=300)
 
     # Get coverages and content dict keys
     content = wcs.contents
     keys = content.keys()
 
-    print('Following data layers are available:')
+    print("Following data layers are available:")
     title_list = []
     description_list = []
     bbox_list = []
     for key in keys:
-        print(f'key: {key}')
-        print(f'title: {wcs[key].title}')
+        print(f"key: {key}")
+        print(f"title: {wcs[key].title}")
         title_list.append(wcs[key].title)
-        print(f'{wcs[key].abstract}')
+        print(f"{wcs[key].abstract}")
         description_list.append(wcs[key].abstract)
-        print(f'bounding box: {wcs[key].boundingBoxWGS84}')
+        print(f"bounding box: {wcs[key].boundingBoxWGS84}")
         bbox_list.append(wcs[key].boundingBoxWGS84)
-        print('')
+        print("")
 
     return keys, title_list, description_list, bbox_list
 
 
-def get_times(url, layername, year = None):
+def get_times(url, layername, year=None):
     """
     Return available dates for layer.
 
@@ -156,7 +165,7 @@ def get_times(url, layername, year = None):
     ------
     list of dates
     """
-    wcs = WebCoverageService(url, version='1.0.0', timeout=300)
+    wcs = WebCoverageService(url, version="1.0.0", timeout=300)
     times = wcs[layername].timepositions
     if year is None:
         return times
@@ -169,7 +178,16 @@ def get_times(url, layername, year = None):
         return dates
 
 
-def get_wcsmap(outfname, layername, bbox, date, url, resolution=1, crs = 'EPSG:4326', format_out = 'GeoTIFF'):
+def get_wcsmap(
+    outfname,
+    layername,
+    bbox,
+    date,
+    url,
+    resolution=1,
+    crs="EPSG:4326",
+    format_out="GeoTIFF",
+):
     """
     Download and save geotiff from WCS layer.
 
@@ -198,7 +216,7 @@ def get_wcsmap(outfname, layername, bbox, date, url, resolution=1, crs = 'EPSG:4
     """
     # If the resolution passed is None, set to native resolution of datasource
     if resolution is None:
-        resolution = get_deadict()['resolution_arcsec']
+        resolution = get_deadict()["resolution_arcsec"]
 
     # Convert resolution into width and height pixel number
     width = abs(bbox[2] - bbox[0])
@@ -207,29 +225,40 @@ def get_wcsmap(outfname, layername, bbox, date, url, resolution=1, crs = 'EPSG:4
     nheight = int(height / resolution * 3600)
     # Get data
     if os.path.exists(outfname):
-        print(f'{outfname} already exists')
+        logging.print(f"△ | download skipped: {outfname} already exists")
     else:
         try:
-            wcs = WebCoverageService(url, version='1.0.0', timeout= 300)
-            data = wcs.getCoverage(identifier=layername,
-                time = [date],
+            wcs = WebCoverageService(url, version="1.0.0", timeout=300)
+            data = wcs.getCoverage(
+                identifier=layername,
+                time=[date],
                 bbox=bbox,
                 format=format_out,
                 crs=crs,
                 width=nwidth,
                 height=nheight,
-                Styles='tc')
+                Styles="tc",
+            )
         except:
-            print('Download failed')
+            print("Download failed")
             return False
 
         # Save data
-        with open(outfname, 'wb') as f:
+        with open(outfname, "wb") as f:
             f.write(data.read())
     return True
 
 
-def get_dea_images(layername, year, bbox, outpath, resolution=1, crs = 'EPSG:4326', format_out = 'GeoTIFF'):
+def get_dea_images(
+    layername,
+    year,
+    bbox,
+    outpath,
+    resolution=1,
+    crs="EPSG:4326",
+    format_out="GeoTIFF",
+    verbose=False,
+):
     """
     Get all satellite images from DEA for a given layer and year.
     Downloaded images are saved either as GeoTIFF or NetCDF.
@@ -255,27 +284,36 @@ def get_dea_images(layername, year, bbox, outpath, resolution=1, crs = 'EPSG:432
     ------
     Exited ok: boolean
     """
+    # Logger setup
+    if verbose:
+        write_logs.setup(level="info")
+    else:
+        write_logs.setup()
+
     os.makedirs(outpath, exist_ok=True)
 
     # If the resolution passed is None, set to native resolution of datasource
     if resolution is None:
-        resolution = get_deadict()['resolution_arcsec']
+        resolution = get_deadict()["resolution_arcsec"]
 
     # URL
     url = "https://gsky.nci.org.au/ows/dea?service=WCS&version=1.0.0&request=GetCapabilities"
 
     # Check if layername is defined
     dict_dea = get_deadict()
-    if layername not in dict_dea['layernames']:
-        print(f'{layername} not a DEA layer. Please select one of the following:')
+    if layername not in dict_dea["layernames"]:
+        logging.print(f"{layername} not a DEA layer. Check log for suggestions")
+        logging.info(
+            f"{layername} not a DEA layer. Please select one of the following:"
+        )
         for key in dict_dea:
-            print(key)
+            logging.info(key)
 
     # Get available timecoverage
     try:
         times = get_times(url, layername)
     except Exception as e:
-        print(f'Exception in timecoverage request with error {e}')
+        logging.error(f"Exception in timecoverage request with error {e}")
         return False
 
     # Convert times to datetime and select dates that are within the choosen year
@@ -286,32 +324,43 @@ def get_dea_images(layername, year, bbox, outpath, resolution=1, crs = 'EPSG:432
         if datetime.fromisoformat(time[:-1]).astimezone(timezone.utc).year == year:
             datetimes.append(datetime.fromisoformat(time[:-1]).astimezone(timezone.utc))
             dates.append(time)
-    print(f'Number of images for {year} found: {len(dates)}')
+    logging.print(f"Number of images for {year} found: {len(dates)}")
     if len(dates) == 0:
-        print(f'No dates found for year {year}')
+        logging.error(f"No dates found for year {year}")
         return False
 
     # Download images for all dates in year
     for date in dates:
-        if format_out == 'GeoTIFF':
-            fname_end = '.tif'
-        elif format_out == 'NetCDF':
-            fname_end = '.nc'
+        if format_out == "GeoTIFF":
+            fname_end = ".tif"
+        elif format_out == "NetCDF":
+            fname_end = ".nc"
         else:
-            print(f'{format_out} not supported. Choose either GeoTIFF or NetCDF.')
+            logging.error(
+                f"{format_out} not supported. Choose either GeoTIFF or NetCDF."
+            )
             return False
         datestring = datetime.fromisoformat(date[:-1]).astimezone(timezone.utc)
-        fname_out = f'{layername}_{datestring.year}-{datestring.month}-{datestring.day}{fname_end}'
+        fname_out = f"{layername}_{datestring.year}-{datestring.month}-{datestring.day}{fname_end}"
         outfname = os.path.join(outpath, fname_out)
         # Get data
-        print(f'Downloading {layername} for date {date} ...')
-        download_ok = get_wcsmap(outfname, layername, bbox, date, url,
-                        resolution=resolution, crs=crs, format_out=format_out)
-    print(f'All image downloads completed and saved in directory {outpath}.')
+        logging.info(f"Downloading {layername} for date {date} ...")
+        download_ok = get_wcsmap(
+            outfname,
+            layername,
+            bbox,
+            date,
+            url,
+            resolution=resolution,
+            crs=crs,
+            format_out=format_out,
+        )
+    logging.print(f"All image downloads can be found in {outpath}.")
     return True
 
 
 ### Some test functions ###
+
 
 def test_get_capabilities():
     """
@@ -323,6 +372,7 @@ def test_get_capabilities():
     keys, titles, descriptions, bboxs = get_capabilities(url)
     assert len(keys) > 0
 
+
 def test_get_times():
     """
     Test script to retrieve available times for a layer
@@ -331,25 +381,29 @@ def test_get_times():
     times = get_times(url, layername)
     assert len(times) > 0
 
+
 def test_get_wcsmap():
     """
     Test script to retrieve and save image for one layer and date
     """
     url = "https://gsky.nci.org.au/ows/dea?service=WCS"
-    layername =  "landsat8_nbart_16day" #"sentinel2_nbart_daily" # for some layers readout time of 30s is exceeding (server limited)
+    layername = "landsat8_nbart_16day"  # "sentinel2_nbart_daily" # for some layers readout time of 30s is exceeding (server limited)
     times = get_times(url, layername)
-    crs = 'EPSG:4326' # WGS84
-    #define bounding box for retrieval (simple test here for entire Australia)
+    crs = "EPSG:4326"  # WGS84
+    # define bounding box for retrieval (simple test here for entire Australia)
     bbox = (114, -44, 153.9, -11)
     # define resolution (in arcsecs per pixel since crs is in WGS84)
     resolution = 100
     # get latest image
     time = times[-1]
     # define output file name
-    fname_out= f'test_{layername}_{time}.tif'
+    fname_out = f"test_{layername}_{time}.tif"
     # Get data
-    download_ok = get_wcsmap(fname_out, layername, bbox, time, url, resolution=resolution)
+    download_ok = get_wcsmap(
+        fname_out, layername, bbox, time, url, resolution=resolution
+    )
     assert download_ok
+
 
 def test_get_dea_images():
     """
@@ -357,17 +411,17 @@ def test_get_dea_images():
     """
     url = "https://gsky.nci.org.au/ows/dea?service=WCS"
     # Get data (here only for first layer)
-    layername =  "landsat8_nbart_16day" #"sentinel2_nbart_daily" # for some layers readout time of 30s is exceeding (server limited)
-    #layername = 'sentinel2_nbart_daily'
-    crs = 'EPSG:4326' # WGS84
-    #define bounding box for retrieval (simple test here for entire Australia)
+    layername = "landsat8_nbart_16day"  # "sentinel2_nbart_daily" # for some layers readout time of 30s is exceeding (server limited)
+    # layername = 'sentinel2_nbart_daily'
+    crs = "EPSG:4326"  # WGS84
+    # define bounding box for retrieval (simple test here for entire Australia)
     bbox = (114, -44, 153.9, -11)
     # define resolution (in arcsecs per pixel since crs is in WGS84)
     resolution = 100
     # define year
     year = 2021
     # define outpath
-    outpath = 'test_dea'
+    outpath = "test_dea"
     # Get data
     download_ok = get_dea_images(layername, year, bbox, outpath, resolution=resolution)
     assert download_ok

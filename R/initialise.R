@@ -1,34 +1,72 @@
-
-#' Initialise and validate Data-Harvester and dependencies
+#' Initialise and validate Data-Harvester, including dependencies
 #'
-#' @param env `chr` name of environment. If the environment doesn't currently
-#'   exist, one will be created in the same name using the default conda binary
 #' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
 #'
 #' @export
-initialise_harvester <- function(env = NULL, earthengine = FALSE) {
-  cli::cli_h1("Welcome to AgReFed Data-Harvester")
-  message("\n\u2139 Checking if dataharvesteR has been set up appropriately")
+initialise_harvester <- function(earthengine=TRUE) {
+  # Check that conda is installed
+  restart <- validate_conda()
+  if (restart) {
+    return(message(crayon::bold("⚑ Please restart R` and run this function again")))
+  }
+  # If we set this up right, this should trigger auto install of dependencies
   tryCatch(
     {
-      validate_conda()
-      validate_env(env = env)
-      validate_py_packages(env = env)
+      # Try to use conda environment
+      use_condaenv("r-reticulate")
     },
     error = function(e) {
-      message("Something went wrong here.")
-      return(invisible(FALSE))
+      # If error, create conda environment
+
+      conda_create("r-reticulate")
     }
   )
-  # Initialise Earth Engine is set
+  message("• Verifying python configuration...")
+  # kickstart python env (if not already done)
+  env = basename(py_config()$pythonhome)
+  message(crayon::green("✔ "), "Using conda environment '",
+    env = basename(py_config()$pythonhome), "'")
+  # Check if we need GEE
   if (earthengine) {
-    message("\u2139 Set up Earth Engine API access")
-    eepy <- dd_source_python("getdata_ee", "dataharvester")
-    eepy$initialise()
+    message("• Starting Earth Engine authetication...")
+    authenticate_ee()
   }
-  return(invisible(TRUE))
-}
 
+}
+# initialise_harvester <- function(env = NULL, earthengine = FALSE) {
+#   cli::cli_h1("Welcome to AgReFed Data-Harvester")
+#   message("\n\u2139 Checking if dataharvesteR has been set up appropriately")
+#   tryCatch(
+#     {
+#       validate_conda()
+#       validate_env(env = env)
+#       validate_py_packages(env = env)
+#     },
+#     error = function(e) {
+#       message("Something went wrong here.")
+#       return(invisible(FALSE))
+#     }
+#   )
+#   # Initialise Earth Engine is set
+#   if (earthengine) {
+#     message("\u2139 Set up Earth Engine API access")
+#     authenticate_ee()
+#   }
+#   return(invisible(TRUE))
+# }
+
+
+#' Authenticate to Google Earth Engine API
+#'
+#' Utilises google-cloud-sdk to initialise and authenticate to the Earth Engine
+#' API. An API token containing the user's credentials is saved locally and can
+#' be used to authenticate vial Application Default Credentials.
+#'
+#' @export
+authenticate_ee <- function() {
+  eepy <- dd_source_python("getdata_ee", "dataharvester")
+  invisible(eepy$initialise())
+}
 
 
 
@@ -37,19 +75,23 @@ initialise_harvester <- function(env = NULL, earthengine = FALSE) {
 #' @param reply `logical` if `interactive()`, function will prompt user for
 #'   response. Defaults to TRUE when `interactive()` is chosen.
 #'
-#' @export
+#' @noRd
 validate_conda <- function(reply = interactive()) {
   # Is conda available? If not, install miniconda
-  message("\u2139 Check Python/conda install")
+  message("• Checkking python/conda install...")
   tryCatch(
     {
       conda_binary <- reticulate::conda_binary()
-      message(crayon::green("✔ "), "conda binary: ", conda_binary)
+      message(crayon::green("✔ "), "Conda binary: ", conda_binary)
+      return(invisible(FALSE))
     },
     error = function(e) {
-      message(crayon::red("\U2717"), "conda binary: NULL")
+      message(crayon::red("✘ Conda binary not found"))
       text_out <- paste0(
-        "Conda binary not detected. You must use Anaconda or  Miniconda to use the AgReFed Data-Harvester. ", crayon::bold("\n\nDownload and install Miniconda. "), "Miniconda is a minimal and open-source installer for Python and conda. For more information see: https://docs.conda.io/en/latest/miniconda.html."
+        "You must use Anaconda or Miniconda to use `dataharvester`.",
+        crayon::bold("\n\nDownload and install Miniconda. "),
+        "Miniconda is a minimal, open-source installer for Python and conda. ",
+        "For more information please see: https://docs.conda.io/en/latest/miniconda.html"
       )
       message(paste(strwrap(text_out, width = 80), collapse = "\n"))
       if (reply) {
@@ -61,12 +103,11 @@ validate_conda <- function(reply = interactive()) {
       repeat {
         id <- tolower(substring(ans, 1, 1))
         if (id %in% c("y", "")) {
-          reticulate::install_miniconda()
+          reticulate::install_miniconda(force = TRUE)
           text_out <- paste0(
             "You may remove miniconda entirely by running:\n",
             "\nreticulate::miniconda_uninstall()\n",
-            "\n in your R console.\n",
-            crayon::bold("* Please restart R and re-run `start_harvester()`.")
+            "\nin your R console.\n"
           )
           message(text_out)
           return(invisible(TRUE))
@@ -80,56 +121,6 @@ validate_conda <- function(reply = interactive()) {
     }
   )
 }
-
-
-#' Load default conda environment
-#'
-#' @param env `chr` name of conda environment to load. Defaults to `NULL`, which
-#'   automatically searches for the environments `geopy` and `dataharvestR`
-#'
-#' @export
-validate_env <- function(env = NULL) {
-  # Try to search for default conda environments "geopy" or "dataharvester"
-  if (is.null(env)) {
-    env <- "geopy"
-    tryCatch(
-      {
-        reticulate::use_condaenv(env)
-      },
-      error = function(e) {
-        tryCatch(
-          {
-            env <- "dataharvester"
-            reticulate::use_condaenv(env)
-          },
-          error = function(e) {
-            # If both environments are not found, create one for `dataharvester`
-            message("Conda environment  not found. Creating one on the spot...")
-            reticulate::conda_create("dataharvester", packages = "python=3.9")
-            reticulate::use_condaenv("dataharvester")
-          }
-        )
-      }
-    )
-  } else {
-    tryCatch(
-      {
-        reticulate::use_condaenv(env)
-      },
-      error = function(e) {
-        message(
-          "Conda env ", env, " does not currently exist, creating one ",
-          "on the spot: "
-        )
-        try(reticulate::conda_remove(env), silent = TRUE)
-        reticulate::conda_create(env, packages = "python=3.9")
-        reticulate::use_condaenv(env)
-      }
-    )
-  }
-  message(crayon::green("✔ "), "conda env: ", env, "\n")
-}
-
 
 
 #' Check if required Python packages for Data-Harvester exist.

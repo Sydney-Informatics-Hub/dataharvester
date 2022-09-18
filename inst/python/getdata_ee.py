@@ -100,31 +100,18 @@ def initialise():
     to authenticate through the command line interface.
     """
     # Check if initialised:
-    try:
-        if not ee.data._credentials:
-            with alive_bar(
-                total=1, title=colored("• Initialising Earth Engine...", "blue")
-            ) as bar:
-                ee.Initialize()
-                bar(1)
+    if ee.data._credentials:
+        cprint("✔ Earth Engine API already authenticated", "blue")
+    else:
+        with alive_bar(
+            total=1, title=colored("• Initialising Earth Engine...", "blue")
+        ) as bar:
+            ee.Initialize()
+            bar(1)
+        if ee.data._credentials:
+            cprint("✔ Earth Engine authenticated", "blue")
         else:
-            cprint("• Initialising Earth Engine...", "blue")
-            cprint("✔ Earth Engine API already authenticated", "blue")
-            return
-        cprint("✔ Earth Engine authenticated", "blue")
-    # If error pops up, it is likely that user has not performed Earth Engine
-    # authentication in CLI. Prompt them to do so (faster than Python
-    # ee.Authenticate)
-    except ee.EEException:
-        print(
-            colored(
-                "✘ Unable to authorise access to your Google Earth Engine account",
-                "red",
-            )
-        )
-        print("ⓘ Running `earthengine authenticate`...")
-        bashCommand = "earthengine authenticate"
-        subprocess.run(bashCommand, shell=True)
+            cprint("⚑ Please run this function again to authenticate", "yellow")
 
 
 class collect:
@@ -416,17 +403,17 @@ class collect:
             s(1)
         self.ee_image = out
 
-    def map(self, bands, minmax=None, palette=None, save_to=None, **kwargs):
+    def map(self, bands=None, minmax=None, palette=None, save_to=None, **kwargs):
         """
         Visualise an Earth Engine Image or ImageCollection on a map
 
         Parameters
         ----------
-        bands : str or list of str
+        bands : str or list of str, optional
             A string or list of strings representing the bands to be visualised.
         minmax : list of int, optional
             A list of two integers representing the minimum and maximum values.
-            if set to None, the min and max values are automatically calculated,
+            If set to None, the min and max values are automatically calculated,
             by default None
         palette : str, optional
             A string representing the name of a palette to be used for map
@@ -572,6 +559,8 @@ class collect:
         out_format : str, optional
             One of the following strings: "png", "jpg", "tif". If set to None,
             will use "tif", by default None
+        overwrite : boolean, optional
+            Overwrite existing file if it already exists, by default False
 
         Returns
         -------

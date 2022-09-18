@@ -2,13 +2,19 @@
 % Please edit documentation in R/harvest.R
 \name{harvest}
 \alias{harvest}
-\title{Title}
+\title{A headless version of the Data-Harvester (with some limitations)}
 \usage{
 harvest(path_to_config, preview = FALSE)
 }
 \arguments{
-\item{...}{}
+\item{path_to_config}{\code{string}: path to YAML config file, e.g. "settings/"}
+
+\item{preview}{\code{logical}: preview}
 }
 \description{
-Title
+The \code{\link[=harvest]{harvest()}} function requires a YAML configuration file to work and will
+perform data aggregation, downloading and logging based on what is parsed
+from the YAML file. For more information on 'headless' functionality, see the
+documentation online (site not live yet). A YAML template can be generated
+using the function \code{\link[=create_yaml]{create_yaml()}}
 }
