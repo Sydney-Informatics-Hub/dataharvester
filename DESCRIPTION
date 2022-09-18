@@ -58,5 +58,4 @@ Config/reticulate:
 Depends: 
     R (>= 4.1.0)
 LazyData: true
-URL: https://sydney-informatics-hub.github.io/dataharvester/,
-    https://januarharianto.github.io/dataharvester/
+URL: https://sydney-informatics-hub.github.io/dataharvester/
