@@ -1,7 +1,7 @@
 #' Initialise and validate Data-Harvester, including dependencies
 #'
 #' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
-#'
+#' @import reticulate
 #' @export
 initialise_harvester <- function(earthengine=TRUE) {
   # Check that conda is installed
@@ -13,19 +13,18 @@ initialise_harvester <- function(earthengine=TRUE) {
   tryCatch(
     {
       # Try to use conda environment
-      use_condaenv("r-reticulate")
+      reticulate::use_condaenv("r-reticulate")
     },
     error = function(e) {
       # If error, create conda environment
 
-      conda_create("r-reticulate")
+      reticulate::conda_create("r-reticulate")
     }
   )
   message("• Verifying python configuration...")
   # kickstart python env (if not already done)
-  env = basename(py_config()$pythonhome)
-  message(crayon::green("✔ "), "Using conda environment '",
-    env = basename(py_config()$pythonhome), "'")
+  env = basename(reticulate::py_config()$pythonhome)
+  message(crayon::green("✔ "), "Using conda environment '", env, "'")
   # Check if we need GEE
   if (earthengine) {
     message("• Starting Earth Engine authetication...")
