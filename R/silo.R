@@ -1,17 +1,18 @@
 #' Download Australian climate data from SILO
 #'
-#' @param layername
-#' @param years
-#' @param outpath
-#' @param bbox
-#' @param format_out
-#' @param delete_temp
-#' @param verbose
+#' @param layername NULL
+#' @param years NULL
+#' @param outpath NULL
+#' @param bbox NULL
+#' @param format_out NULL
+#' @param delete_temp NULL
+#' @param verbose NULL
 #'
-#' @return
+#' @return NULL
 #' @export
 #'
 #' @examples
+#' NULL
 download_silo <- function(layername,
                           years,
                           out_path,
