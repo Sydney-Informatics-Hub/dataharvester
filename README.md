@@ -47,13 +47,12 @@ perform basic operations to filter, reduce, visualise and download data.
 
 ## Installation
 
-**Important**: `dataharvester` is currently still under early
-development. **Many things are broken** and this repository is public so
-that our community developers can access it. **Do not download this
-package unless you are a developer and love to break things!**
+**Important: `dataharvester` is currently still under early development.
+Do not download this package unless you are a developer and love to
+break things.**
 
-Download the development version of this package from GitHub using
-`install_github()`:
+Install the development version of this package from GitHub using
+`install_github()` from `remotes` or `devtools`:
 
 ``` r
 # install.packages("remotes") # uncomment and run this line if necessary
@@ -62,20 +61,29 @@ remotes::install_github("januarharianto/dataharvester")
 library(dataharvester) # load package
 ```
 
-## `initialise_harvester()`
+## Examples
 
-The heart *and* soul of `dataharvester`, `intialise_harvester()` helps
-you initialise the package, verifies package dependencies and connect to
-the Earth Engine API. The online documentation (currently not available)
-provides a detailed outlook on what the function does.
+### “Headless” run
 
-## Example
+Run `initialise_harvester()` after loading the package. The function
+helps you initialise the package, verifies package dependencies and
+connect to the Earth Engine API.
 
 ``` r
-# library(dataharvester)
-# initialise(earthengine = TRUE)
+library(dataharvester)
+initialise_harvester(earthengine = TRUE)
+```
 
-# todo
+Then, run `harvest()`, which parses a YAML config file:
+
+``` r
+harvest("path/to/config.yaml")
+```
+
+### Manual downloads
+
+``` r
+# TODO
 ```
 
 ## Acknowledgments
