@@ -74,7 +74,7 @@ authenticate_ee <- function() {
 #' @param reply `logical` if `interactive()`, function will prompt user for
 #'   response. Defaults to TRUE when `interactive()` is chosen.
 #'
-#' @noRd
+#' @export
 validate_conda <- function(reply = interactive()) {
   # Is conda available? If not, install miniconda
   message("• Checkking python/conda install...")
