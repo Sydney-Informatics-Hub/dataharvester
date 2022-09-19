@@ -56,7 +56,7 @@ Install the development version of this package from GitHub using
 
 ``` r
 # install.packages("remotes") # uncomment and run this line if necessary
-remotes::install_github("januarharianto/dataharvester")
+remotes::install_github("Sydney-Informatics-Hub/dataharvester")
 
 library(dataharvester) # load package
 ```
