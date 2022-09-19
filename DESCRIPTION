@@ -36,7 +36,7 @@ Config/testthat/edition: 3
 Config/reticulate:
   list(
     packages = list(
-      list(package = "gdal", version = "3.4.2", pip = FALSE),
+      list(package = "gdal", pip = FALSE),
       list(package = "rasterio", pip = FALSE),
       list(package = "earthengine-api", pip = FALSE),
       list(package = "eemont", pip = FALSE),
