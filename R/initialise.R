@@ -54,9 +54,9 @@ authenticate_ee <- function() {
 #'   response. Defaults to TRUE when `interactive()` is chosen.
 #'
 #' @export
-validate_conda <- function(reply = interactive()) {
+validate_conda <- function() {
   # Is conda available? If not, install miniconda
-  message("• Checkking python/conda install...")
+  message("• Checking python/conda install...")
   tryCatch(
     {
       conda_binary <- reticulate::conda_binary()
@@ -72,7 +72,7 @@ validate_conda <- function(reply = interactive()) {
         "For more information please see: https://docs.conda.io/en/latest/miniconda.html"
       )
       message(paste(strwrap(text_out, width = 80), collapse = "\n"))
-      if (reply) {
+      if (interactive()) {
         ans <- readline("Would you like to install Miniconda now? {Y/n}: ")
       } else {
         ans <- "y"
