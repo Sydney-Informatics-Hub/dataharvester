@@ -33,12 +33,6 @@ Imports:
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Config/reticulate:
-  list(
-    packages = list(
-      list(package = "python", version = "3.9", pip = FALSE)
-    )
-  )
 Depends: 
     R (>= 4.1.0)
 LazyData: true
