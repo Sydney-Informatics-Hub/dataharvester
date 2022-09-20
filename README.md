@@ -56,7 +56,7 @@ Install the development version of this package from GitHub using
 
 ``` r
 # install.packages("remotes") # uncomment and run this line if necessary
-remotes::install_github("januarharianto/dataharvester")
+remotes::install_github("sydney-informatics-hub/dataharvester")
 
 library(dataharvester) # load package
 ```
@@ -71,7 +71,7 @@ connect to the Earth Engine API.
 
 ``` r
 library(dataharvester)
-initialise_harvester(earthengine = TRUE)
+initialise_harvester(earthengine = FALSE)
 ```
 
 Then, run `harvest()`, which parses a YAML config file:
