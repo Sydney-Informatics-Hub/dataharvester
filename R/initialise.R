@@ -3,22 +3,22 @@
 #' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
 #' @import reticulate
 #' @export
-initialise_harvester <- function(earthengine=TRUE) {
+initialise_harvester <- function(env = "r-reticulate", earthengine=TRUE) {
   # Check that conda is installed
   restart <- validate_conda()
   if (restart) {
-    return(message(crayon::bold("⚑ Please restart R` and run this function again")))
+    return(message(crayon::bold("⚑ Please restart R now (Session > Restart R)")))
   }
   # If we set this up right, this should trigger auto install of dependencies
   tryCatch(
     {
       # Try to use conda environment
-      reticulate::use_condaenv("r-reticulate")
+      reticulate::use_condaenv(env)
     },
     error = function(e) {
       # If error, create conda environment
-
-      reticulate::conda_create("r-reticulate")
+      reticulate::conda_create(env, python_version = "3.9")
+      reticulate::use_condaenv(env)
     }
   )
   message("• Verifying python configuration...")
@@ -32,27 +32,6 @@ initialise_harvester <- function(earthengine=TRUE) {
   }
 
 }
-# initialise_harvester <- function(env = NULL, earthengine = FALSE) {
-#   cli::cli_h1("Welcome to AgReFed Data-Harvester")
-#   message("\n\u2139 Checking if dataharvesteR has been set up appropriately")
-#   tryCatch(
-#     {
-#       validate_conda()
-#       validate_env(env = env)
-#       validate_py_packages(env = env)
-#     },
-#     error = function(e) {
-#       message("Something went wrong here.")
-#       return(invisible(FALSE))
-#     }
-#   )
-#   # Initialise Earth Engine is set
-#   if (earthengine) {
-#     message("\u2139 Set up Earth Engine API access")
-#     authenticate_ee()
-#   }
-#   return(invisible(TRUE))
-# }
 
 
 #' Authenticate to Google Earth Engine API
