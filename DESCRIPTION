@@ -37,6 +37,7 @@ Config/reticulate:
   list(
     packages = list(
       list(package = "python", version = "3.9", pip = FALSE),
+      list(package = "gdal", pip = FALSE),
       list(package = "earthengine-api", pip = FALSE),
       list(package = "ipykernel", pip = FALSE),
       list(package = "rioxarray", pip = FALSE),
@@ -46,9 +47,9 @@ Config/reticulate:
       list(package = "geopandas", pip = FALSE),
       list(package = "numba", pip = FALSE),
       list(package = "owslib", pip = FALSE),
-      list(package = "localtileserver", pip = TRUE),
+      list(package = "localtileserver", pip = FALSE),
+      list(package = "wxee", pip = FALSE),
       list(package = "termcolor", pip = TRUE),
-      list(package = "wxee", pip = TRUE),
       list(package = "eemont", pip = TRUE),
       list(package = "geemap", pip = TRUE),
       list(package = "alive-progress", pip = TRUE)
