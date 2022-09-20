@@ -4,7 +4,7 @@
 \alias{initialise_harvester}
 \title{Initialise and validate Data-Harvester, including dependencies}
 \usage{
-initialise_harvester(earthengine = TRUE)
+initialise_harvester(env = "r-reticulate", earthengine = TRUE)
 }
 \arguments{
 \item{earthengine}{\code{logical} initialise Earth Engine if TRUE. Defaults to FALSE}
