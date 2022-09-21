@@ -1,38 +1,39 @@
 #' Initialise and validate Data-Harvester, including dependencies
 #'
+#' @param envname
 #' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
+#'
 #' @import reticulate
 #' @export
-initialise_harvester <- function(env = "r-reticulate", earthengine=TRUE) {
-  # Check that conda is installed
+initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) {
+  # Check if conda exists
   restart <- validate_conda()
   if (restart) {
     return(message(crayon::bold("⚑ Please restart R now (Session > Restart R)")))
   }
-  # If we set this up right, this should trigger auto install of dependencies
+  # Check if environment can be loaded
+  message("• Verifying Python configuration...", "\r", appendLF = FALSE)
   tryCatch(
     {
-      # Try to use conda environment
-      reticulate::use_condaenv(env)
+      use_condaenv(envname)
+      message("✔ Using Conda environment: ", envname)
     },
     error = function(e) {
-      # If error, create conda environment
-      reticulate::conda_create(env, python_version = "3.9")
-      reticulate::use_condaenv(env)
+      message("⚑ Environment '", envname, "' not found, will create one now")
+      conda_create(envname, python_version = "3.9")
+      .install_dependencies(envname)
+      use_condaenv(envname)
+      message("• Using Conda environment: ", envname)
     }
   )
-  message("• Verifying python configuration...")
-  # kickstart python env (if not already done)
-  env = basename(reticulate::py_config()$pythonhome)
-  message(crayon::green("✔ "), "Using conda environment '", env, "'")
-  # Check if we need GEE
+  .validate_dependencies(envname)
+
   if (earthengine) {
-    message("• Starting Earth Engine authetication...")
-    authenticate_ee()
+    if (terra::gdal() == "3.0.4") {
+      authenticate_ee("notebook")
+    } else authenticate_ee()
   }
-
 }
-
 
 #' Authenticate to Google Earth Engine API
 #'
@@ -41,9 +42,13 @@ initialise_harvester <- function(env = "r-reticulate", earthengine=TRUE) {
 #' be used to authenticate vial Application Default Credentials.
 #'
 #' @export
-authenticate_ee <- function() {
-  eepy <- dd_source_python("getdata_ee", "dataharvester")
-  invisible(eepy$initialise())
+authenticate_ee <- function(auth_mode = "gcloud") {
+  path <- system.file("python", package = "dataharvester")
+  ee <- reticulate::import_from_path("getdata_ee",
+    path = path,
+    delay_load = TRUE
+  )
+  ee$initialise(auth_mode = auth_mode)
 }
 
 
@@ -101,66 +106,94 @@ validate_conda <- function() {
 }
 
 
-#' Check if required Python packages for Data-Harvester exist.
-#'
-#' Internal function. First, the function checks if all required packages have
-#' been installed. Then it does a quick check to see if gdal is at version
-#' 3.4.2. If any package appears to be missing they will be reinstalled.
-#'
-#' @param env `chr` name of environment
-#'
-#' @import dplyr
-#' @importFrom rlang .data
-#' @returns `logical`
-#' @export
-validate_py_packages <- function(env = NULL) {
+.install_dependencies <- function(envname = "r-reticulate") {
+  # Create environment first
+  # Horrible way to check if we are on RStudio Cloud by checking GDAL version
+  use_pygdal <- FALSE
+  if (terra::gdal() == "3.0.4") {
+    use_pygdal <- TRUE
+  }
+  # Install dependencies
+  if (use_pygdal) {
+    conda_install(
+      envname = envname,
+      packages = c("rasterio==1.2.10", "pygdal==3.0.4.11"),
+      pip = TRUE
+    )
+    conda_install(
+      envname = envname,
+      packages = "google-cloud-sdk"
+    )
+  } else {
+    conda_install(
+      envname = "r-reticulate",
+      packages = c("gdal", "rasterio", "google-cloud-sdk")
+    )
+  }
+  # remainder conda installs
+  conda_install(
+    envname = envname,
+    packages = c(
+      "alive-progress",
+      "eemont",
+      "geemap",
+      "geedim",
+      "geopandas",
+      "netcdf4",
+      "numba",
+      "owslib",
+      "ipykernel",
+      "ipywidgets==7.6.5",
+      "earthengine-api",
+      "rioxarray",
+      "wxee",
+      "termcolor"
+    ),
+    pip = TRUE
+  )
+}
+
+
+.validate_dependencies <- function(envname = "r-reticulate") {
+  # Note: a Conda environment must be loaded first or this function will fail
   # List required packages
-  py_packages <- c(
-    "gdal",
+  message("• Validating dependencies...", "\r", appendLF = FALSE)
+  checklist <- c(
+    # pip
+    "alive-progress",
+    "eemont",
+    "geemap",
+    "geedim",
     "geopandas",
-    "ipykernel",
     "netcdf4",
     "numba",
     "owslib",
-    "rasterio",
-    "rioxarray",
-    "eemont",
-    "geemap",
-    "pygis",
-    "localtileserver",
+    "ipykernel",
+    "ipywidgets",
     "earthengine-api",
-    "geemap",
-    "alive-progress"
+    "rioxarray",
+    "wxee",
+    "termcolor",
+    # conda
+    # "gdal",
+    "rasterio",
+    "google-cloud-sdk"
   )
-  # Required gdal version
-  gdal_required <- "3.4.2"
   # Filter package list for checks
   py_avail_modules <-
     reticulate::py_list_packages()[, 1:2] |>
-    dplyr::filter(.data$package %in% py_packages)
-  message("\u2139 Checking package versions")
-  # Check that all packages have been installed
-  check_py_packages <-
+    dplyr::filter(.data$package %in% checklist)
+
+  dependencies_ok <-
     py_avail_modules |>
     dplyr::pull(.data$package) |>
-    setequal(py_packages)
-  # Check that gdal version is 3.4.2
-  check_gdal_version <-
-    py_avail_modules |>
-    dplyr::filter(.data$package == "gdal") |>
-    dplyr::pull(.data$version) |>
-    setequal(gdal_required)
-  # If both are TRUE, we are good, otherwise re-install everything to be safe
-  if (check_py_packages & check_gdal_version) {
-    # message(paste(crayon::green("✔"), py_packages, " | "))
-    message(paste(crayon::green("✔ all packages validated")))
+    setequal(checklist)
+
+  if (dependencies_ok) {
+    message("✔ All dependencies validated")
   } else {
-    message(paste0(
-      "Cannot validate required Python packages. ",
-      "Attempting to reinstall all packages to be safe..."
-    ))
-    # reticulate::conda_install(env, c("gdal == 3.4.2", py_packages[-1]))
-    pyconfig <- reticulate::py_config()
+    message(paste(crayon::yellow("⚑ Looks like some packages are not installed or have changed. ")))
+    message(paste(crayon::yellow("Re-installing all dependencies just to be sure...")))
+    .install_dependencies(envname)
   }
-  return(invisible(TRUE))
 }
