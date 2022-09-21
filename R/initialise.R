@@ -100,67 +100,46 @@ validate_conda <- function() {
   )
 }
 
-
-#' Check if required Python packages for Data-Harvester exist.
-#'
-#' Internal function. First, the function checks if all required packages have
-#' been installed. Then it does a quick check to see if gdal is at version
-#' 3.4.2. If any package appears to be missing they will be reinstalled.
-#'
-#' @param env `chr` name of environment
-#'
-#' @import dplyr
-#' @importFrom rlang .data
-#' @returns `logical`
-#' @export
-validate_py_packages <- function(env = NULL) {
+.validate_dependencies <- function(envname = "r-reticulate") {
+  # Note: a Conda environment must be loaded first or this function will fail
   # List required packages
-  py_packages <- c(
-    "gdal",
+  message("• Validating dependencies...", "\r", appendLF = FALSE)
+  checklist <- c(
+    # pip
+    "alive-progress",
+    "eemont",
+    "geemap",
+    "geedim",
     "geopandas",
-    "ipykernel",
     "netcdf4",
     "numba",
     "owslib",
-    "rasterio",
-    "rioxarray",
-    "eemont",
-    "geemap",
-    "pygis",
-    "localtileserver",
+    "ipykernel",
+    "ipywidgets",
     "earthengine-api",
-    "geemap",
-    "alive-progress"
+    "rioxarray",
+    "wxee",
+    "termcolor",
+    # conda
+    # "gdal",
+    "rasterio",
+    "google-cloud-sdk"
   )
-  # Required gdal version
-  gdal_required <- "3.4.2"
   # Filter package list for checks
   py_avail_modules <-
     reticulate::py_list_packages()[, 1:2] |>
-    dplyr::filter(.data$package %in% py_packages)
-  message("\u2139 Checking package versions")
-  # Check that all packages have been installed
-  check_py_packages <-
+    dplyr::filter(.data$package %in% checklist)
+
+  dependencies_ok <-
     py_avail_modules |>
     dplyr::pull(.data$package) |>
-    setequal(py_packages)
-  # Check that gdal version is 3.4.2
-  check_gdal_version <-
-    py_avail_modules |>
-    dplyr::filter(.data$package == "gdal") |>
-    dplyr::pull(.data$version) |>
-    setequal(gdal_required)
-  # If both are TRUE, we are good, otherwise re-install everything to be safe
-  if (check_py_packages & check_gdal_version) {
-    # message(paste(crayon::green("✔"), py_packages, " | "))
-    message(paste(crayon::green("✔ all packages validated")))
+    setequal(checklist)
+
+  if (dependencies_ok) {
+    message("✔ All dependencies validated")
   } else {
-    message(paste0(
-      "Cannot validate required Python packages. ",
-      "Attempting to reinstall all packages to be safe..."
-    ))
-    # reticulate::conda_install(env, c("gdal == 3.4.2", py_packages[-1]))
-    pyconfig <- reticulate::py_config()
+    message(paste(crayon::yellow("⚑ Looks like some packages are not installed or have changed. ")))
+    message(paste(crayon::yellow("Re-installing all dependencies just to be sure...")))
+    .install_dependencies(envname)
   }
-  return(invisible(TRUE))
 }
