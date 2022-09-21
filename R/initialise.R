@@ -1,38 +1,39 @@
 #' Initialise and validate Data-Harvester, including dependencies
 #'
+#' @param envname
 #' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
+#'
 #' @import reticulate
 #' @export
-initialise_harvester <- function(env = "r-reticulate", earthengine=TRUE) {
-  # Check that conda is installed
+initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) {
+  # Check if conda exists
   restart <- validate_conda()
   if (restart) {
     return(message(crayon::bold("⚑ Please restart R now (Session > Restart R)")))
   }
-  # If we set this up right, this should trigger auto install of dependencies
+  # Check if environment can be loaded
+  message("• Verifying Python configuration...", "\r", appendLF = FALSE)
   tryCatch(
     {
-      # Try to use conda environment
-      reticulate::use_condaenv(env)
+      use_condaenv(envname)
+      message("✔ Using Conda environment: ", envname)
     },
     error = function(e) {
-      # If error, create conda environment
-      reticulate::conda_create(env, python_version = "3.9")
-      reticulate::use_condaenv(env)
+      message("⚑ Environment '", envname, "' not found, will create one now")
+      conda_create(envname, python_version = "3.9")
+      .install_dependencies(envname)
+      use_condaenv(envname)
+      message("• Using Conda environment: ", envname)
     }
   )
-  message("• Verifying python configuration...")
-  # kickstart python env (if not already done)
-  env = basename(reticulate::py_config()$pythonhome)
-  message(crayon::green("✔ "), "Using conda environment '", env, "'")
-  # Check if we need GEE
+  .validate_dependencies(envname)
+
   if (earthengine) {
-    message("• Starting Earth Engine authetication...")
-    authenticate_ee()
+    if (terra::gdal() == "3.0.4") {
+      authenticate_ee("notebook")
+    } else authenticate_ee()
   }
-
 }
-
 
 #' Authenticate to Google Earth Engine API
 #'
@@ -103,6 +104,55 @@ validate_conda <- function() {
     }
   )
 }
+
+
+.install_dependencies <- function(envname = "r-reticulate") {
+  # Create environment first
+  # Horrible way to check if we are on RStudio Cloud by checking GDAL version
+  use_pygdal <- FALSE
+  if (terra::gdal() == "3.0.4") {
+    use_pygdal <- TRUE
+  }
+  # Install dependencies
+  if (use_pygdal) {
+    conda_install(
+      envname = envname,
+      packages = c("rasterio==1.2.10", "pygdal==3.0.4.11"),
+      pip = TRUE
+    )
+    conda_install(
+      envname = envname,
+      packages = "google-cloud-sdk"
+    )
+  } else {
+    conda_install(
+      envname = "r-reticulate",
+      packages = c("gdal", "rasterio", "google-cloud-sdk")
+    )
+  }
+  # remainder conda installs
+  conda_install(
+    envname = envname,
+    packages = c(
+      "alive-progress",
+      "eemont",
+      "geemap",
+      "geedim",
+      "geopandas",
+      "netcdf4",
+      "numba",
+      "owslib",
+      "ipykernel",
+      "ipywidgets==7.6.5",
+      "earthengine-api",
+      "rioxarray",
+      "wxee",
+      "termcolor"
+    ),
+    pip = TRUE
+  )
+}
+
 
 .validate_dependencies <- function(envname = "r-reticulate") {
   # Note: a Conda environment must be loaded first or this function will fail
