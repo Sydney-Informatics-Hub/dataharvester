@@ -41,9 +41,13 @@ initialise_harvester <- function(env = "r-reticulate", earthengine=TRUE) {
 #' be used to authenticate vial Application Default Credentials.
 #'
 #' @export
-authenticate_ee <- function() {
-  eepy <- dd_source_python("getdata_ee", "dataharvester")
-  invisible(eepy$initialise())
+authenticate_ee <- function(auth_mode = "gcloud") {
+  path <- system.file("python", package = "dataharvester")
+  ee <- reticulate::import_from_path("getdata_ee",
+    path = path,
+    delay_load = TRUE
+  )
+  ee$initialise(auth_mode = auth_mode)
 }
 
 
