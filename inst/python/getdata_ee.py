@@ -92,7 +92,7 @@ def suppress():
             yield (err, out)
 
 
-def initialise(auth_mode="gcloud"):
+def initialise():
     """
     Initialise Google Earth Engine API
 
@@ -106,7 +106,7 @@ def initialise(auth_mode="gcloud"):
         with alive_bar(
             total=1, title=colored("• Initialising Earth Engine...", "blue")
         ) as bar:
-            geemap.ee_initialize(auth_mode=auth_mode)
+            ee.Initialize()
             bar(1)
         if ee.data._credentials:
             cprint("✔ Earth Engine authenticated", "blue")

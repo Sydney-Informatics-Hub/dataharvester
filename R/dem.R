@@ -15,12 +15,14 @@
 #' NULL
 download_dem <- function(layer,
                          out_path,
-                         bounding_box, zresolution = 1) {
+                         bounding_box,
+                         resolution = 1) {
   # Import module
   path <- system.file("python", package = "dataharvester")
   dem <- reticulate::import_from_path("getdata_dem",
     path = path,
-    delay_load = TRUE)
+    delay_load = TRUE
+  )
   out <- dem$get_dem_layers(as.list(layer), out_path, bounding_box)
   return(out)
 }

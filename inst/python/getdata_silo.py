@@ -55,8 +55,6 @@ config_handler.set_global(
     receipt=True,
     elapsed="{elapsed}",
 )
-
-
 def spin(message=None, colour=None):
     """Spin animation as a progress inidicator"""
     return alive_bar(1, title=colored(f"{message} ", colour))
@@ -320,6 +318,10 @@ def get_SILO_raster(
         url = silo_baseurl + layername + "/" + str(year) + "." + layername + ".nc"
         # Download file
         # logging.info(f"Downloading data from {url} ...")
+        if os.path.exists(os.path.join(outpath, url.split("/")[-1])):
+            file_exists = True
+        else:
+            file_exists = False
         filename = download_file(url, year, outpath)
         # Open file in Xarray
         ds = xarray.open_dataset(filename)
