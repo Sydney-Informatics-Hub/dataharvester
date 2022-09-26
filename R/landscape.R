@@ -1,14 +1,13 @@
-#' Title
+#' Download from SLGA Landscape Attributes
 #'
-#' @param layer
-#' @param bounding_box
-#' @param out_path
-#' @param resolution
+#' @param layer `r params(layer)`
+#' @param bounding_box `r params(bounding_box)`
+#' @param out_path `r params(out_path)`
+#' @param resolution ` r params(resolution)`
 #'
-#' @return
+#' @return a list of filenames (after files have been downloaded or processed)
 #' @export
 #'
-#' @examples
 download_landscape <- function(layer, bounding_box, out_path, resolution = 3) {
   # Import module
   path <- system.file("python", package = "dataharvester")
