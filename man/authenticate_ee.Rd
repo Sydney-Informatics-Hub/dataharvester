@@ -4,7 +4,7 @@
 \alias{authenticate_ee}
 \title{Authenticate to Google Earth Engine API}
 \usage{
-authenticate_ee()
+authenticate_ee(auth_mode = "gcloud")
 }
 \description{
 Utilises google-cloud-sdk to initialise and authenticate to the Earth Engine

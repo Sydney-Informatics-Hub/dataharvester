@@ -4,24 +4,21 @@
 \alias{download_dem}
 \title{Download Geoscience Australia DEM grid data}
 \usage{
-download_dem(layer, out_path, bounding_box, zresolution = 1)
+download_dem(layer, out_path, bounding_box, resolution = 1)
 }
 \arguments{
-\item{layer}{\code{string}: layer name(s) to download}
+\item{layer}{Layer name(s) to download as a vector of strings}
 
-\item{out_path}{\code{string}: path to output folder e.g. 'downloads/'}
+\item{out_path}{Path to an output/download folder, e.g. \code{'downloads/'}}
 
-\item{bounding_box}{\code{numeric}:}
+\item{bounding_box}{A numeric vector of coordinate values used to generate a bounding box around are of interest in EPSG:4326 format, for example, \code{c(min_x, min_y, max_x, max_y)}}
 
-\item{resolution}{\code{integer}, \code{optional}:}
+\item{resolution}{An integer value for resolution, in arc seconds}
 }
 \value{
-a list of output filenames
+a list of filenames (after files have been downloaded or processed)
 }
 \description{
 Wrapper funtion to get the layers from the Geoscience Australia DEM 1 arc
 second grid.
-}
-\examples{
-NULL
 }

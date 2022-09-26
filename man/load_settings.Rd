@@ -7,7 +7,10 @@
 load_settings(path_to_yaml, to_namespace = TRUE)
 }
 \arguments{
-\item{path}{}
+\item{path}{Path to settings file in YAML format/extension.}
+}
+\value{
+A settings namespace object
 }
 \description{
 Load settings from YAML file
