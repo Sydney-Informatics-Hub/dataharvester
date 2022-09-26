@@ -1,17 +1,18 @@
-#' Title
+#' Download from Digital Earth Australia
 #'
-#' @param layer
-#' @param bounding_box
-#' @param out_path
-#' @param years
-#' @param resolution
-#' @param crs
-#' @param format_out
+#' Wrapper funtion to get the layers from Digital Earth Australia collections.
 #'
-#' @return
+#' @param layer `r params(layer)`
+#' @param bounding_box `r params(bounding_box)`
+#' @param out_path `r params(out_path)`
+#' @param years `r params(years)`
+#' @param resolution `r params(resolution)`
+#' @param crs `r params(crs)`
+#' @param format_out Output format, either "GeoTIFF" or "NetCDF". Defaults to
+#'   "GeoTIFF"
+#'
+#' @return a list of filenames (after files have been downloaded or processed)
 #' @export
-#'
-#' @examples
 download_dea <- function(layer,
                          bounding_box,
                          out_path,
