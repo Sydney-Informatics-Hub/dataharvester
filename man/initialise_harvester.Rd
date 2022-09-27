@@ -2,16 +2,15 @@
 % Please edit documentation in R/initialise.R
 \name{initialise_harvester}
 \alias{initialise_harvester}
-\title{Initialise and validate Data-Harvester and dependencies}
+\title{Initialise and validate Data-Harvester, including dependencies}
 \usage{
-initialise_harvester(env = NULL, earthengine = FALSE)
+initialise_harvester(envname = "r-reticulate", earthengine = FALSE)
 }
 \arguments{
-\item{env}{\code{chr} name of environment. If the environment doesn't currently
-exist, one will be created in the same name using the default conda binary}
+\item{envname}{Use this Conda environment. Defaults to \code{"r-reticulate"}}
 
-\item{earthengine}{\code{logical} initialise Earth Engine if TRUE. Defaults to FALSE}
+\item{earthengine}{Initialise Earth Engine if \code{TRUE.} Defaults to \code{FALSE}}
 }
 \description{
-Initialise and validate Data-Harvester and dependencies
+Initialise and validate Data-Harvester, including dependencies
 }

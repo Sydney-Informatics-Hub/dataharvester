@@ -1,5 +1,4 @@
-url: https://januarharianto.github.io/dataharvester/
+url: https://sydney-informatics-hub.github.io/dataharvester/
 template:
   bootstrap: 5
-development:
-  mode: auto
+

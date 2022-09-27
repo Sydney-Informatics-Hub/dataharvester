@@ -1,34 +1,42 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
-
-[![Codacy
-Badge](https://app.codacy.com/project/badge/Grade/e715df42acef461bac6f4e0d6ba8181b)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=januarharianto/dataharvestR&utm_campaign=Badge_Grade)
 <!-- badges: end -->
 
 <img src="man/figures/logo_r.png" width="300" style="display: block; margin: auto;" />
 
-`dataharvester` is an R interface to the [AgReFed Data Harvester](). Use
+`dataharvester` is an R interface to the AgReFed Data Harvester. Use
 `dataharvester` to preprocess, aggregate, visualise and download
 geospatial data from a range of Australian and international data
 sources, including:
 
--   [Soil and Landscape Grid of Australia (SLGA)]()
--   [SILO Climate Database]()
--   [Digital Elevation Model (DEM) of Australia]()
--   [Digital Earth Australia (DEA) Geoscience Earth Observations]()
--   [GSKY Data Server for DEA Geoscience Earth Observations]()
--   [Google Earth Engine]()
+-   [Soil and Landscape Grid of Australia (SLGA)](https://is.gd/i8nF0Z)
+-   [SILO Climate Database](https://is.gd/ifJ8tB)
+-   [Digital Elevation Model (DEM) of Australia](https://is.gd/ZLFwGs)
+-   [Digital Earth Australia (DEA) Geoscience Earth
+    Observations](https://is.gd/gRSlVG)
+-   [GSKY Data Server for DEA Geoscience Earth
+    Observations](https://is.gd/zFHxfD)
+-   [Google Earth Engine](https://is.gd/VdO3Jx)
 
 With connectivity to the Earth Engine API, perform petabyte-scale
 operations which include temporal cloud/shadow masking and automatic
 calculation of spectral indices (e.g. NDVI) for the following
 collections:
 
--   Landsat [5]() (TM), [7]() (ETM+), [8]() (OLI/TRS) and [9]()
+-   Landsat
+    [5](https://developers.google.com/earth-engine/datasets/catalog/landsat-5)
+    (TM),
+    [7](https://developers.google.com/earth-engine/datasets/catalog/landsat-7)
+    (ETM+),
+    [8](https://developers.google.com/earth-engine/datasets/catalog/landsat-8)
+    (OLI/TRS) and
+    [9](https://developers.google.com/earth-engine/datasets/catalog/landsat-9)
     (OLI-2/TRS-2)
--   [Sentinel-2]() (Surface Reflectance) and [Sentinel-3]() (Ocean and
-    Land Colour Instrument)
+-   [Sentinel-2](https://developers.google.com/earth-engine/datasets/catalog/sentinel-2)
+    (Surface Reflectance) and
+    [Sentinel-3](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S3_OLCI)
+    (Ocean and Land Colour Instrument)
 -   [MODIS](https://developers.google.com/earth-engine/datasets/catalog/modis)
     (or Moderate Resolution Imaging Spectroradiometer) products
 
@@ -39,35 +47,43 @@ perform basic operations to filter, reduce, visualise and download data.
 
 ## Installation
 
-**Important**: `dataharvester` is currently still under early
-development. **Many things are broken** and this repository is public so
-that our community developers can access it. **Do not download this
-package unless you are a developer and love to break things!**
+**Important: `dataharvester` is currently still under early development.
+Do not download this package unless you are a developer and love to
+break things.**
 
-Download the development version of this package from GitHub using
-`install_github()`:
+Install the development version of this package from GitHub using
+`install_github()` from `remotes` or `devtools`:
 
 ``` r
 # install.packages("remotes") # uncomment and run this line if necessary
-remotes::install_github("januarharianto/dataharvester")
+remotes::install_github("sydney-informatics-hub/dataharvester")
 
 library(dataharvester) # load package
 ```
 
-## `initialise_harvester()`
+## Examples
 
-The heart *and* soul of `dataharvester`, `intialise_harvester()` helps
-you initialise the package, verifies package dependencies and connect to
-the Earth Engine API. The [online documentation]() (currently not
-available) provides a detailed outlook on what the function does.
+### “Headless” run
 
-## Example
+Run `initialise_harvester()` after loading the package. The function
+helps you initialise the package, verifies package dependencies and
+connect to the Earth Engine API.
 
 ``` r
-# library(dataharvester)
-# initialise(earthengine = TRUE)
+library(dataharvester)
+initialise_harvester(earthengine = FALSE)
+```
 
-# todo
+Then, run `harvest()`, which parses a YAML config file:
+
+``` r
+harvest("path/to/config.yaml")
+```
+
+### Manual downloads
+
+``` r
+# TODO
 ```
 
 ## Acknowledgments
@@ -93,9 +109,9 @@ Infrastructure Strategy (NCRIS).
 We would also like to acknowledge the use of the following Python
 packages in `dataharvester`:
 
--   (geemap)\[<https://github.com/giswqs/geemap>\]
--   (wxee)\[<https://github.com/aazuspan/wxee>\]
--   (eemont)\[<https://github.com/davemlz/eemont>\]
+-   [geemap](https://github.com/giswqs/geemap)
+-   [wxee](https://github.com/aazuspan/wxee)
+-   [eemont](https://github.com/davemlz/eemont)
 
 ## License
 

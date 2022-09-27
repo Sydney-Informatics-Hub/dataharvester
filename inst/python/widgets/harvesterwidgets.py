@@ -15,6 +15,11 @@ Copyright 2022 Sydney Informatics Hub (SIH), The University of Sydney
 
 This open-source software is released under the LGPL-3.0 License.
 
+TBD:
+- convert bbox string to list of floats
+settings.target_bbox = settings.target_bbox.strip('][').split(', ')
+settings.target_bbox = [float(item) for item in settings.target_bbox]
+
 """
 
 import os
@@ -265,8 +270,9 @@ def gen_panel_silo():
         disabled=False,
         indent=False)
         w_temp = widgets.SelectMultiple(
-        options=['Total','Median','Mean','Std','5pct','10pct','15pct','25pct','75pct','85pct','90pct','95pct'],
-        value=['Median'],
+        #options=['Total','Median','Mean','Std','5pct','10pct','15pct','25pct','75pct','85pct','90pct','95pct'],
+        options= ['mean', 'median', 'sum', 'std', 'perc95', 'perc5', 'max', 'min'],
+        value=['median'],
         rows=2,
         description='',
         disabled=False
@@ -300,7 +306,6 @@ def gen_panel_dea():
         indent=False)
         # If any temporal aggregation needed, uncomment following lines
         #w_temp = widgets.SelectMultiple(
-        #options=['Median','Mean','Std','5pct','10pct','15pct','25pct','75pct','85pct','90pct','95pct'],
         #value=['Median'],
         #rows=2,
         #description='',

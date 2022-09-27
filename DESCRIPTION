@@ -1,10 +1,21 @@
 Package: dataharvester
 Title: R interface to the AgReFed Data-Harvester
-Version: 0.0.1
+Version: 0.0.5
 Authors@R: 
-    person("Januar", "Harianto", , "januar.harianto@sydney.edu.au", 
-    role = c("aut", "cre"),
-    comment = c(ORCID = "0000-0002-4803-108X"))
+    c(person("Januar", 
+             "Harianto",
+             email = "januar.harianto@sydney.edu.au", 
+             role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0002-4803-108X")),
+      person("Sebastian", 
+             "Haan",
+             email = "sebastian.haan@sydney.edu.au", 
+             role = c("aut")),
+      person("Nathaniel", 
+             "Butterworth",
+             email = "nathaniel.butterworth@sydney.edu.au", 
+             role = c("aut"))
+             )
 Description: An R interface to the AgReFed Data Harvester
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -18,32 +29,12 @@ Imports:
     reticulate,
     rlang,
     rstudioapi,
+    terra,
     yaml
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Config/reticulate:
-  list(
-    packages = list(
-      list(package = "gdal",  version = "3.4.2", pip = FALSE),
-      list(package = "geopandas", pip = FALSE),
-      list(package = "netcdf4", pip = FALSE),
-      list(package = "rioxarray", pip = FALSE),
-      list(package = "owslib", pip = FALSE),
-      list(package = "numba", pip = FALSE),
-      list(package = "rasterio", pip = FALSE),
-      list(package = "ipykernel", pip = FALSE),
-      list(package = "eemont", pip = FALSE),
-      list(package = "localtileserver", pip = FALSE),
-      list(package = "earthengine-api", pip = FALSE),
-      list(package = "pygis", pip = TRUE),
-      list(package = "geemap", pip = TRUE),
-      list(package = "wxee", pip = FALSE),
-      list(package = "termcolor", pip = TRUE),
-      list(package = "alive-progress", pip = TRUE)
-    )
-  )
 Depends: 
     R (>= 4.1.0)
 LazyData: true
-URL: https://januarharianto.github.io/dataharvester/
+URL: https://sydney-informatics-hub.github.io/dataharvester/

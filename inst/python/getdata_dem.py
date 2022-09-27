@@ -90,9 +90,9 @@ def get_demdict():
     ]
     demdict["resolution_arcsec"] = 1
     demdict["layernames"] = {
-        'DEM': 'Digital Elevation Model',  
-        'Slope': 'Slope',
-        'Aspect': 'Aspect Ratio',
+        "DEM": "Digital Elevation Model",
+        "Slope": "Slope",
+        "Aspect": "Aspect Ratio",
     }
     return demdict
 
@@ -280,7 +280,7 @@ def get_dem_layers(layernames, outpath, bbox, resolution=1, crs="EPSG:4326"):
                 dem_ok = True
             outfname = dem2aspect(outfname_dem)
         else:
-            print(f"layername {layername} not recognised")
+            cprint(f"⚑ Layername {layername} not recognised, skipping", "yellow")
             outfname = None
         outfnames.append(outfname)
     return outfnames
@@ -314,8 +314,9 @@ def dem2slope(fname_dem):
     path = os.path.dirname(fname_dem)
     fname_out = os.path.join(path, "Slope_" + fname)
     gdal.DEMProcessing(fname_out, fname_dem, "slope")
-    logging.info(f"✓ | DEM slope from: {fname_dem}")
-    logging.print(f"✓ | DEM slope generated at: {fname_out}")
+    logging.info(f"✔  DEM slope from: {fname_dem}")
+    # logging.print(f"✔ DEM slope generated at: {fname_out}")
+    cprint(f"✔ DEM slope generated at: {fname_out}", "blue")
     return fname_out
 
 

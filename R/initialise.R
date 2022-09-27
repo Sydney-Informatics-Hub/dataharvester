@@ -1,34 +1,54 @@
-
-#' Initialise and validate Data-Harvester and dependencies
+#' Initialise and validate Data-Harvester, including dependencies
 #'
-#' @param env `chr` name of environment. If the environment doesn't currently
-#'   exist, one will be created in the same name using the default conda binary
-#' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
+#' @param envname Use this Conda environment. Defaults to `"r-reticulate"`
+#' @param earthengine Initialise Earth Engine if `TRUE.` Defaults to `FALSE`
 #'
 #' @export
-initialise_harvester <- function(env = NULL, earthengine = FALSE) {
-  cli::cli_h1("Welcome to AgReFed Data-Harvester")
-  message("\n\u2139 Checking if dataharvesteR has been set up appropriately")
+initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) {
+  # Check if conda exists
+  restart <- reticulate::validate_conda()
+  if (restart) {
+    return(message(crayon::bold("⚑ Please restart R now (Session > Restart R)")))
+  }
+  # Check if environment can be loaded
+  message("• Verifying Python configuration...", "\r", appendLF = FALSE)
   tryCatch(
     {
-      validate_conda()
-      validate_env(env = env)
-      validate_py_packages(env = env)
+      reticulate::use_condaenv(envname)
+      message("✔ Using Conda environment: ", envname)
     },
     error = function(e) {
-      message("Something went wrong here.")
-      return(invisible(FALSE))
+      message("⚑ Environment '", envname, "' not found, will create one now")
+      reticulate::conda_create(envname, python_version = "3.9")
+      .install_dependencies(envname)
+      reticulate::use_condaenv(envname)
+      message("• Using Conda environment: ", envname)
     }
   )
-  # Initialise Earth Engine is set
+  .validate_dependencies(envname)
+
   if (earthengine) {
-    message("\u2139 Set up Earth Engine API access")
-    eepy <- dd_source_python("getdata_ee", "dataharvester")
-    eepy$initialise()
+    if (terra::gdal() == "3.0.4") {
+      authenticate_ee("notebook")
+    } else authenticate_ee()
   }
-  return(invisible(TRUE))
 }
 
+#' Authenticate to Google Earth Engine API
+#'
+#' Utilises google-cloud-sdk to initialise and authenticate to the Earth Engine
+#' API. An API token containing the user's credentials is saved locally and can
+#' be used to authenticate vial Application Default Credentials.
+#'
+#' @export
+authenticate_ee <- function(auth_mode = "gcloud") {
+  path <- system.file("python", package = "dataharvester")
+  ee <- reticulate::import_from_path("getdata_ee",
+    path = path,
+    delay_load = TRUE
+  )
+  ee$initialise(auth_mode = auth_mode)
+}
 
 
 
@@ -38,21 +58,25 @@ initialise_harvester <- function(env = NULL, earthengine = FALSE) {
 #'   response. Defaults to TRUE when `interactive()` is chosen.
 #'
 #' @export
-validate_conda <- function(reply = interactive()) {
+validate_conda <- function() {
   # Is conda available? If not, install miniconda
-  message("\u2139 Check Python/conda install")
+  message("• Checking python/conda install...")
   tryCatch(
     {
       conda_binary <- reticulate::conda_binary()
-      message(crayon::green("✔ "), "conda binary: ", conda_binary)
+      message(crayon::green("✔ "), "Conda binary: ", conda_binary)
+      return(invisible(FALSE))
     },
     error = function(e) {
-      message(crayon::red("\U2717"), "conda binary: NULL")
+      message(crayon::red("✘ Conda binary not found"))
       text_out <- paste0(
-        "Conda binary not detected. You must use Anaconda or  Miniconda to use the AgReFed Data-Harvester. ", crayon::bold("\n\nDownload and install Miniconda. "), "Miniconda is a minimal and open-source installer for Python and conda. For more information see: https://docs.conda.io/en/latest/miniconda.html."
+        "You must use Anaconda or Miniconda to use `dataharvester`.",
+        crayon::bold("\n\nDownload and install Miniconda. "),
+        "Miniconda is a minimal, open-source installer for Python and conda. ",
+        "For more information please see: https://docs.conda.io/en/latest/miniconda.html"
       )
       message(paste(strwrap(text_out, width = 80), collapse = "\n"))
-      if (reply) {
+      if (interactive()) {
         ans <- readline("Would you like to install Miniconda now? {Y/n}: ")
       } else {
         ans <- "y"
@@ -61,12 +85,11 @@ validate_conda <- function(reply = interactive()) {
       repeat {
         id <- tolower(substring(ans, 1, 1))
         if (id %in% c("y", "")) {
-          reticulate::install_miniconda()
+          reticulate::install_miniconda(force = TRUE)
           text_out <- paste0(
             "You may remove miniconda entirely by running:\n",
             "\nreticulate::miniconda_uninstall()\n",
-            "\n in your R console.\n",
-            crayon::bold("* Please restart R and re-run `start_harvester()`.")
+            "\nin your R console.\n"
           )
           message(text_out)
           return(invisible(TRUE))
@@ -82,116 +105,94 @@ validate_conda <- function(reply = interactive()) {
 }
 
 
-#' Load default conda environment
-#'
-#' @param env `chr` name of conda environment to load. Defaults to `NULL`, which
-#'   automatically searches for the environments `geopy` and `dataharvestR`
-#'
-#' @export
-validate_env <- function(env = NULL) {
-  # Try to search for default conda environments "geopy" or "dataharvester"
-  if (is.null(env)) {
-    env <- "geopy"
-    tryCatch(
-      {
-        reticulate::use_condaenv(env)
-      },
-      error = function(e) {
-        tryCatch(
-          {
-            env <- "dataharvester"
-            reticulate::use_condaenv(env)
-          },
-          error = function(e) {
-            # If both environments are not found, create one for `dataharvester`
-            message("Conda environment  not found. Creating one on the spot...")
-            reticulate::conda_create("dataharvester", packages = "python=3.9")
-            reticulate::use_condaenv("dataharvester")
-          }
-        )
-      }
+.install_dependencies <- function(envname = "r-reticulate") {
+  # Create environment first
+  # Horrible way to check if we are on RStudio Cloud by checking GDAL version
+  use_pygdal <- FALSE
+  if (terra::gdal() == "3.0.4") {
+    use_pygdal <- TRUE
+  }
+  # Install dependencies
+  if (use_pygdal) {
+    reticulate::conda_install(
+      envname = envname,
+      packages = c("rasterio==1.2.10", "pygdal==3.0.4.11"),
+      pip = TRUE
+    )
+    reticulate::conda_install(
+      envname = envname,
+      packages = "google-cloud-sdk"
     )
   } else {
-    tryCatch(
-      {
-        reticulate::use_condaenv(env)
-      },
-      error = function(e) {
-        message(
-          "Conda env ", env, " does not currently exist, creating one ",
-          "on the spot: "
-        )
-        try(reticulate::conda_remove(env), silent = TRUE)
-        reticulate::conda_create(env, packages = "python=3.9")
-        reticulate::use_condaenv(env)
-      }
+    reticulate::conda_install(
+      envname = "r-reticulate",
+      packages = c("gdal", "rasterio", "google-cloud-sdk")
     )
   }
-  message(crayon::green("✔ "), "conda env: ", env, "\n")
+  # remainder conda installs
+  reticulate::conda_install(
+    envname = envname,
+    packages = c(
+      "alive-progress",
+      "eemont",
+      "geemap",
+      "geedim",
+      "geopandas",
+      "netcdf4",
+      "numba",
+      "owslib",
+      "ipykernel",
+      "ipywidgets==7.6.5",
+      "earthengine-api",
+      "rioxarray",
+      "wxee",
+      "termcolor"
+    ),
+    pip = TRUE
+  )
 }
 
 
-
-#' Check if required Python packages for Data-Harvester exist.
-#'
-#' Internal function. First, the function checks if all required packages have
-#' been installed. Then it does a quick check to see if gdal is at version
-#' 3.4.2. If any package appears to be missing they will be reinstalled.
-#'
-#' @param env `chr` name of environment
-#'
-#' @import dplyr
-#' @importFrom rlang .data
-#' @returns `logical`
-#' @export
-validate_py_packages <- function(env = NULL) {
+.validate_dependencies <- function(envname = "r-reticulate") {
+  # Note: a Conda environment must be loaded first or this function will fail
   # List required packages
-  py_packages <- c(
-    "gdal",
+  message("• Validating dependencies...", "\r", appendLF = FALSE)
+  checklist <- c(
+    # pip
+    "alive-progress",
+    "eemont",
+    "geemap",
+    "geedim",
     "geopandas",
-    "ipykernel",
     "netcdf4",
     "numba",
     "owslib",
-    "rasterio",
-    "rioxarray",
-    "eemont",
-    "geemap",
-    "pygis",
-    "localtileserver",
+    "ipykernel",
+    "ipywidgets",
     "earthengine-api",
-    "geemap",
-    "alive-progress"
+    "rioxarray",
+    "wxee",
+    "termcolor",
+    # conda
+    # "gdal",
+    "rasterio",
+    "google-cloud-sdk"
   )
-  # Required gdal version
-  gdal_required <- "3.4.2"
   # Filter package list for checks
   py_avail_modules <-
     reticulate::py_list_packages()[, 1:2] |>
-    dplyr::filter(.data$package %in% py_packages)
-  message("\u2139 Checking package versions")
-  # Check that all packages have been installed
-  check_py_packages <-
+    dplyr::filter(.data$package %in% checklist)
+
+  dependencies_ok <-
     py_avail_modules |>
     dplyr::pull(.data$package) |>
-    setequal(py_packages)
-  # Check that gdal version is 3.4.2
-  check_gdal_version <-
-    py_avail_modules |>
-    dplyr::filter(.data$package == "gdal") |>
-    dplyr::pull(.data$version) |>
-    setequal(gdal_required)
-  # If both are TRUE, we are good, otherwise re-install everything to be safe
-  if (check_py_packages & check_gdal_version) {
-    # message(paste(crayon::green("✔"), py_packages, " | "))
-    message(paste(crayon::green("✔ all packages validated")))
+    setequal(checklist)
+
+  if (dependencies_ok) {
+    message("✔ All dependencies validated")
   } else {
-    message(paste0(
-      "Cannot validate required Python packages. ",
-      "Attempting to reinstall all packages to be safe..."
-    ))
-    # reticulate::conda_install(env, c("gdal == 3.4.2", py_packages[-1]))
-    pyconfig <- reticulate::py_config()
+    message(paste(crayon::yellow("⚑ Looks like some packages are not installed or have changed. ")))
+    message(paste(crayon::yellow("Re-installing all dependencies just to be sure...")))
+    .install_dependencies(envname)
   }
-  return(invisible(TRUE))
 }
