@@ -1,13 +1,12 @@
 #' Initialise and validate Data-Harvester, including dependencies
 #'
-#' @param envname
-#' @param earthengine `logical` initialise Earth Engine if TRUE. Defaults to FALSE
+#' @param envname Use this Conda environment. Defaults to `"r-reticulate"`
+#' @param earthengine Initialise Earth Engine if `TRUE.` Defaults to `FALSE`
 #'
-#' @import reticulate
 #' @export
 initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) {
   # Check if conda exists
-  restart <- validate_conda()
+  restart <- reticulate::validate_conda()
   if (restart) {
     return(message(crayon::bold("⚑ Please restart R now (Session > Restart R)")))
   }
@@ -15,14 +14,14 @@ initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) 
   message("• Verifying Python configuration...", "\r", appendLF = FALSE)
   tryCatch(
     {
-      use_condaenv(envname)
+      reticulate::use_condaenv(envname)
       message("✔ Using Conda environment: ", envname)
     },
     error = function(e) {
       message("⚑ Environment '", envname, "' not found, will create one now")
-      conda_create(envname, python_version = "3.9")
+      reticulate::conda_create(envname, python_version = "3.9")
       .install_dependencies(envname)
-      use_condaenv(envname)
+      reticulate::use_condaenv(envname)
       message("• Using Conda environment: ", envname)
     }
   )
@@ -115,23 +114,23 @@ validate_conda <- function() {
   }
   # Install dependencies
   if (use_pygdal) {
-    conda_install(
+    reticulate::conda_install(
       envname = envname,
       packages = c("rasterio==1.2.10", "pygdal==3.0.4.11"),
       pip = TRUE
     )
-    conda_install(
+    reticulate::conda_install(
       envname = envname,
       packages = "google-cloud-sdk"
     )
   } else {
-    conda_install(
+    reticulate::conda_install(
       envname = "r-reticulate",
       packages = c("gdal", "rasterio", "google-cloud-sdk")
     )
   }
   # remainder conda installs
-  conda_install(
+  reticulate::conda_install(
     envname = envname,
     packages = c(
       "alive-progress",

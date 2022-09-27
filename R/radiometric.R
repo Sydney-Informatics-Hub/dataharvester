@@ -1,16 +1,15 @@
-#' Title
+#' Download from Geosciences Australia's Radiometric Map of Australia
 #'
-#' @param layer
-#' @param bounding_box
-#' @param out_path
-#' @param resolution
-#' @param crs
-#' @param format_out
+#' @param layer `r params(layer)`
+#' @param bounding_box `r params(bounding_box)`
+#' @param out_path `r params(out_path)`
+#' @param resolution `r params(resolution)`
+#' @param crs `r params(crs)`
+#' @param format_out File format of downloaded file. Can only be `"GeoTIFF"` or
+#'   `"NetCDF"`. Defaults to `"GeoTIFF"`
 #'
-#' @return
+#' @return a list of filenames (after files have been downloaded or processed)
 #' @export
-#'
-#' @examples
 download_radiometric <- function(layer,
                                  bounding_box,
                                  out_path,

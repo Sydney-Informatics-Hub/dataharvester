@@ -1,25 +1,21 @@
-#' Download layers from SLGA data server
+#' Download from SLGA (Soil Atributes)
 #'
-#' @param layer `string`: layer name(s) to download
-#' @param bounding_box `numeric`: coordinates in EPSG:4326 use to generate a
-#'   bounding box around are of interest, i.e. `c(min_x, min_y, max_x, max_y)`
-#' @param out_path `string`: path to output folder e.g. 'downloads/'
-#' @param resolution `numeric`, `optional`: resolution in arcsec. Defaults to 3
-#'   arcsec (~ 90 m), which is the native resolution of SLGA data
-#' @param depth_min `integer`, `optional`: SLGA layers are aggregated by depth.
-#'   Use `depth_min` and `depth_max` to define specific depths to collect
-#' @param depth_max `integer`, `optional`: SLGA layers are aggregated by depth.
-#'   Use `depth_min` and `depth_max` to define specific depths to collect
-#' @param get_ci `logical`, `optional`: download upper and lower 95% confidence
-#'   limits with the the layer. Defaults to TRUE
-#' @param verbose `logical`, `optional`: print as much information as possible
-#'   to the debug log. Defaults to FALSE
+#' Wrapper funtion to get layers from the Soil and Landscape Grid of Australia
+#' (SLGA).
 #'
-#' @return path name(s) of layer(s) downloaded
+#' @param layer `r params(layer)`
+#' @param bounding_box `r params(bounding_box)`
+#' @param out_path `r params(out_path)`
+#' @param resolution `r params(resolution)`
+#' @param depth_min,depth_max SLGA layers can be filtered between specific
+#'   depths. Minimum and maximum depths can be set using `depth_min` and
+#'   `depth_max`. Defaults to `0` and `200`, respectively
+#' @param get_ci Also download upper and lower 95% confidence limits with the
+#'   the layer. Defaults to `TRUE`
+#' @param verbose `r params(verbose)`
+#'
+#' @return a list of filenames (after files have been downloaded or processed)
 #' @export
-#'
-#' @examples
-#' NULL
 download_slga <- function(layer,
                           bounding_box,
                           out_path,
