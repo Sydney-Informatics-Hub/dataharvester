@@ -1,11 +1,11 @@
 Package: dataharvester
 Title: R interface to the AgReFed Data-Harvester
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: 
     c(person("Januar", 
              "Harianto",
              email = "januar.harianto@sydney.edu.au", 
-             role = c("aut", "cre", "trl"),
+             role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-4803-108X")),
       person("Sebastian", 
              "Haan",
@@ -29,31 +29,11 @@ Imports:
     reticulate,
     rlang,
     rstudioapi,
+    terra,
     yaml
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Config/reticulate:
-  list(
-    packages = list(
-      list(package = "gdal", pip = FALSE),
-      list(package = "rasterio", pip = FALSE),
-      list(package = "earthengine-api", pip = FALSE),
-      list(package = "eemont", pip = FALSE),
-      list(package = "geopandas", pip = FALSE),
-      list(package = "ipykernel", pip = FALSE),
-      list(package = "numba", pip = FALSE),
-      list(package = "owslib", pip = FALSE),
-      list(package = "rioxarray", pip = FALSE),
-      list(package = "termcolor", pip = FALSE),
-      list(package = "wxee", pip = FALSE),
-      list(package = "google-cloud-sdk", pip = FALSE),
-      list(package = "localtileserver", pip = FALSE),
-      list(package = "netCDF4", pip = TRUE),
-      list(package = "geemap", pip = TRUE),
-      list(package = "alive-progress", pip = TRUE)
-    )
-  )
 Depends: 
     R (>= 4.1.0)
 LazyData: true

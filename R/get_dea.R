@@ -1,15 +1,5 @@
-#' Get DEA
-#'
-#' @param x
-#' @param config
-#' @param agg
-#' @param ...
-#'
-#' @return
-#' @export
-#'
-#' @examples
-get_dea <- function(x, config = NULL, agg = c("mean", "perc95", "perc5"),...) {
+# Deprecated but code is useful (will delete after logtable functions are copied)
+.get_dea <- function(x, config = NULL, agg = c("mean", "perc95", "perc5"),...) {
   # Is object pased on by wrap_config()? If yes, settings can be extracted
   # from this object
   if ("agrefed.wrap" %in% class(x) & is.null(config)) {

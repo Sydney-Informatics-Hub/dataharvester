@@ -2,7 +2,7 @@
 % Please edit documentation in R/slga.R
 \name{download_slga}
 \alias{download_slga}
-\title{Download layers from SLGA data server}
+\title{Download from SLGA (Soil Atributes)}
 \usage{
 download_slga(
   layer,
@@ -16,34 +16,27 @@ download_slga(
 )
 }
 \arguments{
-\item{layer}{\code{string}: layer name(s) to download}
+\item{layer}{Layer name(s) to download as a vector of strings}
 
-\item{bounding_box}{\code{numeric}: coordinates in EPSG:4326 use to generate a
-bounding box around are of interest, i.e. \code{c(min_x, min_y, max_x, max_y)}}
+\item{bounding_box}{A numeric vector of coordinate values used to generate a bounding box around are of interest in EPSG:4326 format, for example, \code{c(min_x, min_y, max_x, max_y)}}
 
-\item{out_path}{\code{string}: path to output folder e.g. 'downloads/'}
+\item{out_path}{Path to an output/download folder, e.g. \code{'downloads/'}}
 
-\item{resolution}{\code{numeric}, \code{optional}: resolution in arcsec. Defaults to 3
-arcsec (~ 90 m), which is the native resolution of SLGA data}
+\item{resolution}{An integer value for resolution, in arc seconds}
 
-\item{depth_min}{\code{integer}, \code{optional}: SLGA layers are aggregated by depth.
-Use \code{depth_min} and \code{depth_max} to define specific depths to collect}
+\item{depth_min, depth_max}{SLGA layers can be filtered between specific
+depths. Minimum and maximum depths can be set using \code{depth_min} and
+\code{depth_max}. Defaults to \code{0} and \code{200}, respectively}
 
-\item{depth_max}{\code{integer}, \code{optional}: SLGA layers are aggregated by depth.
-Use \code{depth_min} and \code{depth_max} to define specific depths to collect}
+\item{get_ci}{Also download upper and lower 95\% confidence limits with the
+the layer. Defaults to \code{TRUE}}
 
-\item{get_ci}{\code{logical}, \code{optional}: download upper and lower 95\% confidence
-limits with the the layer. Defaults to TRUE}
-
-\item{verbose}{\code{logical}, \code{optional}: print as much information as possible
-to the debug log. Defaults to FALSE}
+\item{verbose}{Print as much information as possible to the debug log}
 }
 \value{
-path name(s) of layer(s) downloaded
+a list of filenames (after files have been downloaded or processed)
 }
 \description{
-Download layers from SLGA data server
-}
-\examples{
-NULL
+Wrapper funtion to get layers from the Soil and Landscape Grid of Australia
+(SLGA).
 }
