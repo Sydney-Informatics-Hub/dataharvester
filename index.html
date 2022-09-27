@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@
 <p>Install the development version of this package from GitHub using <code>install_github()</code> from <code>remotes</code> or <code>devtools</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes") # uncomment and run this line if necessary</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"januarharianto/dataharvester"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sydney-informatics-hub/dataharvester"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sydney-informatics-hub.github.io/dataharvester/">dataharvester</a></span><span class="op">)</span> <span class="co"># load package</span></span></code></pre></div>
 </div>
@@ -92,7 +92,7 @@
 <p>Run <code><a href="reference/initialise_harvester.html">initialise_harvester()</a></code> after loading the package. The function helps you initialise the package, verifies package dependencies and connect to the Earth Engine API.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sydney-informatics-hub.github.io/dataharvester/">dataharvester</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/initialise_harvester.html">initialise_harvester</a></span><span class="op">(</span>earthengine <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/initialise_harvester.html">initialise_harvester</a></span><span class="op">(</span>earthengine <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>Then, run <code><a href="reference/harvest.html">harvest()</a></code>, which parses a YAML config file:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/harvest.html">harvest</a></span><span class="op">(</span><span class="st">"path/to/config.yaml"</span><span class="op">)</span></span></code></pre></div>
@@ -147,7 +147,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Januar Harianto <br><small class="roles"> Author, maintainer, translator </small> <a href="https://orcid.org/0000-0002-4803-108X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Januar Harianto <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-4803-108X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Sebastian Haan <br><small class="roles"> Author </small>  </li>
 <li>Nathaniel Butterworth <br><small class="roles"> Author </small>  </li>
 </ul>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,27 @@
       
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.5" id="dataharvester-005">dataharvester 0.0.5<a class="anchor" aria-label="anchor" href="#dataharvester-005"></a></h2>
+<p>This version focuses on more download options and improved validation to Python dependencies and Google Earth Engine.</p>
+<div class="section level4">
+<h4 id="whats-new-0-0-5">What’s new:<a class="anchor" aria-label="anchor" href="#whats-new-0-0-5"></a></h4>
+<ul><li>⚡: <code><a href="../reference/download_dea.html">download_dea()</a></code> for Digital Earth Australia downloads</li>
+<li>⚡: <code><a href="../reference/download_landscape.html">download_landscape()</a></code> for SLGA Landscape products</li>
+<li>⚡: <code><a href="../reference/download_radiometric.html">download_radiometric()</a></code> for Geoscience Australia Radiometric maps</li>
+<li>⚡: <code><a href="../reference/download_silo.html">download_silo()</a></code> now accepts more than 1 layer for downloads</li>
+</ul></div>
+<div class="section level4">
+<h4 id="whats-changed-0-0-5">What’s changed:<a class="anchor" aria-label="anchor" href="#whats-changed-0-0-5"></a></h4>
+<ul><li>🛠: Config/reticulate is no longer used to validate Python dependencies, since different package versions needed to be installed depending on the workspace environment (i.e. RStudio Desktop, RStudio Cloud, or Binder).</li>
+<li>🏎: performance and usability improvements to <code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code>
+</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.4" id="dataharvester-004">dataharvester 0.0.4<a class="anchor" aria-label="anchor" href="#dataharvester-004"></a></h2>
+<p>This is mainly a bugfix 🪲 (and some testing) release with no new features.</p>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.3" id="dataharvester-003">dataharvester 0.0.3<a class="anchor" aria-label="anchor" href="#dataharvester-003"></a></h2>
 <div class="section level4">
@@ -84,9 +105,9 @@
 <li>
 <code><a href="../reference/harvest.html">harvest()</a></code> to perform “headless” data harvesting when paired with a config YAML</li>
 <li>
-<code><a href="../reference/get_slga.html">get_slga()</a></code> for SLGA downloads</li>
+<code>get_slga()</code> for SLGA downloads</li>
 <li>
-<code><a href="../reference/get_dea.html">get_dea()</a></code> for DEA downloads</li>
+<code>get_dea()</code> for DEA downloads</li>
 <li>Some initial documentation has been added to functions, but most are draft-y</li>
 <li>
 <code>README.md</code> has been added</li>

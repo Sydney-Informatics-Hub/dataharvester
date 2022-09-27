@@ -58,22 +58,25 @@
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_xy_names.html</loc>
   </url>
   <url>
+    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/download_dea.html</loc>
+  </url>
+  <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/download_dem.html</loc>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/download_ee.html</loc>
   </url>
   <url>
+    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/download_landscape.html</loc>
+  </url>
+  <url>
+    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/download_radiometric.html</loc>
+  </url>
+  <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/download_silo.html</loc>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/download_slga.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/get_dea.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/get_slga.html</loc>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/harvest.html</loc>
@@ -106,7 +109,7 @@
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/update_logtable.html</loc>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/validate_py_packages.html</loc>
+    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/validate_conda.html</loc>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/wrap_config.html</loc>
