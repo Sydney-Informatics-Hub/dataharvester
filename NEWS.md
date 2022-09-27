@@ -1,3 +1,24 @@
+# dataharvester 0.0.5
+
+This version focuses on more download options and improved validation to Python dependencies and Google Earth Engine.
+
+### What's new:
+
+- ⚡: `download_dea()` for Digital Earth Australia downloads
+- ⚡: `download_landscape()` for SLGA Landscape products
+- ⚡: `download_radiometric()` for Geoscience Australia Radiometric maps
+- ⚡: `download_silo()` now accepts more than 1 layer for downloads
+
+
+### What's changed:
+
+- 🛠: Config/reticulate is no longer used to validate Python dependencies, since different package versions needed to be installed depending on the workspace environment (i.e. RStudio Desktop, RStudio Cloud, or Binder).
+- 🏎: performance and usability improvements to `initialise_harvester()`
+
+# dataharvester 0.0.4
+
+This is mainly a bugfix 🪲 (and some testing) release with no new features.
+
 # dataharvester 0.0.3
 
 ### What's new:
