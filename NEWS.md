@@ -1,3 +1,12 @@
+# dataharvester 0.0.6
+
+A quick update to authentication methods for Google Earth Engine (fingers crossed).
+
+### What's changed:
+
+- 🛠: Changed how `intialise_harvester()` works with Google Earth Engine to be more compatible with RStudio Cloud/Binder.
+
+
 # dataharvester 0.0.5
 
 This version focuses on more download options and improved validation to Python dependencies and Google Earth Engine.
