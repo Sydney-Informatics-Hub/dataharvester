@@ -1,3 +1,9 @@
+# dataharvester 0.0.7
+
+Another quick update to fix issues with Google Earth Engine authentication.
+
+
+
 # dataharvester 0.0.6
 
 A quick update to authentication methods for Google Earth Engine (fingers crossed).
