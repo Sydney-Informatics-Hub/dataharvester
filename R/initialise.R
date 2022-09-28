@@ -6,7 +6,7 @@
 #' @export
 initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) {
   # Check if conda exists
-  restart <- reticulate::validate_conda()
+  restart <- validate_conda()
   if (restart) {
     return(message(crayon::bold("⚑ Please restart R now (Session > Restart R)")))
   }
@@ -28,7 +28,12 @@ initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) 
   .validate_dependencies(envname)
 
   if (earthengine) {
+    message("• Checking Google Earth Engine authentication")
     if (terra::gdal() == "3.0.4") {
+      message(paste0("⚑ Cloud/server environment detected. If a browser popup ",
+        "does not appear, please ignore the warning messages and copy and ",
+        "paste the link produced to your web browser to proceed with ",
+        "authentication"))
       authenticate_ee("notebook")
     } else authenticate_ee()
   }
