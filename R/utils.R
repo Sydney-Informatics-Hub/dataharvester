@@ -77,7 +77,7 @@ init_logtable <- function() {
 #' output directory.
 #'
 #' @param logname `string`: name of data frame object created from
-#'   [init_logfile()]
+#'   `init_logfile()`
 #' @param file_name `string`: file name(s) to add to the data frame
 #' @param layer `string`: layer name(s) to add to the data frame
 #' @param source `string`: the download source, abbreviated. For example, "DEA"

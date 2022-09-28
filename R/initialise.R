@@ -8,17 +8,17 @@ initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) 
   # Check if conda exists
   restart <- validate_conda()
   if (restart) {
-    return(message(crayon::bold("⚑ Please restart R now (Session > Restart R)")))
+    return(message(crayon::bold("\u2691 Please restart R now (Session > Restart R)")))
   }
   # Check if environment can be loaded
   message("• Verifying Python configuration...", "\r", appendLF = FALSE)
   tryCatch(
     {
       reticulate::use_condaenv(envname)
-      message("✔ Using Conda environment: ", envname)
+      message("\u2714 Using Conda environment: ", envname)
     },
     error = function(e) {
-      message("⚑ Environment '", envname, "' not found, will create one now")
+      message("\u2691 Environment '", envname, "' not found, will create one now")
       reticulate::conda_create(envname, python_version = "3.9")
       .install_dependencies(envname)
       reticulate::use_condaenv(envname)
@@ -30,7 +30,7 @@ initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) 
   if (earthengine) {
     message("• Checking Google Earth Engine authentication")
     if (terra::gdal() == "3.0.4") {
-      message(paste0("⚑ Cloud/server environment detected. If a browser popup ",
+      message(paste0("\u2691 Cloud/server environment detected. If a browser popup ",
         "does not appear, please ignore the warning messages and copy and ",
         "paste the link produced to your web browser to proceed with ",
         "authentication"))
@@ -199,10 +199,10 @@ validate_conda <- function(reinstall = FALSE) {
     setequal(checklist)
 
   if (dependencies_ok) {
-    message("✔ All dependencies validated")
+    message("\u2714 All dependencies validated")
   } else {
-    message(paste(crayon::yellow("⚑ Looks like some packages are not installed or have changed. ")))
-    message(paste(crayon::yellow("Re-installing all dependencies just to be sure...")))
+    message(paste(crayon::yellow("\u2691 Looks like some packages are not installed or have changed. ")))
+    message(paste(crayon::yellow("• Re-installing all dependencies just to be sure...")))
     .install_dependencies(envname)
   }
 }
