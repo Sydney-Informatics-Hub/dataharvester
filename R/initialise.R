@@ -6,7 +6,7 @@
 #' @export
 initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) {
   # Check if conda exists
-  restart <- reticulate::validate_conda()
+  restart <- validate_conda()
   if (restart) {
     return(message(crayon::bold("⚑ Please restart R now (Session > Restart R)")))
   }
