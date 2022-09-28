@@ -42,9 +42,11 @@ config_handler.set_global(
     elapsed="{elapsed}",
 )
 
+
 def spin(message=None, colour=None):
     """Spin animation as a progress inidicator"""
     return alive_bar(1, title=colored(f"{message} ", colour))
+
 
 def get_radiometricdict():
     """

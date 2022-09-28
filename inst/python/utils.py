@@ -35,7 +35,7 @@ from rasterio.plot import show
 import numpy as np
 import pandas as pd
 import geopandas as gpd
-from osgeo import gdal
+
 from pyproj import CRS
 from pathlib import Path
 
@@ -484,8 +484,8 @@ def _get_coords_at_point(gt, lon, lat):
     col: x index value from the raster
     row: y index value from the raster
     """
-    row = int((lon - gt[0]) / gt[1])
-    col = int((lat - gt[3]) / gt[5])
+    row = int((lon - gt[2]) / gt[0])
+    col = int((lat - gt[5]) / gt[4])
 
     return (col, row)
 
@@ -517,18 +517,19 @@ def raster_query(longs, lats, rasters, titles=None):
         filename = Path(filepath).resolve().stem
         # print("Opening:", filename)
         # Open the file:
-        raster = gdal.Open(filepath)
+        raster = rasterio.open(filepath)
+        # Get the transformation crs data
+        gt = raster.transform
+        # This will only be the first band, usally multiband has same index.
+        arr = raster.read(1)
+
         if titles is not None:
             colname = titles[rasters.index(filepath)]
         else:
             colname = Path(filepath).stem
             # colname = filepath.split("/")[-1][:-4]
-        # Get the transformation crs data
-        gt = raster.GetGeoTransform()
 
         # Interogate the tiff file as an array
-        # This will only be the first band, usally multiband has same index.
-        arr = raster.GetRasterBand(1).ReadAsArray()
 
         # FIXME Check the number of bands and print a warning if more than 1
 
