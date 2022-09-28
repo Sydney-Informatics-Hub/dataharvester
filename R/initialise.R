@@ -131,12 +131,14 @@ validate_conda <- function(reinstall = FALSE) {
     )
     reticulate::conda_install(
       envname = envname,
-      packages = "google-cloud-sdk"
+      packages = "google-cloud-sdk",
+      channel = "conda-forge"
     )
   } else {
     reticulate::conda_install(
       envname = "r-reticulate",
-      packages = c("gdal", "rasterio", "google-cloud-sdk")
+      packages = c("gdal", "rasterio", "google-cloud-sdk"),
+      channel = "conda-forge"
     )
   }
   # remainder conda installs
