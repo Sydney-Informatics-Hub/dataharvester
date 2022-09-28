@@ -44,6 +44,7 @@ TBF:
 import os
 from owslib.wcs import WebCoverageService
 import rasterio
+from rasterio import MemoryFile
 from rasterio.plot import show
 from datetime import datetime, timezone
 from termcolor import cprint, colored
@@ -83,12 +84,6 @@ def get_deadict():
             "ga_ls_ard_3": "DEA Surface Reflectance (Landsat)",
             "s2_nrt_granule_nbar_t": "DEA Surface Reflectance (Sentinel-2 Near Real-Time)",
             "s2_ard_granule_nbar_t": "DEA Surface Reflectance (Sentinel-2)",
-            "ls8_nbart_geomedian_annual": "DEA Surface Reflectance Calendar Year (Landsat 8 OLI-TIRS)",
-            "ls7_nbart_geomedian_annual": "DEA Surface Reflectance Calendar Year (Landsat 7 ETM+)",
-            "ls5_nbart_geomedian_annual": "DEA Surface Reflectance Calendar Year (Landsat 5 TM)",
-            "ls8_nbart_tmad_annual": "DEA Surface Reflectance TMAD Calendar Year (Landsat 8 OLI-TIRS)",
-            "ls7_nbart_tmad_annual": "DEA Surface Reflectance TMAD Calendar Year (Landsat 7 ETM+)",
-            "ls5_nbart_tmad_annual": "DEA Surface Reflectance TMAD Calendar Year (Landsat 5 TM)",
             "ga_ls8c_nbart_gm_cyear_3": "DEA GeoMAD (Landsat 8 OLI-TIRS)",
             "ga_ls7e_nbart_gm_cyear_3": "DEA GeoMAD (Landsat 7 ETM+)",
             "ga_ls5t_nbart_gm_cyear_3": "DEA GeoMAD (Landsat 5 TM)",
@@ -108,46 +103,26 @@ def get_deadict():
             "ga_ls_landcover": "DEA Land Cover Calendar Year (Landsat)",
             "ga_ls_landcover_descriptors": "DEA Land Cover Environmental Descriptors",
             "ga_ls_fc_3": "DEA Fractional Cover (Landsat)",
-            "fcp_rgb": "DEA Fractional Cover Percentiles (Landsat, Annual)",
-            "fcp_seasonal_rgb": "DEA Fractional Cover Percentiles (Landsat, Seasonal)",
-            "fcp_green_veg": "DEA Fractional Cover Percentiles (Landsat, Annual, Green Vegetation)",
-            "fcp_non_green_veg": "DEA Fractional Cover Percentiles (Landsat, Annual, Non-Green Vegetation)",
-            "fcp_bare_ground": "DEA Fractional Cover Percentiles (Landsat, Annual, Bare Ground)",
-            "fcp_seasonal_green_veg": "DEA Fractional Cover Percentiles (Landsat, Seasonal, Green Vegetation)",
-            "fcp_seasonal_non_green_veg": "DEA Fractional Cover Percentiles (Landsat, Seasonal, Non-Green Vegetation)",
-            "fcp_seasonal_bare_ground": "DEA Fractional Cover Percentiles (Landsat, Seasonal, Bare Ground)",
-            "ls5_fc_albers": "DEA Fractional Cover (Landsat 5 TM, Collection 2)",
-            "ls7_fc_albers": "DEA Fractional Cover (Landsat 7 ETM+, Collection 2)",
-            "ls8_fc_albers": "DEA Fractional Cover (Landsat 8 OLI-TIRS, Collection 2)",
-            "fc_albers_combined": "DEA Fractional Cover (Landsat, Collection 2)",
-            "mangrove_cover_v2_0_2": "DEA Mangroves (Landsat)",
+            "ga_ls_fc_pc_cyear_3": "DEA Fractional Cover Percentiles Calendar Year (Landsat)",
+            "ga_ls_mangrove_cover_cyear_3": "DEA Mangroves (Landsat)",
             "s2_barest_earth": "GA Barest Earth (Sentinel-2)",
             "ls8_barest_earth_mosaic": "GA Barest Earth (Landsat 8 OLI/TIRS)",
             "landsat_barest_earth": "GA Barest Earth (Landsat)",
             "ga_ls_tcw_percentiles_2": "DEA Wetness Percentiles (Landsat)",
+            "ga_ls_tc_pc_cyear_3": "DEA Tasseled Cap Indices Percentiles Calendar Year (Landsat)",
             "ga_ls_wo_3": "DEA Water Observations (Landsat)",
-            "ga_ls_wo_fq_myear_3": "Multi Year Water Observation Statistics (Landsat)",
-            "ga_ls_wo_fq_cyear_3": "Annual Water Observation Statistics - Calendar Year (Landsat)",
-            "ga_ls_wo_fq_apr_oct_3": "Seasonal Water Observation Statistics - April to October (Landsat)",
-            "ga_ls_wo_fq_nov_mar_3": "Seasonal Water Observation Statistics - November to March (Landsat)",
-            "wofs_albers": "DEA Water Observations (Landsat, depricated)",
-            "wofs_annual_summary_statistics": "DEA Annual Water Observation Frequency Statistics (Landsat, depricated)",
-            "wofs_annual_summary_clear": "DEA Annual Clear Observation Statistics (Landsat, C2)",
-            "wofs_annual_summary_wet": "DEA Annual Wet Observation Statistics (Landsat, depricated)",
-            "wofs_filtered_summary": "DEA Multi-Year Water Observation Frequency Filtered Statistics (Landsat, depricated)",
-            "wofs_summary_clear": "DEA Multi-Year Clear Observation Statistics (Landsat, depricated)",
-            "wofs_summary_wet": "DEA Multi-Year Wet Observation Statistics (Landsat, depricated)",
-            "Water Observations from Space Statistics": "DEA Multi-Year Water Observation Frequency Statistics (Landsat, depricated)",
-            "wofs_filtered_summary_confidence": "DEA Multi-Year Water Observation Confidence Statistics (Landsat, depricated)",
-            "wofs_apr_oct_summary_statistics": "DEA April-October Seasonal Water Observations (Landsat, depricated)",
-            "wofs_apr_oct_summary_clear": "DEA April-October Clear Observation Statistics (Landsat, depricated)",
-            "wofs_apr_oct_summary_wet": "DEA April-October Wet Observation Statistics (Landsat, depricated)",
-            "wofs_nov_mar_summary_statistics": "DEA November-March Seasonal Water Observations (Landsat, depricated)",
-            "wofs_nov_mar_summary_clear": "DEA November-March Clear Observation Statistics (Landsat, depricated)",
-            "wofs_nov_mar_summary_wet": "DEA November-March Wet Observation Statistics (Landsat, depricated)",
-            "ITEM_V2.0.0": "DEA Intertidal Extents (ITEM)",
+            "ga_ls_wo_fq_myear_3": "DEA Water Observations Multi Year (Landsat)",
+            "ga_ls_wo_fq_cyear_3": "DEA Water Observations Calendar Year (Landsat)",
+            "ga_ls_wo_fq_apr_oct_3": "DEA Water Observations April to October (Landsat)",
+            "ga_ls_wo_fq_nov_mar_3": "DEA Water Observations November to March (Landsat)",
+            "wofs_filtered_summary": "DEA Multi-Year Water Observation Frequency Filtered Statistics (Landsat, DEPRECATED)",
+            "wofs_summary_clear": "DEA Multi-Year Clear Observation Statistics (Landsat, DEPRECATED)",
+            "wofs_summary_wet": "DEA Multi-Year Wet Observation Statistics (Landsat, DEPRECATED)",
+            "Water Observations from Space Statistics": "DEA Multi-Year Water Observation Frequency Statistics (Landsat, DEPRECATED)",
+            "wofs_filtered_summary_confidence": "DEA Multi-Year Water Observation Confidence Statistics (Landsat, DEPRECATED)",
+            "ITEM_V2.0.0": "DEA Intertidal Extents (Landsat)",
             "ITEM_V2.0.0_Conf": "DEA Intertidal Extents confidence",
-            "NIDEM": "DEA Intertidal Elevation (NIDEM)",
+            "NIDEM": "DEA Intertidal Elevation (Landsat)",
             "high_tide_composite": "DEA High Tide Imagery (Landsat)",
             "low_tide_composite": "DEA Low Tide Imagery (Landsat)",
             "ga_s2_ba_provisional_3": "DEA Burnt Area Characteristic Layers (Sentinel 2 Near Real-Time, Provisional)",
@@ -176,6 +151,150 @@ def get_deadict():
             "aster_quartz_index": "TIR Quartz Index",
             "multi_scale_topographic_position": "Multi-Scale Topographic Position",
             "weathering_intensity": "Weathering Intensity",
+        },
+        "n_bands": {
+            "ga_ls_ard_3": 7,
+            "s2_nrt_granule_nbar_t": 23,
+            "s2_ard_granule_nbar_t": 12,
+            "ga_ls8c_nbart_gm_cyear_3": 10,
+            "ga_ls7e_nbart_gm_cyear_3": 10,
+            "ga_ls5t_nbart_gm_cyear_3": 10,
+            "ga_ls8c_ard_3": 9,
+            "ga_ls7e_ard_3": 8,
+            "ga_ls5t_ard_3": 7,
+            "ga_ls8c_ard_provisional_3": 9,
+            "ga_ls7e_ard_provisional_3": 8,
+            "ga_ls_ard_provisional_3": 7,
+            "s2b_nrt_granule_nbar_t": 23,
+            "s2a_nrt_granule_nbar_t": 23,
+            "s2_nrt_provisional_granule_nbar_t": 12,
+            "s2b_nrt_provisional_granule_nbar_t": 12,
+            "s2a_nrt_provisional_granule_nbar_t": 12,
+            "s2a_ard_granule_nbar_t": 12,
+            "s2b_ard_granule_nbar_t": 12,
+            "ga_ls_landcover": 2,
+            "ga_ls_landcover_descriptors": 5,
+            "ga_ls_fc_3": 4,
+            "ga_ls_fc_pc_cyear_3": 10,
+            "ga_ls_mangrove_cover_cyear_3": 1,
+            "s2_barest_earth": 10,
+            "ls8_barest_earth_mosaic": 6,
+            "landsat_barest_earth": 6,
+            "ga_ls_tcw_percentiles_2": 3,
+            "ga_ls_tc_pc_cyear_3": 9,
+            "ga_ls_wo_3": 1,
+            "ga_ls_wo_fq_myear_3": 3,
+            "ga_ls_wo_fq_cyear_3": 3,
+            "ga_ls_wo_fq_apr_oct_3": 3,
+            "ga_ls_wo_fq_nov_mar_3": 3,
+            "wofs_filtered_summary": 2,
+            "wofs_summary_clear": 3,
+            "wofs_summary_wet": 3,
+            "Water Observations from Space Statistics": 3,
+            "wofs_filtered_summary_confidence": 2,
+            "ITEM_V2.0.0": 1,
+            "ITEM_V2.0.0_Conf": 1,
+            "NIDEM": 1,
+            "high_tide_composite": 6,
+            "low_tide_composite": 6,
+            "ga_s2_ba_provisional_3": None,
+            "alos_displacement": 4,
+            "alos_velocity": 4,
+            "envisat_displacement": 4,
+            "envisat_velocity": 4,
+            "radarsat2_displacement": 4,
+            "radarsat2_velocity": 4,
+            "aster_false_colour": 3,
+            "aster_regolith_ratios": 3,
+            "aster_aloh_group_composition": 1,
+            "aster_aloh_group_content": 1,
+            "aster_feoh_group_content": 1,
+            "aster_ferric_oxide_composition": 1,
+            "aster_ferric_oxide_content": 1,
+            "aster_ferrous_iron_content_in_mgoh": 1,
+            "aster_ferrous_iron_index": 1,
+            "aster_green_vegetation": 1,
+            "aster_gypsum_index": 1,
+            "aster_kaolin_group_index": 1,
+            "aster_mgoh_group_composition": 1,
+            "aster_mgoh_group_content": 1,
+            "aster_opaque_index": 1,
+            "aster_silica_index": 1,
+            "aster_quartz_index": 1,
+            "multi_scale_topographic_position": 3,
+            "weathering_intensity": 1,
+        },
+        "date_limits": {
+            "ga_ls_ard_3": ["1986-08-16", "2022-09-05"],
+            "s2_nrt_granule_nbar_t": ["2022-06-20", "2022-09-19"],
+            "s2_ard_granule_nbar_t": ["2015-07-12", "2022-09-13"],
+            "ga_ls8c_nbart_gm_cyear_3": ["2013-01-01", "2021-01-01"],
+            "ga_ls7e_nbart_gm_cyear_3": ["1999-01-01", "2021-01-01"],
+            "ga_ls5t_nbart_gm_cyear_3": ["1986-01-01", "2011-01-01"],
+            "ga_ls8c_ard_3": ["2013-03-19", "2022-09-05"],
+            "ga_ls7e_ard_3": ["1999-05-28", "2022-04-06"],
+            "ga_ls5t_ard_3": ["1986-08-16", "2011-11-17"],
+            "ga_ls8c_ard_provisional_3": ["2022-06-20", "2022-09-19"],
+            "ga_ls7e_ard_provisional_3": ["2022-06-22", "2022-08-24"],
+            "ga_ls_ard_provisional_3": ["2022-06-20", "2022-09-19"],
+            "s2b_nrt_granule_nbar_t": ["2022-06-20", "2022-09-19"],
+            "s2a_nrt_granule_nbar_t": ["2022-06-20", "2022-09-19"],
+            "s2_nrt_provisional_granule_nbar_t": ["2022-06-20", "2022-09-19"],
+            "s2b_nrt_provisional_granule_nbar_t": ["2022-06-20", "2022-09-19"],
+            "s2a_nrt_provisional_granule_nbar_t": ["2022-06-20", "2022-09-19"],
+            "s2a_ard_granule_nbar_t": ["2015-07-12", "2022-09-13"],
+            "s2b_ard_granule_nbar_t": ["2017-06-30", "2022-09-13"],
+            "ga_ls_landcover": ["1988-01-01", "2020-01-01"],
+            "ga_ls_landcover_descriptors": ["1988-01-01", "2020-01-01"],
+            "ga_ls_fc_3": ["1986-08-16", "2022-09-05"],
+            "ga_ls_fc_pc_cyear_3": ["1987-01-01", "2021-01-01"],
+            "ga_ls_mangrove_cover_cyear_3": ["1987-01-01", "2021-01-01"],
+            "s2_barest_earth": ["2017-01-01", "2017-01-01"],
+            "ls8_barest_earth_mosaic": ["2013-01-01", "2013-01-01"],
+            "landsat_barest_earth": ["1980-01-01", "1980-01-01"],
+            "ga_ls_tcw_percentiles_2": ["1987-01-01", "1987-01-01"],
+            "ga_ls_tc_pc_cyear_3": ["1987-01-01", "2021-01-01"],
+            "ga_ls_wo_3": ["1986-08-16", "2022-09-05"],
+            "ga_ls_wo_fq_myear_3": ["1986-01-01", "1986-01-01"],
+            "ga_ls_wo_fq_cyear_3": ["1986-01-01", "2021-01-01"],
+            "ga_ls_wo_fq_apr_oct_3": ["1986-04-01", "2021-04-01"],
+            "ga_ls_wo_fq_nov_mar_3": ["1987-11-01", "2021-11-01"],
+            "wofs_filtered_summary": ["1970-01-01", "1970-01-01"],
+            "wofs_summary_clear": ["1970-01-01", "1970-01-01"],
+            "wofs_summary_wet": ["1970-01-01", "1970-01-01"],
+            "Water Observations from Space Statistics": ["1970-01-01", "1970-01-01"],
+            "wofs_filtered_summary_confidence": ["1970-01-01", "1970-01-01"],
+            "ITEM_V2.0.0": ["1986-01-01", "1986-01-01"],
+            "ITEM_V2.0.0_Conf": ["1986-01-01", "1986-01-01"],
+            "NIDEM": ["1986-01-01", "1986-01-01"],
+            "high_tide_composite": ["2000-01-01", "2000-01-01"],
+            "low_tide_composite": ["2000-01-01", "2000-01-01"],
+            "ga_s2_ba_provisional_3": ["2021-10-01", "2022-09-19"],
+            "alos_displacement": ["2008-02-11", "2010-10-22"],
+            "alos_velocity": ["2009-06-15", "2009-06-15"],
+            "envisat_displacement": ["2006-06-26", "2010-08-28"],
+            "envisat_velocity": ["2008-06-15", "2008-06-15"],
+            "radarsat2_displacement": ["2015-07-15", "2019-05-31"],
+            "radarsat2_velocity": ["2017-06-15", "2017-06-15"],
+            "aster_false_colour": ["2000-02-01", "2000-02-01"],
+            "aster_regolith_ratios": ["2000-02-01", "2000-02-01"],
+            "aster_aloh_group_composition": ["2000-02-01", "2000-02-01"],
+            "aster_aloh_group_content": ["2000-02-01", "2000-02-01"],
+            "aster_feoh_group_content": ["2000-02-01", "2000-02-01"],
+            "aster_ferric_oxide_composition": ["2000-02-01", "2000-02-01"],
+            "aster_ferric_oxide_content": ["2000-02-01", "2000-02-01"],
+            "aster_ferrous_iron_content_in_mgoh": ["2000-02-01", "2000-02-01"],
+            "aster_ferrous_iron_index": ["2000-02-01", "2000-02-01"],
+            "aster_green_vegetation": ["2000-02-01", "2000-02-01"],
+            "aster_gypsum_index": ["2000-02-01", "2000-02-01"],
+            "aster_kaolin_group_index": ["2000-02-01", "2000-02-01"],
+            "aster_mgoh_group_composition": ["2000-02-01", "2000-02-01"],
+            "aster_mgoh_group_content": ["2000-02-01", "2000-02-01"],
+            "aster_opaque_index": ["2000-02-01", "2000-02-01"],
+            "aster_silica_index": ["2000-02-01", "2000-02-01"],
+            "aster_quartz_index": ["2000-02-01", "2000-02-01"],
+            "multi_scale_topographic_position": ["2018-01-01", "2018-01-01"],
+            "weathering_intensity": ["2018-01-01", "2018-01-01"],
         },
     }
     return deadict
@@ -257,6 +376,7 @@ def get_capabilities(url):
     title_list = []
     description_list = []
     bbox_list = []
+    timelimits = []
     for key in keys:
         print(f"key: {key}")
         print(f"title: {wcs[key].title}")
@@ -265,9 +385,63 @@ def get_capabilities(url):
         description_list.append(wcs[key].abstract)
         print(f"bounding box: {wcs[key].boundingBoxWGS84}")
         bbox_list.append(wcs[key].boundingBoxWGS84)
+        print(f"timelimits: {wcs[key].timelimits}")
+        timelimits.append(wcs[key].timelimits)
         print("")
+    nbands = []
+    # Get number of bands (need to retrieve small subset)
+    bbox = [130, -30.2, 130.2, -30]
+    print("Requesting number of bands for each key...")
+    for key in keys:
+        try:
+            response = wcs.getCoverage(
+                identifier=key,
+                bbox=bbox,
+                format="GeoTIFF",
+                crs="EPSG:4326",
+                width=4,
+                height=4,
+                Styles="tc",
+            )
+            with MemoryFile(response) as memfile:
+                with memfile.open() as dataset:
+                    nband = dataset.count
+            print(f"{key} has {nband} bands.")
+        except:
+            print(f"{key} failed to download")
+            nband = None
+        nbands.append(nband)
+    return keys, title_list, description_list, bbox_list, timelimits, nbands
 
-    return keys, title_list, description_list, bbox_list
+
+def write_deadict():
+    """
+    Generates new DEA dictionary from crawling WCS url
+    """
+    url = "https://ows.dea.ga.gov.au/?version=1.3.0"
+    (
+        keys,
+        title_list,
+        description_list,
+        bbox_list,
+        timelimits,
+        nbands,
+    ) = get_capabilities(url)
+
+    deadict = {"resolution_arcsec": 1}
+    layernames = {}
+    n_bands = {}
+    date_limits = {}
+    deadict["resolution_arcsec"] = 1
+    for i in range(len(keys)):
+        layernames[keys[i]] = title_list[i]
+        n_bands[keys[i]] = nbands[i]
+        date_limits[keys[i]] = timelimits[i]
+
+    deadict["layernames"] = layernames
+    deadict["n_bands"] = n_bands
+    deadict["date_limits"] = date_limits
+    return deadict
 
 
 def get_times(url, layername, year=None):
@@ -295,6 +469,35 @@ def get_times(url, layername, year=None):
             if datetime.fromisoformat(time[:-1]).astimezone(timezone.utc).year == year:
                 dates.append(time)
         return dates
+
+
+def get_times_startend(url, layername, dt_start, dt_end):
+    """
+    Return all available images datetimes for layer in range
+    between start and end date.
+
+    Parameters
+    ----------
+    url: str, layer url
+    layername: str, name of layer id
+    dt_start: str, start date in dateformat YYYY-MM-DD
+    dt_end: str, end date in dateformat YYYY-MM-DD
+
+    Return
+    ------
+    list of dates
+    """
+    # Convert to datetimes
+    dt_start = datetime.strptime(dt_start, "%Y-%m-%d")
+    dt_end = datetime.strptime(dt_end, "%Y-%m-%d")
+    wcs = WebCoverageService(url, version="1.0.0", timeout=300)
+    times = wcs[layername].timepositions
+    dates = []
+    for time in times:
+        dt = datetime.fromisoformat(time[:-1])
+        if (dt >= dt_start) & (dt <= dt_end):
+            dates.append(time)
+    return dates
 
 
 def get_wcsmap(
@@ -523,6 +726,7 @@ def get_dea_images(
         #     logging.warning(
         #         f"No dates found for year {year}. Trying to download without date..."
         #     )
+    if len(dates) == 0:
         dates = ["None"]
     # Download images for all dates in year
     outfnames = []
@@ -585,6 +789,18 @@ def test_get_times():
     layername = "ga_ls8c_ard_3"
     url = "https://ows.dea.ga.gov.au/?version=1.3.0"
     times = get_times(url, layername)
+    assert len(times) > 0
+
+
+def test_get_times_startend():
+    """
+    Test script to retrieve available times for a layer
+    """
+    layername = "ga_ls8c_ard_3"
+    url = "https://ows.dea.ga.gov.au/?version=1.3.0"
+    dt_start = "2020-01-01"
+    dt_end = "2020-02-20"
+    times = get_times_startend(url, layername, dt_start, dt_end)
     assert len(times) > 0
 
 

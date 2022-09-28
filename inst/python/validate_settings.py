@@ -40,6 +40,7 @@ def check_schema(settings):
         'target_bbox': [list, tuple, str, None],
         'target_dates': list,
         'target_res': [float, int],
+        'temp_res': int,
         'target_sources': dict,
     }
     for conf in list(settings.keys()):
@@ -74,6 +75,7 @@ def check_schema2(settings):
         'target_bbox': Or(list, tuple, '', None),
         'target_dates': list,
         'target_res': Or(float, int),
+        Optional('temp_res'): int,
         'target_sources': {
             Optional('DEA'): list,
             Optional('DEM'): list,

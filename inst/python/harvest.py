@@ -1,5 +1,5 @@
 """
-This script is used to run the headless version of the data harvester
+This script is used to run the headless version of the data harvester.
 """
 
 import os
@@ -136,17 +136,19 @@ def run(path_to_config, preview=False):
         cprint("\n⌛ Downloading DEA data...", attrs=["bold"])
         # get data from DEA
         dea_layernames = settings.target_sources["DEA"]
+        outpath_dea = os.path.join(settings.outpath, "mvp_dea")
         # put into subdirectory
         outfnames = getdata_dea.get_dea_layers(
             dea_layernames,
             settings.target_dates,
             settings.target_bbox,
             settings.target_res,
-            settings.outpath,
+            outpath_dea,
             crs="EPSG:4326",
             format_out="GeoTIFF",
         )
-        outfnames = [item for sublist in outfnames for item in sublist]
+        # remove nested list
+        # outfnames = [item for sublist in outfnames for item in sublist]
         # print(outfnames)
         # print(dea_layernames)
         download_log = update_logtable(

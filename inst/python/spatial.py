@@ -30,7 +30,7 @@ from rasterio.plot import show
 import numpy as np
 import pandas as pd
 import geopandas as gpd
-from osgeo import gdal
+
 from pyproj import CRS
 from pathlib import Path
 
@@ -93,7 +93,7 @@ def _coreg_buffer(i0, j0, data, region):
     j0: row-index of point of interest
     data: two-dimensional numpy array (raster)
     region: integer radius, same units as data resolution.
-    
+
     RETURNS
     pts: all values from array within region
     """
@@ -128,14 +128,17 @@ def raster_buffer(long, lat, raster, buffer):
     values: list of raster array values around point of interest.
     """
     print("Opening:", raster)
-    raster = gdal.Open(raster)
+    # raster = gdal.Open(raster)
+    raster = rasterio.open(raster)
 
     # Get the transformation crs data
-    gt = raster.GetGeoTransform()
+    # gt = raster.GetGeoTransform()
+    gt  = raster.transform
 
     # Interogate the tiff file as an array
     # This will only be the first band, usally multiband has same index.
-    arr = raster.GetRasterBand(1).ReadAsArray()
+    # arr = raster.GetRasterBand(1).ReadAsArray()
+    arr = raster.read(1)
 
     # FIXME Check the number of bands and print a warning if more than 1
 
