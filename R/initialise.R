@@ -63,50 +63,55 @@ authenticate_ee <- function(auth_mode = "gcloud") {
 #'   response. Defaults to TRUE when `interactive()` is chosen.
 #'
 #' @export
-validate_conda <- function() {
+validate_conda <- function(reinstall = FALSE) {
   # Is conda available? If not, install miniconda
-  message("• Checking python/conda install...")
-  tryCatch(
-    {
-      conda_binary <- reticulate::conda_binary()
-      message(crayon::green("✔ "), "Conda binary: ", conda_binary)
-      return(invisible(FALSE))
-    },
-    error = function(e) {
-      message(crayon::red("✘ Conda binary not found"))
-      text_out <- paste0(
-        "You must use Anaconda or Miniconda to use `dataharvester`.",
-        crayon::bold("\n\nDownload and install Miniconda. "),
-        "Miniconda is a minimal, open-source installer for Python and conda. ",
-        "For more information please see: https://docs.conda.io/en/latest/miniconda.html"
-      )
-      message(paste(strwrap(text_out, width = 80), collapse = "\n"))
-      if (interactive()) {
-        ans <- readline("Would you like to install Miniconda now? {Y/n}: ")
-      } else {
-        ans <- "y"
-      }
-      # Make sure that the answer can be interpreted
-      repeat {
-        id <- tolower(substring(ans, 1, 1))
-        if (id %in% c("y", "")) {
-          reticulate::install_miniconda(force = TRUE)
-          text_out <- paste0(
-            "You may remove miniconda entirely by running:\n",
-            "\nreticulate::miniconda_uninstall()\n",
-            "\nin your R console.\n"
-          )
-          message(text_out)
-          return(invisible(TRUE))
-        } else if (id == "n") {
-          message("Installation aborted.")
-          return(invisible(FALSE))
+  message("• Checking Python/Conda install...")
+  if (reinstall) {
+    reticulate::install_miniconda(force = TRUE, update = FALSE)
+  } else {
+    tryCatch(
+      {
+        conda_binary <- reticulate::conda_binary()
+        message("\u2714 Conda binary: ", conda_binary)
+        return(invisible(FALSE))
+      },
+      error = function(e) {
+        message(crayon::red("✘ Conda binary not found"))
+        text_out <- paste0(
+          "You must use Anaconda or Miniconda to use `dataharvester`.",
+          crayon::bold("\n\nDownload and install Miniconda. "),
+          "Miniconda is a minimal, open-source installer for Python and Conda.",
+          " For more information please see: ",
+          "https://docs.conda.io/en/latest/miniconda.html"
+        )
+        message(paste(strwrap(text_out, width = 80), collapse = "\n"))
+        if (interactive()) {
+          ans <- readline("Would you like to install Miniconda now? {Y/n}: ")
         } else {
-          ans <- readline("Please answer yes or no: ")
+          ans <- "y"
+        }
+        # Make sure that the answer can be interpreted
+        repeat {
+          id <- tolower(substring(ans, 1, 1))
+          if (id %in% c("y", "")) {
+            reticulate::install_miniconda(force = TRUE, update = FALSE)
+            text_out <- paste0(
+              "You may remove miniconda entirely by running:\n",
+              "\nreticulate::miniconda_uninstall()\n",
+              "\nin your R console.\n"
+            )
+            message(text_out)
+            return(invisible(TRUE))
+          } else if (id == "n") {
+            message("Installation aborted.")
+            return(invisible(FALSE))
+          } else {
+            ans <- readline("Please answer yes or no: ")
+          }
         }
       }
-    }
-  )
+    )
+  }
 }
 
 
