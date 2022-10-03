@@ -179,7 +179,7 @@ class collect:
                 # TODO: put into kwargs at some point to clean this up
                 yaml_vals = yaml.load(f, Loader=yaml.SafeLoader)
                 gee_config = yaml_vals["target_sources"]["GEE"]
-                gee_process = gee_config["process"]
+                gee_process = gee_config["preprocess"]
                 gee_aggregate = gee_config["aggregate"]
                 gee_download = gee_config["download"]
                 # Class attributes:
@@ -578,7 +578,7 @@ class collect:
             bands = self.gee_download["bands"]
             scale = self.gee_download["scale"]
             outpath = self.yaml_vals["outpath"]
-            out_format = self.gee_download["out_format"]
+            out_format = self.gee_download["format"]
             overwrite = self.gee_download["overwrite"]
         # Check that preprocess() has been called
         img = self.ee_image

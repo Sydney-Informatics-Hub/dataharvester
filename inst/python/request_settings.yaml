@@ -1,0 +1,44 @@
+# AgReFed Data Harvester Project Settings (request_settings.yaml)
+
+# Path of input directory
+inpath: ../data/
+
+# output directory
+outpath: ../data/extracted/
+
+# Filename of Target Point Locations (.csv file with Latitude/Longitude or Easting/Northing )
+infname: df_targetlocations.csv
+colname_easting: 'Easting'
+colname_nothing: 'Northing'
+source_crs: 'EPSG:8059'
+
+# or alternatively to infname, if target is raster grid, select target grid specifications
+# bounding box:
+gridtarget_bbox: [easting_left, easting_right, northing_bottom, northing_top]
+# Resolution [meters]
+gridtarget_res: 10
+
+# Target coordinate reference system (crs)
+target_crs: 'EPSG:8059'
+
+# List of Date-times for which target to extract (in datetime format: YYYY-MM-DD) :
+target_dates:
+	- 2000-05-01
+	- 2005-05-28
+	- 2010-04-24
+	- ...
+
+#### Specify Data Sources to be retrieved ####
+# can be either names of APIs, e.g.:
+# 'SLGA-AWC', 'SLGA-BDF',  
+
+# or as local filenames (accepted formats: .(geo)tif, .gpkg, .shp, .csv)
+
+target_sources:
+	- 'SLGA-AWC'
+	- 'SILO-TEMP'
+	- 'SILO-RAIN'
+	- 'DEM-1m'
+	- 'SAT-LANDSAT'
+	- 'customdata.csv'
+  - ...

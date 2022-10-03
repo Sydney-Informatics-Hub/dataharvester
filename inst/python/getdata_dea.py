@@ -578,7 +578,7 @@ def get_wcsmap(
                     )
                 s(1)
         except:
-            print("Download failed")
+            print("✘ Download failed")
             return False
         # Save data
         with open(outfname, "wb") as f:
@@ -650,7 +650,7 @@ def get_dea_layers(
             )
         fnames_out.append(outfnames)
     # logging.print(f"DEA download(s) complete (saved to: {outpath})")
-    return fnames_out
+    return [item for sublist in fnames_out for item in sublist]
 
 
 def get_dea_images(
@@ -746,8 +746,8 @@ def get_dea_images(
             datestring = datetime.fromisoformat(date[:-1]).astimezone(timezone.utc)
             fname_out = f"{layername}_{datestring.year}-{datestring.month}-{datestring.day}{fname_end}"
         outfname = os.path.join(outpath, fname_out)
-        if os.path.exists(outfname):
-            outfnames.append(outfname)
+        # if os.path.exists(outfname):
+        #     outfnames.append(outfname)
         # Get data
         download_ok = get_wcsmap(
             outfname,
@@ -764,7 +764,6 @@ def get_dea_images(
             outfnames.append(outfname)
         else:
             cprint(f"✘ {layername} for date {date} failed to download", "red")
-    # return [item for sublist in outfnames for item in sublist]
     return outfnames
 
 
