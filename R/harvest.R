@@ -15,3 +15,11 @@ harvest <- function(path_to_config, preview = FALSE) {
   ee <- reticulate::import_from_path("harvest", path = path, delay_load = TRUE)
   ee$run(path_to_config, preview = preview)
 }
+
+#' Create a YAML configuration file for editing
+#'
+#' @return a YAML file
+#' @export
+create_yaml <- function() {
+  NULL
+}
