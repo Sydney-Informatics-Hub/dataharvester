@@ -4,11 +4,20 @@
 #' @param earthengine Initialise Earth Engine if `TRUE.` Defaults to `FALSE`
 #'
 #' @export
-initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) {
+initialise_harvester <- function(envname = NULL, earthengine = FALSE) {
   # Check if conda exists
   restart <- validate_conda()
   if (restart) {
-    return(message(crayon::bold("\u2691 Please restart R now (Session > Restart R)")))
+    return(message(
+      crayon::bold("\u2691 Please restart R now (Session > Restart R)")
+    ))
+  }
+  # Ensure an envname is specified
+  if (is.null(envname)) {
+    stop(paste0(
+      "✘ Environment `envname` must be specified. We recommend",
+      " \"r=reticulate\" or a unique name e.g. \"dataharvester\""
+    ))
   }
   # Check if environment can be loaded
   message("• Verifying Python configuration...", "\r", appendLF = FALSE)
@@ -18,7 +27,10 @@ initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) 
       message("\u2714 Using Conda environment: ", envname)
     },
     error = function(e) {
-      message("\u2691 Environment '", envname, "' not found, will create one now")
+      message(
+        "\u2691 Environment '", envname,
+        "' not found, will create one now"
+      )
       reticulate::conda_create(envname, python_version = "3.9")
       .install_dependencies(envname)
       reticulate::use_condaenv(envname)
@@ -30,12 +42,16 @@ initialise_harvester <- function(envname = "r-reticulate", earthengine = FALSE) 
   if (earthengine) {
     message("• Checking Google Earth Engine authentication")
     if (terra::gdal() == "3.0.4") {
-      message(paste0("\u2691 Cloud/server environment detected. If a browser popup ",
-        "does not appear, please ignore the warning messages and copy and ",
+      message(paste0(
+        "\u2691 Cloud/server environment detected. If a browser popup ",
+        "does not appear, ignore the warning messages and copy and ",
         "paste the link produced to your web browser to proceed with ",
-        "authentication"))
+        "authentication"
+      ))
       authenticate_ee("notebook")
-    } else authenticate_ee()
+    } else {
+      authenticate_ee()
+    }
   }
 }
 
@@ -78,15 +94,17 @@ validate_conda <- function(reinstall = FALSE) {
       error = function(e) {
         message(crayon::red("✘ Conda binary not found"))
         text_out <- paste0(
-          "You must use Anaconda or Miniconda to use `dataharvester`.",
+          "You must use Anaconda/Miniconda to use `dataharvester`.",
           crayon::bold("\n\nDownload and install Miniconda. "),
-          "Miniconda is a minimal, open-source installer for Python and Conda.",
+          "Miniconda is a minimalinstaller for Python and Conda.",
           " For more information please see: ",
           "https://docs.conda.io/en/latest/miniconda.html"
         )
         message(paste(strwrap(text_out, width = 80), collapse = "\n"))
         if (interactive()) {
-          ans <- readline("Would you like to install Miniconda now? {Y/n}: ")
+          ans <- readline(paste0(
+            "Would you like to install Miniconda now? {Y/n}: "
+          ))
         } else {
           ans <- "y"
         }
@@ -94,7 +112,9 @@ validate_conda <- function(reinstall = FALSE) {
         repeat {
           id <- tolower(substring(ans, 1, 1))
           if (id %in% c("y", "")) {
-            reticulate::install_miniconda(force = TRUE, update = FALSE)
+            reticulate::install_miniconda(
+              update = FALSE, force = TRUE
+            )
             text_out <- paste0(
               "You may remove miniconda entirely by running:\n",
               "\nreticulate::miniconda_uninstall()\n",
@@ -115,7 +135,7 @@ validate_conda <- function(reinstall = FALSE) {
 }
 
 
-.install_dependencies <- function(envname = "r-reticulate") {
+.install_dependencies <- function(envname) {
   # Create environment first
   # Horrible way to check if we are on RStudio Cloud by checking GDAL version
   use_pygdal <- FALSE
@@ -136,7 +156,7 @@ validate_conda <- function(reinstall = FALSE) {
     )
   } else {
     reticulate::conda_install(
-      envname = "r-reticulate",
+      envname = envname,
       packages = c("gdal", "rasterio", "google-cloud-sdk"),
       channel = "conda-forge"
     )
@@ -203,8 +223,16 @@ validate_conda <- function(reinstall = FALSE) {
   if (dependencies_ok) {
     message("\u2714 All dependencies validated")
   } else {
-    message(paste(crayon::yellow("\u2691 Looks like some packages are not installed or have changed. ")))
-    message(paste(crayon::yellow("• Re-installing all dependencies just to be sure...")))
+    message(paste0(
+      crayon::yellow(
+        "\u2691 Not all dependencies are available"
+      )
+    ))
+    message(paste0(
+      crayon::yellow(
+        "• Re-installing all dependencies just to be sure..."
+      )
+    ))
     .install_dependencies(envname)
   }
 }
