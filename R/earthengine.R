@@ -109,7 +109,7 @@ preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
 #' that processing times can increase substantially with an increased number of
 #' images.
 #'
-#' @param object `object`: a data object produced by [collect_e()]
+#' @param object `object`: a data object produced by [collect_ee()]
 #' @param frequency `str`, `optional`: either `"month"` or `"year"` are accepted
 #' @param reduce_by `str`, `optional`: summary statistic or technique to perform on
 #'   aggregated data. If NULL (default), will calculate the mean per period
@@ -140,7 +140,7 @@ aggregate_ee <- function(object, frequency = "month", reduce_by = NULL) {
 #' A [folium](http://python-visualization.github.io/folium/) map is produced and
 #' image(s) collected so far are displayed as layer(s) on top of the map.
 #'
-#' @param object `object`: a data object produced by [collect_e()]
+#' @param object `object`: a data object produced by [collect_ee()]
 #' @param bands `string`, `optional`: a string or list of strings representing
 #'   the bands to be visualised. If NULL, will present a list of available bands
 #'   to visualise
@@ -177,7 +177,7 @@ map_ee <- function(object, bands = NULL, minmax = NULL, palette = NULL) {
 #' Images are saved as GeoTIFF (.tif) files containing geospatial data, unless
 #' otherwise specified in `out_format`.
 #'
-#' @param object `object`: a data object produced by [collect_e()]
+#' @param object `object`: a data object produced by [collect_ee()]
 #' @param bands `string`: a string or list of strings representing the bands to
 #'   be downloaded
 #' @param scale `numeric`, `optional`: a number represeting the scale of a pixel

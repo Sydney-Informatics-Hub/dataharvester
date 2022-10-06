@@ -4,7 +4,7 @@
 \alias{validate_conda}
 \title{Check if conda is available}
 \usage{
-validate_conda()
+validate_conda(reinstall = FALSE)
 }
 \arguments{
 \item{reply}{\code{logical} if \code{interactive()}, function will prompt user for

@@ -77,7 +77,7 @@ init_logtable <- function() {
 #' output directory.
 #'
 #' @param logname `string`: name of data frame object created from
-#'   [init_logfile()]
+#'   `init_logfile()`
 #' @param file_name `string`: file name(s) to add to the data frame
 #' @param layer `string`: layer name(s) to add to the data frame
 #' @param source `string`: the download source, abbreviated. For example, "DEA"
@@ -94,13 +94,13 @@ init_logtable <- function() {
 #' @examples
 #' NULL
 update_logtable <- function(logname,
-                                file_name,
-                                layer,
-                                source,
-                                settings,
-                                layertitles = list(),
-                                agfunctions = list(),
-                                loginfos = list()) {
+                            file_name,
+                            layer,
+                            source,
+                            settings,
+                            layertitles = list(),
+                            agfunctions = list(),
+                            loginfos = list()) {
   # Import module
   path <- system.file("python", package = "dataharvester")
   utils <- reticulate::import_from_path("utils",
@@ -108,15 +108,52 @@ update_logtable <- function(logname,
     delay_load = TRUE
   )
   # Run
-  out <- utils$update_logtable(df_log,
+  out <- utils$update_logtable(
+    df_log,
     filenames,
     layernames,
     datasource,
     settings,
     layertitles,
     agfunctions,
-    loginfos)
+    loginfos
+  )
   return(out)
 }
 
 
+#' Preview all images in a folder, recursively
+#'
+#' @param path path to folder
+#' @param contour show contour lines. Defaults to FALSE
+#'
+#' @export
+plot_rasters <- function(path,
+                         contour = FALSE,
+                         points = FALSE,
+                         x = NULL, y = NULL) {
+  # Extract image list
+  images <- list.files(
+    path = path,
+    pattern = "\\.tif$",
+    recursive = TRUE,
+    full.names = TRUE
+  )
+  # Generate matrix grid
+  mar <- c(1, 1, 1.5, 1)
+  par(mfrow = n2mfrow(length(images)))
+  # Plot
+  for (i in 1:length(images)) {
+    r <- terra::rast(images[i])[[1]]
+    terra::plot(r,
+      legend = FALSE,
+      main = basename(images[i])
+    )
+    if (contour) terra::contour(r, alpha = 0.5, add = TRUE, nlevels = 5)
+    if (points) {
+      terra::points(y, x, col = 'firebrick', pch = 20, cex = 1)
+
+    }
+  }
+  par(mfrow = c(1, 1))
+}

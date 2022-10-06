@@ -4,7 +4,7 @@
 \alias{load_settings}
 \title{Load settings from YAML file}
 \usage{
-load_settings(path_to_yaml, to_namespace = TRUE)
+load_settings(path_to_yaml)
 }
 \arguments{
 \item{path}{Path to settings file in YAML format/extension.}

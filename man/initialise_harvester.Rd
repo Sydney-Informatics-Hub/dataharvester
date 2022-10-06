@@ -4,7 +4,7 @@
 \alias{initialise_harvester}
 \title{Initialise and validate Data-Harvester, including dependencies}
 \usage{
-initialise_harvester(envname = "r-reticulate", earthengine = FALSE)
+initialise_harvester(envname = NULL, earthengine = FALSE)
 }
 \arguments{
 \item{envname}{Use this Conda environment. Defaults to \code{"r-reticulate"}}

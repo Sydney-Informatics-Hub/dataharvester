@@ -1,3 +1,20 @@
+# dataharvester 0.0.8
+
+Great focus on making sure that dependencies work, as well as making sure that YAML config file processing workflow is more reproducible.
+
+### What's changed
+
+- improved 'harvest()` for abilities to change the output download log name and plot rasters in a folder
+- `initialise_harvester()` can now create other environments, not just stick to `r-reticulate`
+- fixed errors in installing google cloud sdk on Windows machines
+
+
+### What's New
+- `plot_rasters()` function to scan a folder recursively and plot the first band of all GeoTIFF images
+- `create_yaml()` function to generate template and skeleton YAML files. The function is incomplete, but it will be finalised in the next version
+- fixed encoding and missing link errors in documentation (#7)
+- fixed conda openSSL error (#8)
+
 # dataharvester 0.0.7
 
 Another quick update to fix issues with Google Earth Engine authentication.

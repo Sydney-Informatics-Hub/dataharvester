@@ -4,9 +4,11 @@ This script is used to run the headless version of the data harvester.
 
 import os
 
-# from os.path import exists
+from os.path import exists
 from pathlib import Path
+import pandas as pd
 from types import SimpleNamespace
+
 
 import geopandas as gpd
 import getdata_dea
@@ -23,7 +25,7 @@ from utils import init_logtable, update_logtable
 from widgets import harvesterwidgets as hw
 
 
-def run(path_to_config, preview=False):
+def run(path_to_config, log_name="download_log", preview=False):
     """
     A headless version of the Data-Harvester (with some limitations)
 
@@ -136,9 +138,9 @@ def run(path_to_config, preview=False):
         cprint("\n⌛ Downloading DEA data...", attrs=["bold"])
         # get data from DEA
         dea_layernames = settings.target_sources["DEA"]
-        outpath_dea = os.path.join(settings.outpath, "mvp_dea")
+        outpath_dea = os.path.join(settings.outpath, "dea")
         # put into subdirectory
-        outfnames = getdata_dea.get_dea_layers(
+        files_gee = getdata_dea.get_dea_layers(
             dea_layernames,
             settings.target_dates,
             settings.target_bbox,
@@ -147,13 +149,9 @@ def run(path_to_config, preview=False):
             crs="EPSG:4326",
             format_out="GeoTIFF",
         )
-        # remove nested list
-        # outfnames = [item for sublist in outfnames for item in sublist]
-        # print(outfnames)
-        # print(dea_layernames)
         download_log = update_logtable(
             download_log,
-            outfnames,
+            files_gee,
             dea_layernames,
             "DEA",
             settings,
@@ -164,26 +162,36 @@ def run(path_to_config, preview=False):
     if "DEM" in list_sources:
         cprint("\n⌛ Downloading DEM data...", attrs=["bold"])
         dem_layernames = settings.target_sources["DEM"]
-        outfnames = getdata_dem.get_dem_layers(
-            dem_layernames, settings.outpath, settings.target_bbox, settings.target_res
-        )
-        # Add extracted data to log dataframe
-        download_log = update_logtable(
-            download_log,
-            outfnames,
-            dem_layernames,
-            "DEM",
-            settings,
-            layertitles=dem_layernames,
-            loginfos="downloaded",
-        )
+        try:
+            files_dem = getdata_dem.get_dem_layers(
+                dem_layernames,
+                settings.outpath,
+                settings.target_bbox,
+                settings.target_res,
+            )
+        except Exception as e:
+            print(e)
+        # Check if output if False (no data available) and skip if so
+        if (files_dem == [False]) or files_dem is None:
+            pass
+        else:
+            # Add extracted data to log dataframe
+            download_log = update_logtable(
+                download_log,
+                files_dem,
+                dem_layernames,
+                "DEM",
+                settings,
+                layertitles=dem_layernames,
+                loginfos="downloaded",
+            )
     if "Landscape" in list_sources:
         cprint("\n⌛ Downloading Landscape data...", attrs=["bold"])
         # get data from Landscape
         layernames = settings.target_sources["Landscape"]
         layertitles = ["landscape_" + layername for layername in layernames]
 
-        outfnames = getdata_landscape.get_landscape_layers(
+        files_ls = getdata_landscape.get_landscape_layers(
             layernames,
             settings.target_bbox,
             settings.outpath,
@@ -192,7 +200,7 @@ def run(path_to_config, preview=False):
         # Add extracted data to log dataframe
         download_log = update_logtable(
             download_log,
-            outfnames,
+            files_ls,
             layernames,
             "Landscape",
             settings,
@@ -204,22 +212,29 @@ def run(path_to_config, preview=False):
         # get data from Radiometric
         # Download radiometrics
         layernames = settings.target_sources["Radiometric"]
-        outfnames = getdata_radiometric.get_radiometric_layers(
-            settings.outpath,
-            layernames,
-            bbox=settings.target_bbox,
-            resolution=settings.target_res,
-        )
-        # Add extracted data to log dataframe
-        download_log = update_logtable(
-            download_log,
-            outfnames,
-            layernames,
-            "Radiometric",
-            settings,
-            layertitles=layernames,
-            loginfos="downloaded",
-        )
+        try:
+            files_rd = getdata_radiometric.get_radiometric_layers(
+                settings.outpath,
+                layernames,
+                bbox=settings.target_bbox,
+                resolution=settings.target_res,
+            )
+        except Exception as e:
+            print(e)
+        var_exists = "files_rd" in locals() or "files_rd" in globals()
+        if var_exists:
+            # Add extracted data to log dataframe
+            download_log = update_logtable(
+                download_log,
+                files_rd,
+                layernames,
+                "Radiometric",
+                settings,
+                layertitles=layernames,
+                loginfos="downloaded",
+            )
+        else:
+            pass
     if "SILO" in list_sources:
         cprint("\n⌛ Downloading SILO data...", attrs=["bold"])
         # get data from SILO
@@ -227,11 +242,11 @@ def run(path_to_config, preview=False):
         silo_layernames = list(settings.target_sources["SILO"].keys())
         for layername in silo_layernames:
             # run the download
-            outpath = settings.outpath + "SILO_" + layername
+            files_silo = settings.outpath + "SILO_" + layername
             fnames_out = getdata_silo.get_SILO_raster(
                 layername,
                 settings.target_dates,
-                outpath,
+                files_silo,
                 bbox=settings.target_bbox,
                 format_out="tif",
                 delete_temp=False,
@@ -255,7 +270,7 @@ def run(path_to_config, preview=False):
             list(settings.target_sources["SLGA"].values())[0]
         )
         slga_layernames = list(settings.target_sources["SLGA"].keys())
-        fnames_out_slga = getdata_slga.get_slga_layers(
+        files_slga = getdata_slga.get_slga_layers(
             slga_layernames,
             settings.target_bbox,
             settings.outpath,
@@ -265,13 +280,17 @@ def run(path_to_config, preview=False):
         )
         download_log = update_logtable(
             download_log,
-            fnames_out_slga,
+            files_slga,
             slga_layernames,
             "SLGA",
             settings,
             layertitles=[],
             loginfos="downloaded",
         )
+
+    # save log to file
+    logfile = settings.outpath + log_name + ".csv"
+    download_log.to_csv(logfile, index=False)
 
     if points_available:
         # extract filename from settings.infile
@@ -292,10 +311,9 @@ def run(path_to_config, preview=False):
             "blue",
             attrs=["bold"],
         )
-        cprint("\nSummary of data extracted -----", "magenta", attrs=["bold"])
-        gdf.info()
-    cprint("\n🎉 🎉 🎉 Harvest complete 🎉 🎉 🎉", "magenta", attrs=["bold"])
+
     if preview:
-        cprint("\nPreview downloaded images", "magenta", attrs=["bold"])
         utils.plot_rasters(rasters, longs, lats, titles)
+
+    cprint("\n🎉 🎉 🎉 Harvest complete 🎉 🎉 🎉", "magenta", attrs=["bold"])
     return None
