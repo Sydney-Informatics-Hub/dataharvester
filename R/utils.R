@@ -94,13 +94,13 @@ init_logtable <- function() {
 #' @examples
 #' NULL
 update_logtable <- function(logname,
-                                file_name,
-                                layer,
-                                source,
-                                settings,
-                                layertitles = list(),
-                                agfunctions = list(),
-                                loginfos = list()) {
+                            file_name,
+                            layer,
+                            source,
+                            settings,
+                            layertitles = list(),
+                            agfunctions = list(),
+                            loginfos = list()) {
   # Import module
   path <- system.file("python", package = "dataharvester")
   utils <- reticulate::import_from_path("utils",
@@ -108,14 +108,16 @@ update_logtable <- function(logname,
     delay_load = TRUE
   )
   # Run
-  out <- utils$update_logtable(df_log,
+  out <- utils$update_logtable(
+    df_log,
     filenames,
     layernames,
     datasource,
     settings,
     layertitles,
     agfunctions,
-    loginfos)
+    loginfos
+  )
   return(out)
 }
 
