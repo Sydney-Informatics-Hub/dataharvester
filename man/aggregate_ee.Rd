@@ -7,7 +7,7 @@
 aggregate_ee(object, frequency = "month", reduce_by = NULL)
 }
 \arguments{
-\item{object}{\code{object}: a data object produced by \code{\link[=collect_e]{collect_e()}}}
+\item{object}{\code{object}: a data object produced by \code{\link[=collect_ee]{collect_ee()}}}
 
 \item{frequency}{\code{str}, \code{optional}: either \code{"month"} or \code{"year"} are accepted}
 

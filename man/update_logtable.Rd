@@ -17,7 +17,7 @@ update_logtable(
 }
 \arguments{
 \item{logname}{\code{string}: name of data frame object created from
-\code{\link[=init_logfile]{init_logfile()}}}
+\code{init_logfile()}}
 
 \item{file_name}{\code{string}: file name(s) to add to the data frame}
 

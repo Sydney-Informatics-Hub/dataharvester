@@ -14,7 +14,7 @@ download_ee(
 )
 }
 \arguments{
-\item{object}{\code{object}: a data object produced by \code{\link[=collect_e]{collect_e()}}}
+\item{object}{\code{object}: a data object produced by \code{\link[=collect_ee]{collect_ee()}}}
 
 \item{bands}{\code{string}: a string or list of strings representing the bands to
 be downloaded}
