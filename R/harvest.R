@@ -7,7 +7,10 @@
 #' using the function [create_yaml()]
 #'
 #' @param path_to_config `string`: path to YAML config file, e.g. "settings/"
-#' @param preview `logical`: preview
+#' @param log_name `string`: name of output log file which contains some
+#'   information about downloaded files
+#' @param preview `logical`: preview rasters by plotting the first band only
+#' @param contour `logical`: add contour lines to the plot. Defaults to FALSE
 #'
 #' @export
 harvest <- function(path_to_config,
