@@ -4,11 +4,8 @@ This script is used to run the headless version of the data harvester.
 
 import os
 
-from os.path import exists
 from pathlib import Path
-import pandas as pd
 from types import SimpleNamespace
-
 
 import geopandas as gpd
 import getdata_dea
@@ -25,7 +22,7 @@ from utils import init_logtable, update_logtable
 from widgets import harvesterwidgets as hw
 
 
-def run(path_to_config, log_name="download_log", preview=False):
+def run(path_to_config, log_name="download_log", preview=False, return_df=False):
     """
     A headless version of the Data-Harvester (with some limitations)
 
@@ -67,10 +64,13 @@ def run(path_to_config, log_name="download_log", preview=False):
     list_sources = list(settings.target_sources.keys())
 
     # Quick checks
-    if settings.infile is not None:
-        points_available = True
+    points_available = True
+    aoi_available = True
+
+    if settings.infile is None:
+        points_available = False
     if settings.target_bbox is None or settings.target_bbox == "":
-        aoi_available = None
+        aoi_available = False
     if settings.target_res is None:
         cprint("ⓘ No target resolution specified, using default of 1 arcsec", "yellow")
         settings.target_res = 1
@@ -116,23 +116,21 @@ def run(path_to_config, log_name="download_log", preview=False):
     if "GEE" in list_sources:
         cprint("\n⌛ Downloading Google Earth Engine data...", attrs=["bold"])
         # get data from GEE
-    gee = getdata_ee.collect(config=path_to_config)
-    gee = getdata_ee.harvest(gee, coords=settings.target_bbox)
-    outfnames = [settings.outpath + gee.filenames]
-    layernames = [Path(gee.filenames).resolve().stem]
-    # print(outfnames)
-    # print(layernames)
-    # print(gee.reduce)
-    download_log = update_logtable(
-        download_log,
-        outfnames,
-        layernames,
-        "GEE",
-        settings,
-        layertitles=[],
-        agfunctions=gee.reduce,
-        loginfos="downloaded",
-    )
+        gee = getdata_ee.collect(config=path_to_config)
+        gee = getdata_ee.harvest(gee, coords=settings.target_bbox)
+        outfnames = [settings.outpath + gee.filenames]
+        layernames = [Path(gee.filenames).resolve().stem]
+
+        download_log = update_logtable(
+            download_log,
+            outfnames,
+            layernames,
+            "GEE",
+            settings,
+            layertitles=[],
+            agfunctions=gee.reduce,
+            loginfos="downloaded",
+        )
     # DEA
     if "DEA" in list_sources:
         cprint("\n⌛ Downloading DEA data...", attrs=["bold"])
@@ -140,7 +138,7 @@ def run(path_to_config, log_name="download_log", preview=False):
         dea_layernames = settings.target_sources["DEA"]
         outpath_dea = os.path.join(settings.outpath, "dea")
         # put into subdirectory
-        files_gee = getdata_dea.get_dea_layers(
+        files_dea = getdata_dea.get_dea_layers(
             dea_layernames,
             settings.target_dates,
             settings.target_bbox,
@@ -151,7 +149,7 @@ def run(path_to_config, log_name="download_log", preview=False):
         )
         download_log = update_logtable(
             download_log,
-            files_gee,
+            files_dea,
             dea_layernames,
             "DEA",
             settings,
@@ -240,29 +238,36 @@ def run(path_to_config, log_name="download_log", preview=False):
         # get data from SILO
         fnames_out_silo = []
         silo_layernames = list(settings.target_sources["SILO"].keys())
-        for layername in silo_layernames:
-            # run the download
-            files_silo = settings.outpath + "SILO_" + layername
-            fnames_out = getdata_silo.get_SILO_raster(
-                layername,
-                settings.target_dates,
-                files_silo,
-                bbox=settings.target_bbox,
-                format_out="tif",
-                delete_temp=False,
+        try:
+            for layername in silo_layernames:
+                # run the download
+                files_silo = settings.outpath + "silo_" + layername
+                fnames_out = getdata_silo.get_SILO_raster(
+                    layername,
+                    settings.target_dates,
+                    files_silo,
+                    bbox=settings.target_bbox,
+                    format_out="tif",
+                    delete_temp=False,
+                )
+                # Save the layer name
+                fnames_out_silo += fnames_out
+        except Exception as e:
+            print(e)
+        var_exists = "files_silo" in locals() or "files_silo" in globals()
+        if var_exists:
+            # Add download info to log dataframe
+            download_log = update_logtable(
+                download_log,
+                fnames_out_silo,
+                silo_layernames,
+                "SILO",
+                settings,
+                layertitles=[],
+                loginfos="downloaded",
             )
-            # Save the layer name
-            fnames_out_silo += fnames_out
-        # Add download info to log dataframe
-        download_log = update_logtable(
-            download_log,
-            fnames_out_silo,
-            silo_layernames,
-            "SILO",
-            settings,
-            layertitles=[],
-            loginfos="downloaded",
-        )
+        else:
+            pass
     if "SLGA" in list_sources:
         cprint("\n⌛ Downloading SLGA data...", attrs=["bold"])
         # get data from SLGA
@@ -270,36 +275,43 @@ def run(path_to_config, log_name="download_log", preview=False):
             list(settings.target_sources["SLGA"].values())[0]
         )
         slga_layernames = list(settings.target_sources["SLGA"].keys())
-        files_slga = getdata_slga.get_slga_layers(
-            slga_layernames,
-            settings.target_bbox,
-            settings.outpath,
-            depth_min=depth_min,
-            depth_max=depth_max,
-            get_ci=True,
-        )
-        download_log = update_logtable(
-            download_log,
-            files_slga,
-            slga_layernames,
-            "SLGA",
-            settings,
-            layertitles=[],
-            loginfos="downloaded",
-        )
+        try:
+            files_slga = getdata_slga.get_slga_layers(
+                slga_layernames,
+                settings.target_bbox,
+                settings.outpath,
+                depth_min=depth_min,
+                depth_max=depth_max,
+                get_ci=True,
+            )
+        except Exception as e:
+            print(e)
+        var_exists = "files_slga" in locals() or "files_slga" in globals()
+        if var_exists:
+            download_log = update_logtable(
+                download_log,
+                files_slga,
+                slga_layernames,
+                "SLGA",
+                settings,
+                layertitles=[],
+                loginfos="downloaded",
+            )
+        else:
+            pass
 
     # save log to file
     logfile = settings.outpath + log_name + ".csv"
     download_log.to_csv(logfile, index=False)
 
+    # extract filename from settings.infile
+    # Select all processed data
+    df_sel = download_log.copy()
+    rasters = df_sel["filename_out"].values.tolist()
+    titles = df_sel["layertitle"].values.tolist()
     if points_available:
-        # extract filename from settings.infile
         fn = Path(settings.infile).resolve().name
         cprint(f"\nExtracting data points for {fn}  -----", "magenta", attrs=["bold"])
-        # Select all processed data
-        df_sel = download_log.copy()
-        rasters = df_sel["filename_out"].values.tolist()
-        titles = df_sel["layertitle"].values.tolist()
         # Extract datatable from rasters given input coordinates
         gdf = utils.raster_query(longs, lats, rasters, titles)
         # Save the results table to a csv
@@ -312,8 +324,14 @@ def run(path_to_config, log_name="download_log", preview=False):
             attrs=["bold"],
         )
 
-    if preview:
+    if preview and points_available:
         utils.plot_rasters(rasters, longs, lats, titles)
+    elif preview and not points_available:
+        utils.plot_rasters(rasters, titles=titles)
 
     cprint("\n🎉 🎉 🎉 Harvest complete 🎉 🎉 🎉", "magenta", attrs=["bold"])
-    return None
+
+    if return_df and points_available:
+        return gdf
+    else:
+        return None
