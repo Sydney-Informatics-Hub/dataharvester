@@ -158,3 +158,11 @@ plot_rasters <- function(path,
   }
   par(mfrow = c(1, 1))
 }
+
+
+raster_query <- function(longs, lats, download_log = NULL, rasters = NULL, names = NULL) {
+  # Import module
+  utils <- harvester_module("utils")
+  out <- utils$raster_query(longs, lats, rasters, titles = names)
+  return(out)
+}
