@@ -41,11 +41,7 @@
 collect_ee <- function(collection = NULL, coords = NULL, date = NULL,
                        end_date = NULL, buffer = NULL, bound = FALSE,
                        config = NULL) {
-  path <- system.file("python", package = "dataharvester")
-  ee <- reticulate::import_from_path("getdata_ee",
-    path = path,
-    delay_load = TRUE
-  )
+  ee <- harvester_module("getdata_ee")
   out <- ee$collect(
     collection, coords, date,
     end_date, buffer, bound, config

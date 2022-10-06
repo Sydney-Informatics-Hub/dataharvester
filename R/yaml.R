@@ -5,11 +5,7 @@
 #' @return A settings namespace object
 #' @export
 load_settings <- function(path_to_yaml) {
-  path <- system.file("python", package = "dataharvester")
-  set <- reticulate::import_from_path("settingshandler",
-    path = path,
-    delay_load = TRUE
-  )
+  set <- harvester_module("settingshandler")
   out <- set$main(path_to_yaml)
   return(out)
 }

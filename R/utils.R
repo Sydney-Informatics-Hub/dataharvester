@@ -1,14 +1,23 @@
-#' (Internal) Source module stored in python folder
+# dd_source_python <- function(modulename, rpackage, report = FALSE) {
+#   filename <- paste0("python/", modulename, ".py")
+#   path <- dirname(system.file(filename, package = rpackage))
+#   if (report) {
+#     message(paste0("Loading ", modulename, " module from ", path))
+#   }
+#   reticulate::import_from_path(modulename, path, convert = FALSE)
+# }
+
+#' (Internal) Source module stored in inst folder
 #'
 #' @export
 #' @noRd
-dd_source_python <- function(modulename, rpackage, report = FALSE) {
-  filename <- paste0("python/", modulename, ".py")
-  path <- dirname(system.file(filename, package = rpackage))
-  if (report) {
-    message(paste0("Loading ", modulename, " module from ", path))
-  }
-  reticulate::import_from_path(modulename, path, convert = FALSE)
+harvester_module <- function(module_name) {
+  # path <- system.file("python", package = "dataharvester")
+  filename <- paste0("python/", module_name, ".py")
+  path <- dirname(system.file(filename, package = "dataharvester"))
+  out <- reticulate::import_from_path(module_name, path = path,
+    delay_load = TRUE)
+  return(out)
 }
 
 #' (Internal) Match to one value in a function's argument
@@ -60,11 +69,7 @@ match_multi <- function(arg) {
 #' @export
 init_logtable <- function() {
   # Import module
-  path <- system.file("python", package = "dataharvester")
-  utils <- reticulate::import_from_path("utils",
-    path = path,
-    delay_load = TRUE
-  )
+  utils <- harvester_module("utils")
   # Run
   out <- utils$init_logtable()
   return(out)
@@ -102,11 +107,7 @@ update_logtable <- function(logname,
                             agfunctions = list(),
                             loginfos = list()) {
   # Import module
-  path <- system.file("python", package = "dataharvester")
-  utils <- reticulate::import_from_path("utils",
-    path = path,
-    delay_load = TRUE
-  )
+  utils <- harvester_module("utils")
   # Run
   out <- utils$update_logtable(
     df_log,
@@ -156,4 +157,12 @@ plot_rasters <- function(path,
     }
   }
   par(mfrow = c(1, 1))
+}
+
+
+raster_query <- function(longs, lats, download_log = NULL, rasters = NULL, names = NULL) {
+  # Import module
+  utils <- harvester_module("utils")
+  out <- utils$raster_query(longs, lats, rasters, titles = names)
+  return(out)
 }

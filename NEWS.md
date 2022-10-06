@@ -1,6 +1,18 @@
+# dataharvester 0.0.9
+
+A fix to achieve reliable Python module imports (hopefully).
+
+### What's changed
+
+- All functions that import Python modules point directly to the `.py` files, instead of the python folder. Hopefully fixes an internal testing error of `"module not found"`
+
+### What's new
+- `raster_query()` samples one or more rasters based on existing sampling data to generate a sampling file of point-specifig geospatial information from all images
+
+
 # dataharvester 0.0.8
 
-Great focus on making sure that dependencies work, as well as making sure that YAML config file processing workflow is more reproducible.
+Big focus on making sure that dependencies work, as well as making sure that YAML config file processing workflow is more reproducible.
 
 ### What's changed
 
@@ -9,7 +21,7 @@ Great focus on making sure that dependencies work, as well as making sure that Y
 - fixed errors in installing google cloud sdk on Windows machines
 
 
-### What's New
+### What's new
 - `plot_rasters()` function to scan a folder recursively and plot the first band of all GeoTIFF images
 - `create_yaml()` function to generate template and skeleton YAML files. The function is incomplete, but it will be finalised in the next version
 - fixed encoding and missing link errors in documentation (#7)

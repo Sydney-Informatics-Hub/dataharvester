@@ -26,11 +26,7 @@ download_slga <- function(layer,
                           verbose = FALSE) {
 
   # Import module
-  path <- system.file("python", package = "dataharvester")
-  slga <- reticulate::import_from_path("getdata_slga",
-    path = path,
-    delay_load = TRUE
-  )
+  slga <- harvester_module("getdata_slga")
   # Run
   out <- slga$get_slga_layers(
     layer,
