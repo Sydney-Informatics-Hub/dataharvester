@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,27 @@
       
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.8" id="dataharvester-008">dataharvester 0.0.8<a class="anchor" aria-label="anchor" href="#dataharvester-008"></a></h2>
+<p>Great focus on making sure that dependencies work, as well as making sure that YAML config file processing workflow is more reproducible.</p>
+<div class="section level4">
+<h4 id="whats-changed-0-0-8">What’s changed<a class="anchor" aria-label="anchor" href="#whats-changed-0-0-8"></a></h4>
+<ul><li>improved ’harvest()` for abilities to change the output download log name and plot rasters in a folder</li>
+<li>
+<code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code> can now create other environments, not just stick to <code>r-reticulate</code>
+</li>
+<li>fixed errors in installing google cloud sdk on Windows machines</li>
+</ul></div>
+<div class="section level4">
+<h4 id="whats-new-0-0-8">What’s New<a class="anchor" aria-label="anchor" href="#whats-new-0-0-8"></a></h4>
+<ul><li>
+<code><a href="../reference/plot_rasters.html">plot_rasters()</a></code> function to scan a folder recursively and plot the first band of all GeoTIFF images</li>
+<li>
+<code><a href="../reference/create_yaml.html">create_yaml()</a></code> function to generate template and skeleton YAML files. The function is incomplete, but it will be finalised in the next version</li>
+<li>fixed encoding and missing link errors in documentation (#7)</li>
+<li>fixed conda openSSL error (#8)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.7" id="dataharvester-007">dataharvester 0.0.7<a class="anchor" aria-label="anchor" href="#dataharvester-007"></a></h2>
 <p>Another quick update to fix issues with Google Earth Engine authentication.</p>
