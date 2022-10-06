@@ -10,10 +10,22 @@
 #' @param preview `logical`: preview
 #'
 #' @export
-harvest <- function(path_to_config, preview = FALSE) {
+harvest <- function(path_to_config,
+  log_name = "download_log",
+  preview = FALSE,
+  contour = FALSE) {
   path <- system.file("python", package = "dataharvester")
   ee <- reticulate::import_from_path("harvest", path = path, delay_load = TRUE)
-  ee$run(path_to_config, preview = preview)
+  ee$run(path_to_config, log_name, preview)
+  config <- load_settings(path_to_config)
+  if (preview & !is.null(config$infile)) {
+    samples <- read.csv(config$infile)
+    x <- samples[[config$colname_lat]]
+    y <- samples[[config$colname_lng]]
+    plot_rasters(config$outpath, contour = contour, points = TRUE, x, y)
+  } else if (preview & is.null(config$infile)) {
+    plot_rasters(config$outpath, contour = contour)
+  }
 }
 
 #' Create a YAML configuration file for editing
@@ -23,3 +35,4 @@ harvest <- function(path_to_config, preview = FALSE) {
 create_yaml <- function() {
   NULL
 }
+
