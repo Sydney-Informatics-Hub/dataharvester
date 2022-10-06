@@ -212,7 +212,7 @@ def getwcs_dem(
             wcs = WebCoverageService(url, version="1.0.0", timeout=300)
             s(1)
         layername = wcs["1"].title
-        date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        date = datetime.now(timezone.utc).strftime("%Y_%m_%d")
         fname_out = layername.replace(" ", "_") + "_" + date + ".tif"
         outfname = os.path.join(outpath, fname_out)
         if os.path.exists(outfname):
