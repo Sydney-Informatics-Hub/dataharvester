@@ -7,7 +7,7 @@
 map_ee(object, bands = NULL, minmax = NULL, palette = NULL)
 }
 \arguments{
-\item{object}{\code{object}: a data object produced by \code{\link[=collect_e]{collect_e()}}}
+\item{object}{\code{object}: a data object produced by \code{\link[=collect_ee]{collect_ee()}}}
 
 \item{bands}{\code{string}, \code{optional}: a string or list of strings representing
 the bands to be visualised. If NULL, will present a list of available bands

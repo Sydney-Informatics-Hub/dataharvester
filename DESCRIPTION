@@ -1,6 +1,6 @@
 Package: dataharvester
 Title: R interface to the AgReFed Data-Harvester
-Version: 0.0.7
+Version: 0.0.8
 Authors@R: 
     c(person("Januar", 
              "Harianto",

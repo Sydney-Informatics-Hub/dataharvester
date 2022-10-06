@@ -4,7 +4,12 @@
 \alias{harvest}
 \title{A headless version of the Data-Harvester (with some limitations)}
 \usage{
-harvest(path_to_config, preview = FALSE)
+harvest(
+  path_to_config,
+  log_name = "download_log",
+  preview = FALSE,
+  contour = FALSE
+)
 }
 \arguments{
 \item{path_to_config}{\code{string}: path to YAML config file, e.g. "settings/"}

@@ -311,11 +311,9 @@ def run(path_to_config, log_name="download_log", preview=False):
             "blue",
             attrs=["bold"],
         )
-        cprint("\nSummary of data extracted -----", "magenta", attrs=["bold"])
-        gdf.info()
-    cprint("\n🎉 🎉 🎉 Harvest complete 🎉 🎉 🎉", "magenta", attrs=["bold"])
 
     if preview:
-        cprint("\nPreview downloaded images", "magenta", attrs=["bold"])
         utils.plot_rasters(rasters, longs, lats, titles)
+
+    cprint("\n🎉 🎉 🎉 Harvest complete 🎉 🎉 🎉", "magenta", attrs=["bold"])
     return None
