@@ -120,3 +120,38 @@ update_logtable <- function(logname,
 }
 
 
+#' Preview all images in a folder, recursively
+#'
+#' @param path path to folder
+#' @param contour show contour lines. Defaults to FALSE
+#'
+#' @export
+plot_rasters <- function(path,
+                         contour = FALSE,
+                         points = FALSE,
+                         x = NULL, y = NULL) {
+  # Extract image list
+  images <- list.files(
+    path = path,
+    pattern = "\\.tif$",
+    recursive = TRUE,
+    full.names = TRUE
+  )
+  # Generate matrix grid
+  mar <- c(1, 1, 1.5, 1)
+  par(mfrow = n2mfrow(length(images)))
+  # Plot
+  for (i in 1:length(images)) {
+    r <- terra::rast(images[i])[[1]]
+    terra::plot(r,
+      legend = FALSE,
+      main = basename(images[i])
+    )
+    if (contour) terra::contour(r, alpha = 0.5, add = TRUE, nlevels = 5)
+    if (points) {
+      terra::points(y, x, col = 'firebrick', pch = 20, cex = 1)
+
+    }
+  }
+  par(mfrow = c(1, 1))
+}
