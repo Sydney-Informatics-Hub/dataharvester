@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.9</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,8 +39,20 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.9" id="dataharvester-009">dataharvester 0.0.9<a class="anchor" aria-label="anchor" href="#dataharvester-009"></a></h2>
+<p>A fix to achieve reliable Python module imports (hopefully).</p>
+<div class="section level4">
+<h4 id="whats-changed-0-0-9">What’s changed<a class="anchor" aria-label="anchor" href="#whats-changed-0-0-9"></a></h4>
+<ul><li>All functions that import Python modules point directly to the <code>.py</code> files, instead of the python folder. Hopefully fixes an internal testing error of <code>"module not found"</code>
+</li></ul></div>
+<div class="section level4">
+<h4 id="whats-new-0-0-9">What’s new<a class="anchor" aria-label="anchor" href="#whats-new-0-0-9"></a></h4>
+<ul><li>
+<code>raster_query()</code> samples one or more rasters based on existing sampling data to generate a sampling file of point-specifig geospatial information from all images</li></ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.8" id="dataharvester-008">dataharvester 0.0.8<a class="anchor" aria-label="anchor" href="#dataharvester-008"></a></h2>
-<p>Great focus on making sure that dependencies work, as well as making sure that YAML config file processing workflow is more reproducible.</p>
+<p>Big focus on making sure that dependencies work, as well as making sure that YAML config file processing workflow is more reproducible.</p>
 <div class="section level4">
 <h4 id="whats-changed-0-0-8">What’s changed<a class="anchor" aria-label="anchor" href="#whats-changed-0-0-8"></a></h4>
 <ul><li>improved ’harvest()` for abilities to change the output download log name and plot rasters in a folder</li>
@@ -50,7 +62,7 @@
 <li>fixed errors in installing google cloud sdk on Windows machines</li>
 </ul></div>
 <div class="section level4">
-<h4 id="whats-new-0-0-8">What’s New<a class="anchor" aria-label="anchor" href="#whats-new-0-0-8"></a></h4>
+<h4 id="whats-new-0-0-8">What’s new<a class="anchor" aria-label="anchor" href="#whats-new-0-0-8"></a></h4>
 <ul><li>
 <code><a href="../reference/plot_rasters.html">plot_rasters()</a></code> function to scan a folder recursively and plot the first band of all GeoTIFF images</li>
 <li>
