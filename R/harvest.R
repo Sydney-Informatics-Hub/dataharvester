@@ -14,9 +14,8 @@ harvest <- function(path_to_config,
   log_name = "download_log",
   preview = FALSE,
   contour = FALSE) {
-  path <- system.file("python", package = "dataharvester")
-  ee <- reticulate::import_from_path("harvest", path = path, delay_load = TRUE)
-  ee$run(path_to_config, log_name, preview)
+  harvest <- harvester_module("harvest")
+  harvest$run(path_to_config, log_name, preview)
   config <- load_settings(path_to_config)
   if (preview & !is.null(config$infile)) {
     samples <- read.csv(config$infile)

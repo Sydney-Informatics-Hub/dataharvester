@@ -10,11 +10,7 @@
 #'
 download_landscape <- function(layer, bounding_box, out_path, resolution = 3) {
   # Import module
-  path <- system.file("python", package = "dataharvester")
-  landscape <- reticulate::import_from_path("getdata_landscape",
-    path = path,
-    delay_load = TRUE
-  )
+  landscape <- harvester_module("getdata_landscape")
   # Run
   out <- landscape$get_landscape_layers(
     layer,

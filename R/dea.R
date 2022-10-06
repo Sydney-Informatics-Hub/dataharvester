@@ -21,11 +21,7 @@ download_dea <- function(layer,
                          crs = "EPSG:4326",
                          format_out = "GeoTIFF") {
   # Import module
-  path <- system.file("python", package = "dataharvester")
-  dea <- reticulate::import_from_path("getdata_dea",
-    path = path,
-    delay_load = TRUE
-  )
+  dea <- harvester_module("getdata_dea")
   # Run
   out <- dea$get_dea_layers(
     layer,

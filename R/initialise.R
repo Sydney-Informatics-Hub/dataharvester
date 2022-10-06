@@ -64,10 +64,7 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE) {
 #' @export
 authenticate_ee <- function(auth_mode = "gcloud") {
   path <- system.file("python", package = "dataharvester")
-  ee <- reticulate::import_from_path("getdata_ee",
-    path = path,
-    delay_load = TRUE
-  )
+  ee <- harvester_module("getdata_ee")
   ee$initialise(auth_mode = auth_mode)
 }
 

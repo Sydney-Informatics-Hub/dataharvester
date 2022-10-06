@@ -15,11 +15,7 @@ download_dem <- function(layer,
                          bounding_box,
                          resolution = 1) {
   # Import module
-  path <- system.file("python", package = "dataharvester")
-  dem <- reticulate::import_from_path("getdata_dem",
-    path = path,
-    delay_load = TRUE
-  )
+  dem <- harvester_module("getdata_dem")
   out <- dem$get_dem_layers(as.list(layer), out_path, bounding_box)
   return(out)
 }

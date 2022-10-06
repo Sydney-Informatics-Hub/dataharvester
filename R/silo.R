@@ -16,11 +16,7 @@ download_silo <- function(layer,
                           format_out = "tif",
                           delete_temp = FALSE) {
   # Import module
-  path <- system.file("python", package = "dataharvester")
-  silo <- reticulate::import_from_path("getdata_silo",
-    path = path,
-    delay_load = TRUE
-  )
+  silo <- harvester_module("getdata_silo")
   # make sure years is integer
   years <- as.integer(years)
   # Iteration happens outside of the main function

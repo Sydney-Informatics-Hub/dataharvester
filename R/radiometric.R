@@ -17,11 +17,7 @@ download_radiometric <- function(layer,
                                  crs = "EPSG:4326",
                                  format_out = "GeoTIFF") {
   # Import module
-  path <- system.file("python", package = "dataharvester")
-  rad <- reticulate::import_from_path("getdata_radiometric",
-    path = path,
-    delay_load = TRUE
-  )
+  rad <- harvester_module("getdata_radiometric")
   # Run
   out <- rad$get_radiometric_layers(
     out_path,
