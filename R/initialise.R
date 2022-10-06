@@ -83,6 +83,7 @@ validate_conda <- function(reinstall = FALSE) {
   # Is conda available? If not, install miniconda
   message("• Checking Python/Conda install...")
   if (reinstall) {
+    reticulate::miniconda_uninstall()
     reticulate::install_miniconda(force = TRUE, update = FALSE)
   } else {
     tryCatch(
