@@ -13,15 +13,18 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-<!-- badges: start -->
-<!-- badges: end -->
-
-
-
 ```{r echo=FALSE, fig.align="center", out.width=300}
 knitr::include_graphics("man/figures/logo_r.png")
 ```
+
+---
+
+<!-- badges: start -->
+[![pkgdown](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml)
+
+<!-- badges: end -->
+
+---
 
 **Important: This is a pre-release version of `dataharvester` which is undergoing active development. Please report any bugs in the [issues](https://github.com/Sydney-Informatics-Hub/dataharvester/issues) tab.**
 

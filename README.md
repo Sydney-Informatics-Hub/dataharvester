@@ -1,9 +1,17 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<!-- badges: start -->
-<!-- badges: end -->
 
 <img src="man/figures/logo_r.png" width="300" style="display: block; margin: auto;" />
+
+------------------------------------------------------------------------
+
+<!-- badges: start -->
+
+[![pkgdown](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml)
+
+<!-- badges: end -->
+
+------------------------------------------------------------------------
 
 **Important: This is a pre-release version of `dataharvester` which is
 undergoing active development. Please report any bugs in the
