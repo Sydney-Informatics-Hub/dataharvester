@@ -11,8 +11,8 @@
 #' @return a list of filenames (after files have been downloaded or processed)
 #' @export
 download_dem <- function(layer,
-                         out_path,
                          bounding_box,
+                         out_path,
                          resolution = 1) {
   # Import module
   dem <- harvester_module("getdata_dem")
