@@ -41,12 +41,10 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE) {
 
   if (earthengine) {
     message("• Checking Google Earth Engine authentication")
+    # Horrible way to check for RStudio Cloud or Binder
     if (terra::gdal() == "3.0.4") {
       message(paste0(
-        "\u2691 Cloud/server environment detected. If a browser popup ",
-        "does not appear, ignore the warning messages and copy and ",
-        "paste the link produced to your web browser to proceed with ",
-        "authentication"
+        "\u2691 Cloud/server environment detected."
       ))
       authenticate_ee("notebook")
     } else {
@@ -140,6 +138,15 @@ validate_conda <- function(reinstall = FALSE) {
   if (terra::gdal() == "3.0.4") {
     use_pygdal <- TRUE
   }
+
+  # check if windows user - can't install google-cloud-sdk if so
+
+  if(.Platform$OS.type == "windows") {
+    windows <- TRUE
+  } else {
+    windows <- FALSE
+  }
+
   # Install dependencies
   if (use_pygdal) {
     reticulate::conda_install(
@@ -155,10 +162,19 @@ validate_conda <- function(reinstall = FALSE) {
   } else {
     reticulate::conda_install(
       envname = envname,
-      packages = c("gdal", "rasterio", "google-cloud-sdk"),
+      packages = c("gdal", "rasterio"),
       channel = "conda-forge"
     )
   }
+  # Install google-cloud-sdk as long as OS is not Windows
+  if (!windows) {
+    reticulate::conda_install(
+      envname = envname,
+      packages = c("google-cloud-sdk"),
+      channel = "conda-forge"
+    )
+  }
+
   # remainder conda installs
   reticulate::conda_install(
     envname = envname,
@@ -204,9 +220,9 @@ validate_conda <- function(reinstall = FALSE) {
     "wxee",
     "termcolor",
     # conda
-    # "gdal",
+    # "gdal", # TODO: will fail for cloud users
     "rasterio",
-    "google-cloud-sdk"
+    # "google-cloud-sdk" # TODO: will fail for windows users
   )
   # Filter package list for checks
   py_avail_modules <-

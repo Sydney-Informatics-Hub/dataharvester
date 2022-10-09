@@ -1,3 +1,13 @@
+# dataharvester 0.0.10
+
+This version updates the package Python modules. There are no major changes to the R code.
+
+### What's changed
+
+- Messages imported from Python are a bit more organised (more to improve in a later version, but these are cosmetic changes)
+- `download_dem()`: arguments were not ordered like other similar functions, so we adjusted this
+- Better support for YAML config files (especially when some attributes are missing)
+
 # dataharvester 0.0.9
 
 A fix to achieve reliable Python module imports (hopefully).

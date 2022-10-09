@@ -187,7 +187,7 @@ def get_radiometric_layers(
     elif format_out == "NetCDF":
         fname_end = ".nc"
     else:
-        print(f"{format_out} not supported. Choose either GeoTIFF or NetCDF.")
+        print(f"\u2716 {format_out} not supported. Choose either GeoTIFF or NetCDF.")
         return outfnames
 
     # Loop over all layers
@@ -245,9 +245,13 @@ def get_radiometric_image(
     # Get data
     if os.path.exists(outfname):
         cprint(f"⚑ {layername}.tif already exists, skipping download", "yellow")
+        print(
+            colored("\u2691", "yellow"),
+            f"{layername}.tif already exists, skipping download",
+        )
     else:
         try:
-            with spin(f"⇩ Downloading {layername}", "blue") as s:
+            with spin(f"\u29e9 Downloading {layername}") as s:
                 wcs = WebCoverageService(url, version="1.0.0", timeout=300)
                 data = wcs.getCoverage(
                     identifier=layername,
@@ -260,7 +264,7 @@ def get_radiometric_image(
                 )
                 s(1)
         except:
-            print("Download failed")
+            print(colored("\u2716", "red"), "Download failed")
             return False
 
         # Save data

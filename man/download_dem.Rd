@@ -4,14 +4,14 @@
 \alias{download_dem}
 \title{Download Geoscience Australia DEM grid data}
 \usage{
-download_dem(layer, out_path, bounding_box, resolution = 1)
+download_dem(layer, bounding_box, out_path, resolution = 1)
 }
 \arguments{
 \item{layer}{Layer name(s) to download as a vector of strings}
 
-\item{out_path}{Path to an output/download folder, e.g. \code{'downloads/'}}
-
 \item{bounding_box}{A numeric vector of coordinate values used to generate a bounding box around are of interest in EPSG:4326 format, for example, \code{c(min_x, min_y, max_x, max_y)}}
+
+\item{out_path}{Path to an output/download folder, e.g. \code{'downloads/'}}
 
 \item{resolution}{An integer value for resolution, in arc seconds}
 }
