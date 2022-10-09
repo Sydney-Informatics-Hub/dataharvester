@@ -27,29 +27,12 @@ import os
 from owslib.wcs import WebCoverageService
 import rasterio
 from rasterio.plot import show
-import matplotlib.pyplot as plt
+import utils
+from utils import spin
 
 # logger setup
 import write_logs
 import logging
-
-from termcolor import cprint, colored
-from alive_progress import alive_bar, config_handler
-
-config_handler.set_global(
-    force_tty=True,
-    bar=None,
-    spinner="waves",
-    monitor=False,
-    stats=False,
-    receipt=True,
-    elapsed="{elapsed}",
-)
-
-
-def spin(message=None, colour=None):
-    """Spin animation as a progress inidicator"""
-    return alive_bar(1, title=colored(f"{message} ", colour))
 
 
 def get_slgadict():
@@ -211,13 +194,13 @@ def get_wcsmap(url, identifier, crs, bbox, resolution, outfname):
     # Create WCS object
     filename = outfname.split(os.sep)[-1]
     if os.path.exists(outfname):
-        cprint(f"⚑ {filename} already exists, skipping download", "yellow")
+        utils.msg_warn(f"{filename} already exists, skipping download")
         # logging.warning(f"\u25b2 Download skipped: {filename} already exists")
         # logging.info(f"  Location: {outfname}")
 
         return False
     else:
-        with spin(f"⇩ {filename}", "blue") as s:
+        with spin(f"Downloading {filename}") as s:
             wcs = WebCoverageService(url, version="1.0.0")
             # Get data
             data = wcs.getCoverage(

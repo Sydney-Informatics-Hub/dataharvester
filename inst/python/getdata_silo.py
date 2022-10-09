@@ -43,23 +43,9 @@ import write_logs
 import logging
 
 # from datacube.utils.cog import write_cog
-from termcolor import cprint, colored
-from alive_progress import alive_bar, config_handler
-
-config_handler.set_global(
-    force_tty=True,
-    bar=None,
-    spinner="waves",
-    monitor=False,
-    stats=False,
-    receipt=True,
-    elapsed="{elapsed}",
-)
-
-
-def spin(message=None, colour=None):
-    """Spin animation as a progress inidicator"""
-    return alive_bar(1, title=colored(f"{message} ", colour))
+from termcolor import cprint
+import utils
+from utils import spin
 
 
 def download_file(url, year, outpath="."):
@@ -76,10 +62,10 @@ def download_file(url, year, outpath="."):
     local_filename = os.path.join(outpath, url.split("/")[-1])
     filename_only = Path(outpath).name
     if os.path.exists(local_filename):
-        cprint(f"⚑ {filename_only} already exists, skipping download", "yellow")
+        utils.msg_warn(f"{filename_only} already exists, skipping download")
         # logging.info(f"  | Location: {local_filename}")
         return local_filename
-    with spin(f"⇩ {filename_only} for year: {str(year)}", "blue") as s:
+    with spin(f"Downloading {filename_only} for year: {str(year)}") as s:
         with requests.get(url, stream=True) as r:
             with open(local_filename, "wb") as f:
                 shutil.copyfileobj(r.raw, f)
@@ -317,7 +303,7 @@ def get_SILO_raster(
     # Download data for each year and save as geotif
     for year in years:
         # Get url
-        url = silo_baseurl + layername + "/" + str(year) + "." + layername + ".nc"
+        url = silo_baseurl + layername + "/" + str(year) + "_" + layername + ".nc"
         # Download file
         # logging.info(f"Downloading data from {url} ...")
         filename = download_file(url, year, outpath)

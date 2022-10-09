@@ -31,53 +31,29 @@ source software is released under the LGPL-3.0 License.
 
 """
 import datetime
-import dateutil
 import ee
 import eemont  # trunk-ignore(flake8/F401)
 import geemap.foliumap as geemap
 import geemap.colormaps as cm
 import math
 import os
-import requests
 import rioxarray
-import subprocess
 import wxee  # trunk-ignore(flake8/F401)
 import yaml
 import urllib
 import json
+import utils
+import settingshandler as sh
 
-from alive_progress import alive_bar
-from alive_progress import config_handler
+from utils import spin
 from contextlib import contextmanager, redirect_stderr, redirect_stdout
 from functools import partialmethod
 
 from os import devnull
-from termcolor import colored
+
+# from termcolor import colored
 from termcolor import cprint
 from tqdm.notebook import tqdm
-
-import settingshandler as sh
-
-# Not used yet (but used during development, might be useful later)
-# import warnings
-
-# from IPython.display import Image
-# import traceback
-# from datetime import datetime
-# import geedim as gd
-# import logging
-# from IPython.display import Image
-
-# Progress bar config for alive-progress
-config_handler.set_global(
-    force_tty=True,
-    bar=None,
-    spinner="waves",
-    monitor=False,
-    stats=False,
-    receipt=True,
-    elapsed="{elapsed}",
-)
 
 
 @contextmanager
@@ -101,17 +77,15 @@ def initialise(auth_mode="gcloud"):
     """
     # Check if initialised:
     if ee.data._credentials:
-        cprint("✔ Earth Engine API already authenticated", "blue")
+        utils.msg_warn("Earth Engine API already authenticated")
     else:
-        with alive_bar(
-            total=1, title=colored("• Initialising Earth Engine...", "blue")
-        ) as bar:
+        with spin("Initialising Earth Engine...") as s:
             geemap.ee_initialize(auth_mode=auth_mode)
-            bar(1)
+            s(1)
         if ee.data._credentials:
-            cprint("✔ Earth Engine authenticated", "blue")
+            utils.msg_success("Earth Engine authenticated")
         else:
-            cprint("⚑ Please run this function again to authenticate", "yellow")
+            utils.msg_warn("Please run this function again to authenticate")
 
 
 class collect:
@@ -178,45 +152,90 @@ class collect:
             with open(config, "r") as f:
                 # TODO: put into kwargs at some point to clean this up
                 yaml_vals = yaml.load(f, Loader=yaml.SafeLoader)
-                gee_config = yaml_vals["target_sources"]["GEE"]
-                gee_process = gee_config["preprocess"]
+
+            # Parse settings
+            gee_config = yaml_vals["target_sources"]["GEE"]
+            gee_process = gee_config["preprocess"]
+            try:
                 gee_aggregate = gee_config["aggregate"]
-                gee_download = gee_config["download"]
-                # Class attributes:
-                collection = gee_process["collection"]
-                if coords is not None:
-                    coords = gee_process["coords"]
-                # If target_dates has 1 entry we could use it
-                # TODO: add support for multiple dates on top of range in GEE config
-                if len(yaml_vals["target_dates"]) == 1 and gee_process["date"] is None:
-                    date = yaml_vals["target_dates"]
-                    end_date = None
-                else:
-                    date = gee_process["date"]
-                    end_date = gee_process["end_date"]
-                buffer = gee_process["buffer"]
-                bound = gee_process["bound"]
-                # check dates
-                if isinstance(date, datetime.date):
-                    date = date.strftime("%Y-%m-%d")
-                if isinstance(end_date, datetime.date):
-                    end_date = end_date.strftime("%Y-%m-%d")
-                # cprint("ⓘ Configuration file parsed")
+            except KeyError:
+                pass
+            gee_download = gee_config["download"]
+
+            # Class attributes:
+            collection = gee_process["collection"]
+            if coords is not None:
+                coords = gee_process["coords"]
+
+            # If date and endate are provided, overwrite everything
+            try:
+                gee_process["date"]
+            except KeyError:
+                gee_process["date"] = None
+            try:
+                gee_process["end_date"]
+            except KeyError:
+                gee_process["end_date"] = None
+            use_gee_dates = False
+            if gee_process["date"] is not None and gee_process["end_date"] is not None:
+                date = gee_process["date"]
+                end_date = gee_process["end_date"]
+                use_gee_dates = True
+            elif gee_process["date"] is not None and gee_process["end_date"] is None:
+                # start = str(date[0]) + "-01-01"
+                # end_date = str(date[0]) + "-12-31"
+                # year_to_range = parse_year_to_range(gee_process["date"])
+                date = str(gee_process["date"][0]) + "-01-01"
+                end_date = str(gee_process["date"][0]) + "-12-31"
+                use_gee_dates = True
+
+            if use_gee_dates is False:
+                if len(yaml_vals["target_dates"]) == 1:
+                    pass
+                elif len(yaml_vals["target_dates"]) > 1:
+                    print("Multiple dates provided, using first date for GEE")
+
+                date = str(yaml_vals["target_dates"][0]) + "-01-01"
+                end_date = str(yaml_vals["target_dates"][0]) + "-12-31"
+
+            # Set GEE preprocessing attributes to None if not found so that the script
+            # doesn't crash
+            try:
+                gee_process["buffer"]
+            except KeyError:
+                gee_process["buffer"] = None
+
+            try:
+                gee_process["bound"]
+            except KeyError:
+                gee_process["bound"] = None
+
+            # check dates
+            if isinstance(date, datetime.date):
+                date = date.strftime("%Y-%m-%d")
+            if isinstance(end_date, datetime.date):
+                end_date = end_date.strftime("%Y-%m-%d")
             # Ok, store method-specific settings
             self.yaml_vals = yaml_vals
             self.gee_config = gee_config
             self.gee_process = gee_process
-            self.gee_aggregate = gee_aggregate
+            try:
+                self.gee_aggregate = gee_aggregate
+            except Exception:
+                pass
             self.gee_download = gee_download
+
         # check that collection exists in GEE catalog
         valid = validate_collection(collection)
+
         # Finalise
         self.collection = collection
         self.coords = coords
-        self.date = date
-        self.end_date = end_date
+        self.date = str(date)
+        self.end_date = str(end_date)
         self.buffer = buffer
         self.bound = bound
+
         # Used for checks:
         if config is not None:
             self.hasconfig = True
@@ -274,7 +293,7 @@ class collect:
             An Earth Engine object which can be further manipulated should the
             user not choose to use other methods in the class.
         """
-        cprint("\n⏱ Running preprocess()")
+        cprint("\n\u1805 Running preprocess()")
         # Check if user has provided a config file
         if self.hasconfig is True:
             mask_clouds = self.gee_process["mask_clouds"]
@@ -294,6 +313,7 @@ class collect:
         img = ee.ImageCollection(self.collection).filterBounds(aoi)
         img = img.filterDate(self.date, self.end_date)
         # Check if there are any images by verifying that image bands exist
+        # NOT WORKING
         try:
             img.first().bandNames().getInfo()
         except ee.EEException:
@@ -305,7 +325,7 @@ class collect:
         # Count images if reduce is None:
         if reduce is False or reduce is None:
             reduce = None
-            with spin("• Image collection requested, counting images...", "blue") as s:
+            with spin("Image collection requested, counting images...") as s:
                 image_count = int(img.size().getInfo())
                 if image_count > 0:
                     self.image_count = image_count  # store for later use
@@ -320,7 +340,7 @@ class collect:
             pass
         if mask_clouds:
             try:
-                with spin("• Applying scale, offset and cloud masks...", "blue") as s:
+                with spin("Applying scale, offset and cloud masks...") as s:
                     img = img.maskClouds()
                     s(1)
             except Exception:
@@ -342,7 +362,7 @@ class collect:
             )
 
         if spectral is not None:
-            with spin(f"• Computing spectral index: {spectral}", "blue") as s:
+            with spin(f"Computing spectral index: {spectral}") as s:
                 try:
                     img = img.spectralIndices(spectral, online=True)
                 except Exception:
@@ -359,9 +379,9 @@ class collect:
         # Reduce/aggregate
         reducers = ["median", "mean", "sum", "mode", "max", "min", "mosaic"]
         if reduce is None:
-            cprint(f"• Selected {image_count} image(s) without aggregation", "blue")
+            utils.msg_info(f"Selected {image_count} image(s) without aggregation")
         elif reduce in reducers:
-            with spin(f"• Reducing image pixels by {reduce}", "blue") as s:
+            with spin(f"Reducing image pixels by {reduce}") as s:
                 func = getattr(img, reduce)
                 img = func()
                 s(1)
@@ -371,7 +391,7 @@ class collect:
         self.spectral = spectral
         self.ee_sample = ee_sample
         self.ee_image = img
-        cprint("✔ Google Earth Engine preprocessing complete", "blue")
+        utils.msg_success("Google Earth Engine preprocessing complete")
         return img
 
     def aggregate(self, frequency="month", reduce_by=None, **kwargs):
@@ -398,7 +418,7 @@ class collect:
         cprint("\u2139 Initial aggregate", "blue")
         ts.describe()
         out = ts.aggregate_time(frequency=frequency, reducer=reducer)
-        with spin("• Calculating new temporal aggregate...", "blue") as s:
+        with spin("Calculating new temporal aggregate...") as s:
             out.describe()
             s(1)
         self.ee_image = out
@@ -433,7 +453,7 @@ class collect:
         ValueError
             If the bands are not valid or not present in the image.
         """
-        cprint("\n⏱ Running map()")
+        cprint("\n\u1805 Running map()")
         # Check that preprocess() has been called
         img = self.ee_image
         if img is None:
@@ -461,14 +481,13 @@ class collect:
         img = img.select(bands)
         # Check if geometry is a point and let user know
         if self.aoi.getInfo()["type"] == "Point":
-            cprint(
-                "\u2139 Looks like geometry is set to a single point with "
-                + "no buffer. Plotting anyway...",
-                "yellow",
+            utils.msg_warn(
+                "Looks like geometry is set to a single point with "
+                + "no buffer. Plotting anyway..."
             )
         # Create min and max parameters for map
         if minmax is None:
-            with spin("• Detecting band min and max parameters...", "blue") as s:
+            with spin("Detecting band min and max parameters...") as s:
                 # Scale here is just for visualisation purposes
                 if len(bands) == 1:
                     minmax = stretch_minmax(
@@ -487,12 +506,7 @@ class collect:
         # Generate palette if single-band
         if len(bands) == 1:
             if palette is None:
-                print(
-                    colored(
-                        "\u2139 Palette is set to None, using 'viridis'",
-                        "yellow",
-                    )
-                )
+                utils.msg_warn("Palette is set to None, using 'viridis'")
                 palette = geemap.get_palette_colors("viridis")
             # add some custom palettes provided by geemap
             elif palette.lower() == "ndvi":
@@ -527,7 +541,7 @@ class collect:
             Map.centerObject(self.aoi, 12)
             Map.to_html(save_to)
         Map.centerObject(self.aoi)
-        cprint("✔ Map generated", "green")
+        utils.msg_success("Map generated")
         return Map
 
     def download(
@@ -536,7 +550,7 @@ class collect:
         scale=None,
         outpath=None,
         out_format=None,
-        overwrite=True,
+        overwrite=False,
         **kwargs,
     ):
         """
@@ -572,7 +586,7 @@ class collect:
         ValueError
             If out_format is not one of 'png', 'jpg', 'tif'.
         """
-        cprint("\n⏱ Running download()")
+        cprint("\n\u1805 Running download()")
         # Check if user has provided a config file
         if self.hasconfig is True:
             bands = self.gee_download["bands"]
@@ -583,15 +597,14 @@ class collect:
         # Check that preprocess() has been called
         img = self.ee_image
         if img is None:
-            cprint("✘ No image found, please run `preprocess()` before mapping", "red")
+            utils.msg_err("No image found, please run `preprocess()` before mapping")
             return None
         # Stop if image is a pixel
         if self.aoi.getInfo()["type"] == "Point":
-            cprint(
-                "\u2139 Single pixel selected. Did you set a buffer in `collect()`?",
-                "yellow",
+            utils.msg_warn(
+                "Single pixel selected. Did you set a buffer in `collect()`?"
             )
-            cprint("✘ Download cancelled", "red")
+            utils.msg_err("Download cancelled")
             return
         # Stop if out_format is not png, jpg or tif
         if out_format is None:
@@ -607,15 +620,15 @@ class collect:
                 bands = self.bands
             except AttributeError:
                 all_bands = get_bandinfo(img)
-                print("✘ No bands defined")
-                print("\u2139 Please select one or more bands to download image:")
+                utils.msg_err("No bands defined")
+                utils.msg_info("Please select one or more bands to download image:")
                 print(all_bands)
                 return None
         img = img.select(bands)
-        cprint(f"• Band(s) selected: {bands}", "blue")
+        utils.msg_info(f"Band(s) selected: {bands}")
         # Throw error if scale is None, i.e. force user to set scale again
         if scale is None:
-            cprint("\u2139 Scale not set, using scale=100", "yellow")
+            utils.msg_warn("Scale not set, using scale=100")
             scale = 100
         # Determine save path
         if outpath is None:
@@ -639,7 +652,7 @@ class collect:
         if is_tif:
             filenames = download_tif(img, self.aoi, fullpath, scale, overwrite)
             self.filenames = filenames
-        cprint("✔ Google Earth Engine download(s) complete", "blue")
+        utils.msg_success("Google Earth Engine download(s) complete")
         return None
 
 
@@ -694,7 +707,7 @@ def extract_ids(img_collection):
     """
     Extracts the image IDs from an Earth Engine image collection
     """
-    with spin("• Collecting image ids...", "blue") as s:
+    with spin("Collecting image ids...") as s:
         count = img_collection.size().getInfo()
         tif_list = []
         for i in range(0, count):
@@ -726,29 +739,16 @@ def validate_collection(collection):
         return True
     # If in STAC but not supported, print info and continue
     elif collection in stac_list and collection not in list(supported.keys()):
-        cprint(
-            f"\u2139 Collection {collection} is not officially supported.",
-            "yellow",
-        )
-        cprint(
-            "  Some preprocessing and aggregation steps are not available",
-            "yellow",
-        )
+        utils.msg_warn(f"Collection {collection} is not officially supported.")
+        print("  Some preprocessing and aggregation steps are not available")
         return True
     else:
         errmsg = (
-            f"✘ Collection {collection} not found in GEE STAC. Please "
+            f"Collection {collection} not found in GEE STAC. Please "
             + "check spelling. Processing cancelled"
         )
-        cprint(errmsg, "red", attrs=["bold"])
+        utils.msg_err(errmsg)
         return False
-
-
-def spin(message=None, colour=None):
-    """
-    Spin animation as a progress inidicator
-    """
-    return alive_bar(1, title=colored(f"{message} ", colour))
 
 
 def supported_collections():
@@ -768,19 +768,17 @@ def supported_collections():
 
 def match_collection(collection):
     """
-    Match a collection (provided by user) to a supported collection
+    Match a collection (provided by user) to a supported collection. Not yet
+    used.
     """
     supported = supported_collections()
     img = ee.ImageCollection(collection)
     try:
         img.first().get("system:id").getInfo()
     except ee.EEException:
-        cprint(
-            f"✘ The collection {collection} does not exist",
-            "red",
-            attrs=["bold"],
-        )
-        cprint("\n".join(list(supported.keys())), "magenta")
+        utils.msg_err(f"The collection {collection} does not exist")
+        # TODO: possible suggests
+        # cprint("\n".join(list(supported.keys())), "magenta")
         return
 
     if set([collection]).issubset(supported):
@@ -942,7 +940,10 @@ def generate_path_string(
     # Clean colletion string
     name = "".join(name.split("/")[0])[:3]
     # Generate date string
-    date = date.replace("-", "")
+    try:
+        date = date.replace("-", "")
+    except (AttributeError, TypeError):
+        pass
     try:
         end_date = end_date.replace("-", "")
     except (AttributeError, TypeError):
@@ -1080,7 +1081,7 @@ def download_tif(image, region, path, scale, crs="EPSG:4326", overwrite=True):
         filename = os.path.basename(path)
         # Check if path already exists and don't download if it does
         if os.path.exists(path) and overwrite:
-            cprint(f"⚑ {filename} already exists, skipping download", "yellow")
+            utils.msg_warn(f"{filename} already exists, skipping download")
             return filename
         # Otherwise download image
         with suppress():
@@ -1088,7 +1089,7 @@ def download_tif(image, region, path, scale, crs="EPSG:4326", overwrite=True):
             tqdm.__init__ = partialmethod(tqdm.__init__, disable=True)
             # Get filename from path
 
-            with spin(f"⇩ Downloading {filename}...", "blue") as s:
+            with spin(f"Downloading {filename}") as s:
                 geemap.download_ee_image(
                     image=image,
                     region=region,
@@ -1097,8 +1098,8 @@ def download_tif(image, region, path, scale, crs="EPSG:4326", overwrite=True):
                     scale=scale,
                 )
                 s(1)
-        final_size = convert_size(os.path.getsize(path))
-        cprint(f"✔ File saved as {path} [final size {final_size}]", "green")
+        # final_size = convert_size(os.path.getsize(path))
+        # cprint(f"✔ File saved as {path} [final size {final_size}]", "green")
         return filename
     else:
         file_list = extract_ids(image)
@@ -1109,7 +1110,7 @@ def download_tif(image, region, path, scale, crs="EPSG:4326", overwrite=True):
             crs="EPSG:4326",
             scale=scale,
         )
-        cprint(f"✔ Files saved to {path}", "green")
+        # cprint(f"✔ Files saved to {path}", "green")
     return file_list
 
 
@@ -1140,200 +1141,8 @@ def preview_tif(image, bands, path, **kwargs):
         )
 
 
-# =============================================================================
-def add_date(image):
-    img_date = ee.Date(image.date())
-    img_date = ee.Number.parse(img_date.format("YYYYMMdd"))
-    return image.addBands(ee.Image(img_date).rename("date").toInt())
-
-
-def download_image(
-    collection_name,
-    bbox,
-    startDate,
-    endDate,
-    outpath,
-    res=1.0,
-    ag="median",
-    bands=None,
-    format_out="GEO_TIFF",
-):
-    """
-    Computes median of ImageCollection of all images between startDate and endDate
-    and downloads image to output path.
-
-    Maximum download size is 32 MB, maximum grid dimension is 10000
-
-    TBD:
-    - add cloud-cover mask
-
-    Args:
-    -----
-    collection_name : str, GEE ImageCollection name
-    bbox : list, bounding box
-    startDate : str, YYYY-MM-DD
-    endDate : str, YYYY-MM-DD
-    outpath : str, output path
-    res : float, resolution in arcsec
-    ag : str, agregation function: 'median' (default), 'mean', 'sum', 'mode', 'max', 'min', 'mosaic'
-    bands : list of bands, e.g. ['B3', 'B8', 'B11'], if None it assumes Singleband
-    format_out : str, 'GEO_TIFF' (default), or 'ZIPPED_GEO_TIFF'
-
-    Return
-    ------
-    filename out : str
-    """
-
-    # Check  first if outpath exists:
-    if not os.path.exists(outpath):
-        raise Exception(f"Output path {outpath} does not exist.")
-
-    # generate output name:
-    if format_out == "GEO_TIFF":
-        fname_end = ".tif"
-    elif format_out == "ZIPPED_GEO_TIFF":
-        fname_end = ".zip"
-    fname_out = os.path.join(
-        outpath, "img_" + ag + "_" + startDate + "_" + endDate + fname_end
-    )
-
-    # getgrid dimension
-    width = abs(bbox[2] - bbox[0])
-    height = abs(bbox[3] - bbox[1])
-    nwidth = int(width / res * 3600)
-    nheight = int(height / res * 3600)
-    if (nwidth > 10000) | (nheight > 10000):
-        raise Exception("Image is too large to download. Max grid dimension is 10000.")
-
-    aoi = ee.Geometry.Rectangle(bbox)
-    region = ee.Geometry.BBox(bbox[0], bbox[1], bbox[2], bbox[3])
-
-    # Generate Image specs:
-    # TBD could add cloud-cover mask
-    img = (
-        ee.ImageCollection(collection_name)
-        .filterDate(startDate, endDate)
-        .filterBounds(aoi)
-        .map(add_date)
-    )
-
-    # Return averaging of image collection
-    if ag == "median":
-        img_ag = img.median()
-    elif ag == "mean":
-        img_ag = img.mean()
-    elif ag == "sum":
-        img_ag = img.sum()
-    elif ag == "mode":
-        img_ag = img.mode()
-    elif ag == "max":
-        img_ag = img.max()
-    elif ag == "min":
-        img_ag = img.min()
-    elif ag == "mosaic":
-        img_ag = img.mosaic()
-    else:
-        raise Exception(f"Unknown aggregation function {ag}.")
-
-    # img_info = img_ag.getInfo()
-
-    # alternative provide "dimensions:" instead of scale
-    if (bands is None) | (bands == "None"):
-        url = img_ag.getDownloadUrl(
-            {
-                "region": region,
-                #'scale': scale,
-                "dimensions": (nwidth, nheight),
-                "format": format_out,
-            }
-        )
-    else:
-        url = img_ag.getDownloadUrl(
-            {
-                "bands": bands,
-                "region": region,
-                #'scale': scale,
-                "dimensions": (nwidth, nheight),
-                "format": format_out,
-            }
-        )
-
-    # get image
-    response = requests.get(url)
-    if response.ok:
-        with open(fname_out, "wb") as fd:
-            fd.write(response.content)
-        print("Download successful,image saved: ", fname_out)
-    else:
-        print("Error: {}".format(response.status_code))
-        print(response.text)
-        raise Exception("Download failed")
-    return fname_out
-
-
-# TEST ------------------------------------------------------------------------
-def test_download_image():
-    """
-    Test download_image function
-    """
-    # Test download_image function:
-    # Download Landsat 8 image:
-    # Landsat 8 collection:
-    collection_name = "COPERNICUS/S2"
-    # Landsat 8 bounding box:
-    bbox = (149.769345, -30.335861, 149.949173, -30.206271)
-    # Landsat 8 start date:
-    startDate = "2017-01-01"
-    # Landsat 8 end date:
-    endDate = "2017-07-01"
-    # Resolution:
-    res = 1.0
-    # Aggregation function:
-    ag = "mosaic"
-    # Bands:
-    bands = ["B8", "B4"]
-    # Format:
-    format_out = "GEO_TIFF"
-    # Output path:
-    outpath = "./test_download_image"
-    # make test directory
-    os.makedirs(outpath, exist_ok=True)
-
-    # Download image:
-    fname_out1 = download_image(
-        collection_name,
-        bbox,
-        startDate,
-        endDate,
-        outpath,
-        res=res,
-        ag=ag,
-        bands=bands,
-        format_out=format_out,
-    )
-
-    # Test single band image:
-    collection_name = "LANDSAT/LC08/C01/T1_32DAY_NDVI"
-    startDate = "2021-01-01"
-    # Landsat 8 end date:
-    endDate = "2022-01-01"
-    # Output path:
-    outpath = "../test_download_image"
-    # Resolution:
-    res = 1.0
-    # Aggregation function:
-    ag = "median"
-    # Bands:
-    bands = None
-    # Download image:
-    fname_out2 = download_image(
-        collection_name, bbox, startDate, endDate, outpath, res=res, ag=ag
-    )
-
-    # Check that files are downloaded and not empty (> 100KB)
-    file_size1 = os.path.getsize(fname_out1)
-    assert file_size1 > 10000
-    file_size2 = os.path.getsize(fname_out2)
-    assert file_size2 > 10000
-
-    print("Test download_image successful.")
+def parse_year_to_range(date):
+    """Convert single-year value to ymd range for the same year"""
+    start = str(date[0]) + "-01-01"
+    end_date = str(date[0]) + "-12-31"
+    return start, end_date
