@@ -12,7 +12,7 @@ second grid."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/lib
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@ second grid.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">download_dem</span><span class="op">(</span><span class="va">layer</span>, <span class="va">out_path</span>, <span class="va">bounding_box</span>, resolution <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">download_dem</span><span class="op">(</span><span class="va">layer</span>, <span class="va">bounding_box</span>, <span class="va">out_path</span>, resolution <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -57,12 +57,12 @@ second grid.</p>
 <dd><p>Layer name(s) to download as a vector of strings</p></dd>
 
 
-<dt>out_path</dt>
-<dd><p>Path to an output/download folder, e.g. <code>'downloads/'</code></p></dd>
-
-
 <dt>bounding_box</dt>
 <dd><p>A numeric vector of coordinate values used to generate a bounding box around are of interest in EPSG:4326 format, for example, <code>c(min_x, min_y, max_x, max_y)</code></p></dd>
+
+
+<dt>out_path</dt>
+<dd><p>Path to an output/download folder, e.g. <code>'downloads/'</code></p></dd>
 
 
 <dt>resolution</dt>

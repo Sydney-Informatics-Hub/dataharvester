@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,6 +54,9 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><p><img src="reference/figures/logo_r.png" width="300" style="display: block; margin: auto;"></p>
+<hr>
+<!-- badges: start -->
+<hr>
 <p><strong>Important: This is a pre-release version of <code>dataharvester</code> which is undergoing active development. Please report any bugs in the <a href="https://github.com/Sydney-Informatics-Hub/dataharvester/issues" class="external-link">issues</a> tab.</strong></p>
 <p><code>dataharvester</code> is an R interface to the <a href="https://www.agrefed.org.au/" class="external-link">AgReFed</a> Data-Harvester. Use <code>dataharvester</code> to preprocess, aggregate, visualise and download geospatial data from a range of Australian and international data sources, including:</p>
 <ul>
@@ -126,7 +129,6 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Make sure that GEE API is initialised</span></span>
 <span><span class="fu"><a href="reference/initialise_harvester.html">initialise_harvester</a></span><span class="op">(</span><span class="st">"r-reticulate"</span>, earthengine <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># 1. Define dataset</span></span>
 <span><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/collect_ee.html">collect_ee</a></span><span class="op">(</span></span>
 <span>  collection <span class="op">=</span> <span class="st">"LANDSAT/LC09/C02/T1_L2"</span>,</span>
@@ -134,13 +136,10 @@
 <span>  date <span class="op">=</span> <span class="st">"2021-06-01"</span>,</span>
 <span>  end_date <span class="op">=</span> <span class="st">"2022-06-01"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># 2. Preprocess (cloud masking, scale and offsetting enabled by default)</span></span>
 <span><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/preprocess_ee.html">preprocess_ee</a></span><span class="op">(</span><span class="va">img</span>, spectral <span class="op">=</span> <span class="st">"NDVI"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># 3. Visualise (optional)</span></span>
 <span><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/map_ee.html">map_ee</a></span><span class="op">(</span><span class="va">img</span>, bands <span class="op">=</span> <span class="st">"NDVI"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># 4. Download at 100m/px resolution</span></span>
 <span><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ee.html">download_ee</a></span><span class="op">(</span><span class="va">img</span>, bands <span class="op">=</span> <span class="st">"NDVI"</span>, scale <span class="op">=</span> <span class="fl">100</span>, out_path <span class="op">=</span> <span class="st">"downloads/"</span><span class="op">)</span></span></code></pre></div>
 <p>Note that the above functions can be chained/simplified using native (<code>|&gt;</code>) or <code>dplyr</code> (<code>%&gt;%</code>) pipes.</p>
@@ -204,7 +203,14 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="#license"><img src="https://img.shields.io/badge/License-GPLV3-blue" alt="License"></a></li>
+<li><a href="https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></li>
+<li><a href="https://github.com/Sydney-Informatics-Hub/dataharvester/issues" class="external-link"><img src="https://img.shields.io/github/issues/Sydney-Informatics-Hub/dataharvester" alt="issues - dataharvester"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
