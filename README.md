@@ -7,8 +7,10 @@
 
 <!-- badges: start -->
 
+[![License](https://img.shields.io/badge/License-GPLV3-blue)](#license)
 [![pkgdown](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml)
-
+[![issues -
+dataharvester](https://img.shields.io/github/issues/Sydney-Informatics-Hub/dataharvester)](https://github.com/Sydney-Informatics-Hub/dataharvester/issues)
 <!-- badges: end -->
 
 ------------------------------------------------------------------------
@@ -138,7 +140,6 @@ performs all of the following (in 9 lines of code):
 ``` r
 # Make sure that GEE API is initialised
 initialise_harvester("r-reticulate", earthengine = TRUE)
-
 # 1. Define dataset
 img <- collect_ee(
   collection = "LANDSAT/LC09/C02/T1_L2",
@@ -146,13 +147,10 @@ img <- collect_ee(
   date = "2021-06-01",
   end_date = "2022-06-01"
 )
-
 # 2. Preprocess (cloud masking, scale and offsetting enabled by default)
 img <- preprocess_ee(img, spectral = "NDVI")
-
 # 3. Visualise (optional)
 img <- map_ee(img, bands = "NDVI")
-
 # 4. Download at 100m/px resolution
 img <- download_ee(img, bands = "NDVI", scale = 100, out_path = "downloads/")
 ```
