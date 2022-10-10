@@ -951,7 +951,7 @@ def generate_path_string(
     # Generate band string
     if bands is not None:
         bands = "".join(str(i) for i in bands)
-        bands = bands.replace("_", "")[:7]
+        bands = bands.replace("_", "")
     scale = "".join([str(scale), "m"])
     # The only difference is whether to add extension to string, or not
     if isinstance(ee_image, ee.image.Image):

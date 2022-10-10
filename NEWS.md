@@ -1,3 +1,14 @@
+# dataharvester 0.0.11
+
+### What's changed
+
+- implemented slightly better console feedback when downloading data (on Python side)
+- `plot_rasters()`: fixed plotting issue when only one raster is in folder
+
+### What's new
+
+- S3 `plot()` methods now available with `download_*()` functions
+
 # dataharvester 0.0.10
 
 This version updates the package Python modules. There are no major changes to the R code.

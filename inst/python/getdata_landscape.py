@@ -30,6 +30,7 @@ from rasterio.plot import show
 import matplotlib.pyplot as plt
 from termcolor import cprint, colored
 from alive_progress import alive_bar, config_handler
+import utils
 from utils import spin
 
 
@@ -182,7 +183,7 @@ def get_wcsmap(url, identifier, crs, bbox, resolution, outfname, layername):
     # Create WCS object
     layer_fname = f"Landscape_{layername}.tif"
     if os.path.exists(outfname):
-        cprint(f"⚑ {layer_fname} already exists, skipping download", "yellow")
+        utils.msg_warn(f"{layer_fname} already exists, skipping download")
     else:
         with spin(f"Downloading {layer_fname}") as s:
             wcs = WebCoverageService(url, version="1.0.0")

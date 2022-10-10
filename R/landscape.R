@@ -18,6 +18,7 @@ download_landscape <- function(layer, bounding_box, out_path, resolution = 3) {
     out_path,
     resolution
   )
+  class(out) <- append(class(out), "rasterPath")
   return(out)
 }
 

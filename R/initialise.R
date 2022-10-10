@@ -221,7 +221,7 @@ validate_conda <- function(reinstall = FALSE) {
     "termcolor",
     # conda
     # "gdal", # TODO: will fail for cloud users
-    "rasterio",
+    "rasterio"
     # "google-cloud-sdk" # TODO: will fail for windows users
   )
   # Filter package list for checks
