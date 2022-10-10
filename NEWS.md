@@ -1,3 +1,5 @@
+# dataharvester 0.0.11
+
 # dataharvester 0.0.10
 
 This version updates the package Python modules. There are no major changes to the R code.
