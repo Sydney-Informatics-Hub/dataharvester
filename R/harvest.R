@@ -15,17 +15,17 @@
 #' @export
 harvest <- function(path_to_config,
   log_name = "download_log",
-  preview = FALSE,
+  plot = FALSE,
   contour = FALSE) {
   harvest <- harvester_module("harvest")
-  harvest$run(path_to_config, log_name, preview)
+  harvest$run(path_to_config, log_name, preview = FALSE)
   config <- load_settings(path_to_config)
-  if (preview & !is.null(config$infile)) {
+  if (plot & !is.null(config$infile)) {
     samples <- read.csv(config$infile)
     x <- samples[[config$colname_lat]]
     y <- samples[[config$colname_lng]]
     plot_rasters(config$outpath, contour = contour, points = TRUE, x, y)
-  } else if (preview & is.null(config$infile)) {
+  } else if (plot & is.null(config$infile)) {
     plot_rasters(config$outpath, contour = contour)
   }
 }
