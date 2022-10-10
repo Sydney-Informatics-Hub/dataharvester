@@ -7,6 +7,12 @@
     <loc>https://sydney-informatics-hub.github.io/dataharvester/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://sydney-informatics-hub.github.io/dataharvester/articles/dataharvester.html</loc>
+  </url>
+  <url>
+    <loc>https://sydney-informatics-hub.github.io/dataharvester/articles/index.html</loc>
+  </url>
+  <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/authors.html</loc>
   </url>
   <url>
@@ -103,7 +109,7 @@
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/map_ee.html</loc>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/plot_rasters.html</loc>
+    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/plot.rasterPath.html</loc>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/preprocess_ee.html</loc>

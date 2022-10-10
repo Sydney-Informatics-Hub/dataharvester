@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,10 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/dataharvester.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item">
@@ -38,9 +41,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="authentication">Authentication<a class="anchor" aria-label="anchor" href="#authentication"></a></h2>
       
-      
+      <p class="section-desc"></p><p>Validate Python environment and Google Earth Engine credentials</p>
 
       
     </div><div id="" class="section level2">
@@ -50,9 +53,96 @@
 
       <dl><dt>
           
-          <code><a href="Llara.html">Llara</a></code> 
+          <code><a href="initialise_harvester.html">initialise_harvester()</a></code> 
         </dt>
-        <dd>Example data Llara</dd>
+        <dd>Initialise and validate Data-Harvester, including dependencies</dd>
+      </dl><dl><dt>
+          
+          <code><a href="validate_conda.html">validate_conda()</a></code> 
+        </dt>
+        <dd>Check if conda is available</dd>
+      </dl><dl><dt>
+          
+          <code><a href="authenticate_ee.html">authenticate_ee()</a></code> 
+        </dt>
+        <dd>Authenticate to Google Earth Engine API</dd>
+      </dl></div><div class="section level2">
+      <h2 id="downloading-and-processing">Downloading and processing<a class="anchor" aria-label="anchor" href="#downloading-and-processing"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions to download and manipulate images from various APIs</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="download_dea.html">download_dea()</a></code> 
+        </dt>
+        <dd>Download from Digital Earth Australia</dd>
+      </dl><dl><dt>
+          
+          <code><a href="download_dem.html">download_dem()</a></code> 
+        </dt>
+        <dd>Download Geoscience Australia DEM grid data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="download_landscape.html">download_landscape()</a></code> 
+        </dt>
+        <dd>Download from SLGA Landscape Attributes</dd>
+      </dl><dl><dt>
+          
+          <code><a href="download_radiometric.html">download_radiometric()</a></code> 
+        </dt>
+        <dd>Download from Geosciences Australia's Radiometric Map of Australia</dd>
+      </dl><dl><dt>
+          
+          <code><a href="download_silo.html">download_silo()</a></code> 
+        </dt>
+        <dd>Download from SILO database</dd>
+      </dl><dl><dt>
+          
+          <code><a href="download_slga.html">download_slga()</a></code> 
+        </dt>
+        <dd>Download from SLGA (Soil Atributes)</dd>
+      </dl><dl><dt>
+          
+          <code><a href="init_logtable.html">init_logtable()</a></code> 
+        </dt>
+        <dd>Create a dataframe to store raster download and processing information</dd>
+      </dl><dl><dt>
+          
+          <code><a href="update_logtable.html">update_logtable()</a></code> 
+        </dt>
+        <dd>Update download and processing dataframe</dd>
+      </dl></div><div class="section level2">
+      <h2 id="google-earth-engine">Google Earth Engine<a class="anchor" aria-label="anchor" href="#google-earth-engine"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions to download and manipulate images from GEE</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="download_ee.html">download_ee()</a></code> 
+        </dt>
+        <dd>Download an Earth Engine Image or Image Collection</dd>
+      </dl><dl><dt>
+          
+          <code><a href="collect_ee.html">collect_ee()</a></code> 
+        </dt>
+        <dd>Define Google Earth Engine data to collect</dd>
+      </dl><dl><dt>
+          
+          <code><a href="preprocess_ee.html">preprocess_ee()</a></code> 
+        </dt>
+        <dd>Preprocess an Earth Engine Image or Image Collection</dd>
       </dl><dl><dt>
           
           <code><a href="aggregate_ee.html">aggregate_ee()</a></code> 
@@ -60,15 +150,26 @@
         <dd>Aggregate an Earth Engine Image Collection by period</dd>
       </dl><dl><dt>
           
-          <code><a href="authenticate_ee.html">authenticate_ee()</a></code> 
+          <code><a href="map_ee.html">map_ee()</a></code> 
         </dt>
-        <dd>Authenticate to Google Earth Engine API</dd>
+        <dd>Visualise an Earth Engine Image or Image Collection on an interactive map</dd>
       </dl><dl><dt>
           
-          <code><a href="collect_ee.html">collect_ee()</a></code> 
+          <code><a href="harvest.html">harvest()</a></code> 
         </dt>
-        <dd>Define Google Earth Engine data to collect</dd>
-      </dl><dl><dt>
+        <dd>A headless version of the Data-Harvester (with some limitations)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="configuration">Configuration<a class="anchor" aria-label="anchor" href="#configuration"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions to programmatically edit the current YAML configuration file. Note this section will be deprecated in favour of a new system and is only available as reference</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="config_bbox.html">config_bbox()</a></code> 
         </dt>
@@ -125,54 +226,14 @@
         <dd>Create a YAML configuration file for editing</dd>
       </dl><dl><dt>
           
-          <code><a href="download_dea.html">download_dea()</a></code> 
+          <code><a href="wrap_config.html">wrap_config()</a></code> 
         </dt>
-        <dd>Download from Digital Earth Australia</dd>
+        <dd>Wrap configuration file to data frame</dd>
       </dl><dl><dt>
           
-          <code><a href="download_dem.html">download_dem()</a></code> 
+          <code><a href="write_config.html">write_config()</a></code> 
         </dt>
-        <dd>Download Geoscience Australia DEM grid data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="download_ee.html">download_ee()</a></code> 
-        </dt>
-        <dd>Download an Earth Engine Image or Image Collection</dd>
-      </dl><dl><dt>
-          
-          <code><a href="download_landscape.html">download_landscape()</a></code> 
-        </dt>
-        <dd>Download from SLGA Landscape Attributes</dd>
-      </dl><dl><dt>
-          
-          <code><a href="download_radiometric.html">download_radiometric()</a></code> 
-        </dt>
-        <dd>Download from Geosciences Australia's Radiometric Map of Australia</dd>
-      </dl><dl><dt>
-          
-          <code><a href="download_silo.html">download_silo()</a></code> 
-        </dt>
-        <dd>Download from SILO database</dd>
-      </dl><dl><dt>
-          
-          <code><a href="download_slga.html">download_slga()</a></code> 
-        </dt>
-        <dd>Download from SLGA (Soil Atributes)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="harvest.html">harvest()</a></code> 
-        </dt>
-        <dd>A headless version of the Data-Harvester (with some limitations)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="init_logtable.html">init_logtable()</a></code> 
-        </dt>
-        <dd>Create a dataframe to store raster download and processing information</dd>
-      </dl><dl><dt>
-          
-          <code><a href="initialise_harvester.html">initialise_harvester()</a></code> 
-        </dt>
-        <dd>Initialise and validate Data-Harvester, including dependencies</dd>
+        <dd>Write config to file</dd>
       </dl><dl><dt>
           
           <code><a href="load_config.html">load_config()</a></code> 
@@ -183,48 +244,46 @@
           <code><a href="load_settings.html">load_settings()</a></code> 
         </dt>
         <dd>Load settings from YAML file</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="s-methods">S3 methods<a class="anchor" aria-label="anchor" href="#s-methods"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
-          <code><a href="map_ee.html">map_ee()</a></code> 
+          <code><a href="plot.rasterPath.html">plot(<i>&lt;rasterPath&gt;</i>)</a></code> 
         </dt>
-        <dd>Visualise an Earth Engine Image or Image Collection on an interactive map</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_rasters.html">plot_rasters()</a></code> 
-        </dt>
-        <dd>Preview all images in a folder, recursively</dd>
-      </dl><dl><dt>
-          
-          <code><a href="preprocess_ee.html">preprocess_ee()</a></code> 
-        </dt>
-        <dd>Preprocess an Earth Engine Image or Image Collection</dd>
+        <dd>Plot GeoTIFF object</dd>
       </dl><dl><dt>
           
           <code><a href="print.harvester.html">print(<i>&lt;harvester&gt;</i>)</a></code> 
         </dt>
         <dd>Print harvester objects</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="example-data">Example data<a class="anchor" aria-label="anchor" href="#example-data"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
-          <code><a href="update_logtable.html">update_logtable()</a></code> 
+          <code><a href="Llara.html">Llara</a></code> 
         </dt>
-        <dd>Update download and processing dataframe</dd>
-      </dl><dl><dt>
-          
-          <code><a href="validate_conda.html">validate_conda()</a></code> 
-        </dt>
-        <dd>Check if conda is available</dd>
-      </dl><dl><dt>
-          
-          <code><a href="wrap_config.html">wrap_config()</a></code> 
-        </dt>
-        <dd>Wrap configuration file to data frame</dd>
-      </dl><dl><dt>
-          
-          <code><a href="write_config.html">write_config()</a></code> 
-        </dt>
-        <dd>Write config to file</dd>
+        <dd>Example data Llara</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
