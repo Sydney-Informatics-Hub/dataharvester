@@ -34,5 +34,6 @@ download_silo <- function(layer,
     )
     out <- append(out, ref)
   }
+  class(out) <- append(class(out), "rasterPath")
   return(out)
 }

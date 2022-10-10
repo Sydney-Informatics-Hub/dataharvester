@@ -38,5 +38,6 @@ download_slga <- function(layer,
     get_ci,
     verbose
   )
+  class(out) <- append(class(out), "rasterPath")
   return(out)
 }

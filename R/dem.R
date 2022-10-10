@@ -17,5 +17,6 @@ download_dem <- function(layer,
   # Import module
   dem <- harvester_module("getdata_dem")
   out <- dem$get_dem_layers(as.list(layer), out_path, bounding_box)
+  class(out) <- append(class(out), "rasterPath")
   return(out)
 }

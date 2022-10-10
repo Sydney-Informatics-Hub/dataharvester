@@ -140,6 +140,7 @@ plot_rasters <- function(path,
     recursive = TRUE,
     full.names = TRUE
   )
+  message(length(images), " images found")
   # Generate matrix grid
   mar <- c(1, 1, 1.5, 1)
   par(mfrow = n2mfrow(length(images)))
@@ -165,4 +166,21 @@ raster_query <- function(longs, lats, download_log = NULL, rasters = NULL, names
   utils <- harvester_module("utils")
   out <- utils$raster_query(longs, lats, rasters, titles = names)
   return(out)
+}
+
+
+#' Plot GeoTIFF object
+#' @export
+plot.rasterPath <- function(x, choose = NULL, index = NULL, ...) {
+  # Filter files
+  if (!is.null(choose)) {
+    x <- x[choose]
+  }
+  # Create raster object
+  raster <- terra::rast(x)
+  # Select bands before plotting
+  if (!is.null(index)) {
+    raster <- raster[[index]]
+  }
+  terra::plot(raster)
 }

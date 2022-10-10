@@ -32,5 +32,6 @@ download_dea <- function(layer,
     crs,
     format_out
   )
+  class(out) <- append(class(out), "rasterPath")
   return(out)
 }
