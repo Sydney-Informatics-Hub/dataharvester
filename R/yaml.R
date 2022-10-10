@@ -6,6 +6,6 @@
 #' @export
 load_settings <- function(path_to_yaml) {
   set <- harvester_module("settingshandler")
-  out <- set$main(path_to_yaml)
+  out <- set$main(path_to_yaml, to_namespace = FALSE)
   return(out)
 }
