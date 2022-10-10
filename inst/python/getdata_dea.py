@@ -532,15 +532,12 @@ def get_wcsmap(
     nheight = int(height / resolution * 3600)
     # Get data
     if os.path.exists(outfname):
-        print(
-            colored("\u2691", "yellow"),
-            f"{layername}.tif already exists, skipping download",
-        )
+        utils.msg_warn(f"{layername}.tif already exists, skipping download")
         # logging.warning(f"▲ | Download skipped: {layername} already exists")
         # logging.info(f"  | Location: {outfname}")
     else:
         try:
-            with spin(f"Downloading {layername}.tif for date: {date}") as s:
+            with spin(f"Downloading {layername}.tif for {date}") as s:
                 wcs = WebCoverageService(url, version="1.0.0", timeout=300)
                 if date == "None":
                     data = wcs.getCoverage(
@@ -565,7 +562,7 @@ def get_wcsmap(
                     )
                 s(1)
         except:
-            print("Download failed")
+            utils.msg_err("Download failed")
             return False
         # Save data
         with open(outfname, "wb") as f:

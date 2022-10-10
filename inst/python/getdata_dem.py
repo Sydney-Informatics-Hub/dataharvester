@@ -199,7 +199,7 @@ def getwcs_dem(
         fname_out = layername.replace(" ", "_") + "_" + date + ".tif"
         outfname = os.path.join(outpath, fname_out)
         if os.path.exists(outfname):
-            cprint(f"⚑ {fname_out} already exists, skipping download", "yellow")
+            utils.msg_warn(f"{fname_out} already exists, skipping download")
             # logging.warning(f"△ | download skipped: {outfname} already exists")
         else:
             with spin(f"Downloading {fname_out}") as s:

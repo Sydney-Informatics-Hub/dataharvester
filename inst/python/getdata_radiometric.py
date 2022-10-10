@@ -31,21 +31,8 @@ from rasterio.plot import show
 from datetime import datetime, timezone
 from termcolor import cprint, colored
 from alive_progress import alive_bar, config_handler
-
-config_handler.set_global(
-    force_tty=True,
-    bar=None,
-    spinner="waves",
-    monitor=False,
-    stats=False,
-    receipt=True,
-    elapsed="{elapsed}",
-)
-
-
-def spin(message=None, colour=None):
-    """Spin animation as a progress inidicator"""
-    return alive_bar(1, title=colored(f"{message} ", colour))
+import utils
+from utils import spin
 
 
 def get_radiometricdict():
@@ -244,14 +231,10 @@ def get_radiometric_image(
     date = times[0]
     # Get data
     if os.path.exists(outfname):
-        cprint(f"⚑ {layername}.tif already exists, skipping download", "yellow")
-        print(
-            colored("\u2691", "yellow"),
-            f"{layername}.tif already exists, skipping download",
-        )
+        utils.msg_warn(f"{layername}.tif already exists, skipping download")
     else:
         try:
-            with spin(f"\u29e9 Downloading {layername}") as s:
+            with spin(f"Downloading {layername}") as s:
                 wcs = WebCoverageService(url, version="1.0.0", timeout=300)
                 data = wcs.getCoverage(
                     identifier=layername,
@@ -264,7 +247,7 @@ def get_radiometric_image(
                 )
                 s(1)
         except:
-            print(colored("\u2716", "red"), "Download failed")
+            utils.msg_err("Download failed")
             return False
 
         # Save data
