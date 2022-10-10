@@ -1,3 +1,11 @@
+# dataharvester 0.0.12
+
+This is a quick bugfix release.
+
+### What's changed
+
+- fixed an error in `harvest()` that can occur when the `infile` attribute exists but contains no path, leading the function to incorrectly think that sampling data exists
+
 # dataharvester 0.0.11
 
 ### What's changed

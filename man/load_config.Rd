@@ -39,4 +39,3 @@ If a file path is provided, it will load the file from the path.
 \examples{
 load_config() # loads template config as a start
 }
-\concept{configuration}

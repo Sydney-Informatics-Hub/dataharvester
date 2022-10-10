@@ -54,7 +54,10 @@ def run(path_to_config, log_name="download_log", preview=False, return_df=False)
     # If no infile provided, generate a blank one (including colnames)
     try:
         settings["infile"]
-        points_available = True
+        if settings["infile"] is None:
+            points_available = False
+        else:
+            points_available = True
     except (AttributeError, KeyError):
         settings["infile"] = None
         settings["colname_lng"] = None
