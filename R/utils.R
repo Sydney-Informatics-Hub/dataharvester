@@ -127,6 +127,7 @@ update_logtable <- function(logname,
 #'
 #' @param path path to folder
 #' @param contour show contour lines. Defaults to FALSE
+#' @noRd
 #'
 #' @export
 plot_rasters <- function(path,
