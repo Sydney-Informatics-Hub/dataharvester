@@ -4,7 +4,8 @@
 #' @param earthengine Initialise Earth Engine if `TRUE.` Defaults to `FALSE`
 #'
 #' @export
-initialise_harvester <- function(envname = NULL, earthengine = FALSE) {
+initialise_harvester <- function(envname = NULL, earthengine = FALSE,
+  auth_mode = "gcloud") {
   # Check if conda exists
   restart <- validate_conda()
   if (restart) {
@@ -41,15 +42,7 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE) {
 
   if (earthengine) {
     message("• Checking Google Earth Engine authentication")
-    # Horrible way to check for RStudio Cloud or Binder
-    if (terra::gdal() == "3.0.4") {
-      message(paste0(
-        "\u2691 Cloud/server environment detected."
-      ))
-      authenticate_ee("notebook")
-    } else {
-      authenticate_ee()
-    }
+    authenticate_ee(auth_mode)
   }
 }
 
@@ -63,6 +56,8 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE) {
 authenticate_ee <- function(auth_mode = "gcloud") {
   path <- system.file("python", package = "dataharvester")
   ee <- harvester_module("getdata_ee")
+  # "gcloud", "notebook", "rstudiocloud", "binder"
+  if (auth_mode %in% c("rstudiocloud", "binder")) auth_mode <- "notebook"
   ee$initialise(auth_mode = auth_mode)
 }
 

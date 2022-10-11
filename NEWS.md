@@ -1,3 +1,11 @@
+# dataharvester 0.0.13
+
+Another quick bugfix release.
+
+### What's changed
+
+- authenticating to GEE in RStudio Cloud is now more reliable when running `initialise_harvester()` as we have added an argument `auth_mode` to manually set the authentication method
+
 # dataharvester 0.0.12
 
 This is a quick bugfix release.
