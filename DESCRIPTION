@@ -14,12 +14,8 @@ Authors@R:
       person("Nathaniel", 
              "Butterworth",
              email = "nathaniel.butterworth@sydney.edu.au", 
-             role = c("aut")),
-      person("Agricultural Research Federation (AgReFed)", 
-             role = c("cph", "fnd")),
-      person("Sydney Informatics Hub (SIH), The University of Sydney", 
-             role = c("cph", "fnd"))
-             )
+             role = c("aut"))
+      )
 Description: Access, download and process geospatial image data from a growing 
     list of Australian databases in one simplified interface. Products include 
     soil, climate, satellite, terrain and radiometric data layers. Also has 
