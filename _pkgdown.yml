@@ -21,6 +21,7 @@ reference:
   - download_slga
   - init_logtable
   - update_logtable
+  - extract_values
 - title: Google Earth Engine
   desc: Functions to download and manipulate images from GEE
 - contents:
