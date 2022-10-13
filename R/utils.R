@@ -172,7 +172,7 @@ raster_query <- function(longs, lats, download_log = NULL, rasters = NULL, names
 
 #' Plot GeoTIFF object
 #' @export
-plot.rasterPath <- function(x, choose = NULL, index = NULL, ...) {
+plot.rasterPath <- function(x, choose = NULL, band = NULL, ...) {
   # Filter files
   if (!is.null(choose)) {
     x <- x[choose]
@@ -180,10 +180,12 @@ plot.rasterPath <- function(x, choose = NULL, index = NULL, ...) {
   # Create raster object
   raster <- terra::rast(x)
   # Select bands before plotting
-  if (!is.null(index)) {
-    raster <- raster[[index]]
+  if (!is.null(band)) {
+    raster <- raster[[band]]
   }
   terra::plot(raster)
+  return(invisible(x))
+}
 
 #' Plot Earth Engine object
 #' @export
