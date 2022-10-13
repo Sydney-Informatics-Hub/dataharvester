@@ -184,4 +184,15 @@ plot.rasterPath <- function(x, choose = NULL, index = NULL, ...) {
     raster <- raster[[index]]
   }
   terra::plot(raster)
+
+#' Plot Earth Engine object
+#' @export
+plot.getdata_ee.download <- function(x, band = NULL, ...) {
+  raster <- terra::rast(paste0(x$outpath, x$filenames))
+  if (!is.null(band)) {
+    raster <- raster[[band]]
+  }
+  terra::plot(raster)
+  return(invisible(x))
+}
 }
