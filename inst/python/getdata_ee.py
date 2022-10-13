@@ -293,7 +293,7 @@ class collect:
             An Earth Engine object which can be further manipulated should the
             user not choose to use other methods in the class.
         """
-        cprint("\n\u1805 Running preprocess()")
+        utils.msg_info("Running preprocess()")
         # Check if user has provided a config file
         if self.hasconfig is True:
             mask_clouds = self.gee_process["mask_clouds"]
@@ -404,7 +404,7 @@ class collect:
             aggregation frequency, either by "day". "week" or "month", by
             default "month"
         """
-        cprint("\n⏱ Running aggregate()")
+        utils.msg_info("Running aggregate()")
         if reduce_by is None:
             reducer = ee.Reducer.mean()
         # Check if user has provided a config file
@@ -453,7 +453,7 @@ class collect:
         ValueError
             If the bands are not valid or not present in the image.
         """
-        cprint("\n\u1805 Running map()")
+        utils.msg_info("Running map()")
         # Check that preprocess() has been called
         img = self.ee_image
         if img is None:
@@ -586,7 +586,7 @@ class collect:
         ValueError
             If out_format is not one of 'png', 'jpg', 'tif'.
         """
-        cprint("\n\u1805 Running download()")
+        utils.msg_info("Running download()")
         # Check if user has provided a config file
         if self.hasconfig is True:
             bands = self.gee_download["bands"]
@@ -652,6 +652,7 @@ class collect:
         if is_tif:
             filenames = download_tif(img, self.aoi, fullpath, scale, overwrite)
             self.filenames = filenames
+        self.outpath = outpath
         utils.msg_success("Google Earth Engine download(s) complete")
         return None
 
