@@ -197,4 +197,46 @@ plot.getdata_ee.download <- function(x, band = NULL, ...) {
   terra::plot(raster)
   return(invisible(x))
 }
+
+
+
+#' Extract values from GeoTIFF image(s)
+#'
+#' Extract values from one or more GeoTIFF images based on a set of point
+#' locations, supplied as (x, y) or (longitude, latitude) coordinates. If a path
+#' to a folder is provided, all images in the folder will be processed.
+#'
+#' @param path path to a folder containing one or more GeoTIFF files e.g.
+#'   "~/Documents/rasters", or path pointing to one or more GeoTIFF files e.g.
+#'   c("~/rasters/clay.tif", "~/rasters/density.tif")
+#' @param xy_coords a data frame of (x, y) or (longitude, latitude) coordinates.
+#'   Note the order - incorrect order of coordinates may result in erroneous or
+#'   NaN results.
+#' @param method one of "simple", which returns the exact value at the cell or
+#'   pixel that the point falls in, or "bilinear", which returns a value
+#'   interpolated from the values of the four nearest raster cells.
+#'
+#' @return a data frame of values
+#' @export
+extract_values <- function(path, xy_coords, method = "simple") {
+  .extract_raster <- function(path, xy_coords) {
+    out <- terra::extract(terra::rast(path), xy_coords, ID = FALSE)
+    return(out)
+  }
+  # Extract image list from path
+  if (all(dir.exists(path))) {
+    image_list <- list.files(
+      path = path,
+      pattern = "\\.tif$",
+      recursive = TRUE,
+      full.names = TRUE
+    )
+    data_points <-
+      image_list |>
+      purrr::map_dfc(~ .extract_raster(.x, xy_coords))
+  } else if (all(file.exists(path))) {
+    data_points <- .extract_raster(path, xy_coords)
+  }
+  out <- dplyr::tibble(xy_coords, data_points)
+  return(out)
 }
