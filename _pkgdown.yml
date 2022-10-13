@@ -45,6 +45,7 @@ reference:
 - title: S3 methods
 - contents:
   - plot.rasterPath
+  - plot.getdata_ee.download
   - print.harvester
 - title: Example data
 - contents:
