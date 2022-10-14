@@ -4,7 +4,7 @@
 \alias{plot.rasterPath}
 \title{Plot GeoTIFF object}
 \usage{
-\method{plot}{rasterPath}(x, choose = NULL, index = NULL, ...)
+\method{plot}{rasterPath}(x, choose = NULL, band = NULL, ...)
 }
 \description{
 Plot GeoTIFF object

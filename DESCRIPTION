@@ -1,6 +1,6 @@
 Package: dataharvester
-Title: R interface to the AgReFed Data-Harvester
-Version: 0.0.13
+Title: Download and Process Geospatial Data
+Version: 0.0.14
 Authors@R: 
     c(person("Januar", 
              "Harianto",
@@ -15,8 +15,11 @@ Authors@R:
              "Butterworth",
              email = "nathaniel.butterworth@sydney.edu.au", 
              role = c("aut"))
-             )
-Description: An R interface to the AgReFed Data Harvester
+      )
+Description: Access, download and process geospatial image data from a growing 
+    list of Australian databases in one simplified interface. Products include 
+    soil, climate, satellite, terrain and radiometric data layers. Also has 
+    access to the Google Earth Engine Catalog.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
