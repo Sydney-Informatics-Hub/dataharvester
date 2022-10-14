@@ -41,7 +41,7 @@ def run(path_to_config, log_name="download_log", preview=False, return_df=False)
     None
         Nothing is returned, results are saved to disk
     """
-    cprint("Starting the data harvester -----\n", "magenta", attrs=["bold"])
+    cprint("Starting the data harvester -----", "magenta", attrs=["bold"])
 
     # Load config file (based on notebook for now, will optimise later)
     with open(path_to_config, "r") as f:
@@ -66,7 +66,7 @@ def run(path_to_config, log_name="download_log", preview=False, return_df=False)
 
     # If no resolution set, make it 1 arc-second
     if settings["target_res"] is None:
-        cprint("ⓘ No target resolution specified, using default of 1 arc-sec", "yellow")
+        utils.msg_info("No target resolution specified, using default of 1 arc-sec")
         settings["target_res"] = 1
 
     # Create bounding box if infile is provided and target_bbox is not provided
@@ -88,15 +88,15 @@ def run(path_to_config, log_name="download_log", preview=False, return_df=False)
     # Create download log
     download_log = init_logtable()
     # process each data source
-    cprint(f"ⓘ Found the following {count_sources} sources: {list_sources}", "blue")
-    cprint("\nDownloading data -----", "magenta", attrs=["bold"])
+    utils.msg_info(f"Found the following {count_sources} sources: {list_sources}")
+    cprint("\nDownloading from API sources -----", "magenta", attrs=["bold"])
 
     # GEE
     if "GEE" in list_sources:
         # Try to initialise API if Earth Engine is selected
         getdata_ee.initialise()
 
-        cprint("\n⌛ Downloading Google Earth Engine data...", attrs=["bold"])
+        cprint("\n\u29d7 Downloading Google Earth Engine data...", attrs=["bold"])
         # get data from GEE
         gee = getdata_ee.collect(config=path_to_config)
         gee = getdata_ee.harvest(gee, coords=settings["target_bbox"])
@@ -115,7 +115,7 @@ def run(path_to_config, log_name="download_log", preview=False, return_df=False)
         )
     # DEA
     if "DEA" in list_sources:
-        cprint("\n⌛ Downloading DEA data...", attrs=["bold"])
+        cprint("\n\u29d7 Downloading DEA data...", attrs=["bold"])
         # get data from DEA
         dea_layernames = settings["target_sources"]["DEA"]
         outpath_dea = os.path.join(settings["outpath"], "dea")
@@ -302,11 +302,7 @@ def run(path_to_config, log_name="download_log", preview=False, return_df=False)
         )
         # Save also as geopackage
         gdf.to_file(os.path.join(settings["outpath"], "results.gpkg"), driver="GPKG")
-        cprint(
-            f"✔ Data points extracted to {settings['outpath']}results.gpkg",
-            "blue",
-            attrs=["bold"],
-        )
+        utils.msg_success(f"Data points extracted to {settings['outpath']}results.gpkg")
 
     if preview and points_available:
         utils.plot_rasters(rasters, longs, lats, titles)

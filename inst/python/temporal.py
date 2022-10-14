@@ -16,7 +16,9 @@ import rioxarray
 import xarray as xr
 
 
-def combine_rasters_temporal(file_list, channel_name='band', attribute_name='long_name'):
+def combine_rasters_temporal(
+    file_list, channel_name="band", attribute_name="long_name"
+):
     """
     Combines multiple tif files into single xarray object. Assumes files are in
     temporal order, and additional channels contain sequential time step data.
@@ -42,45 +44,53 @@ def combine_rasters_temporal(file_list, channel_name='band', attribute_name='lon
     xdr : xarray object of x,y,time, with approriate metadata.
 
     """
-    print("Concatenating",channel_name,"and",attribute_name,"over",file_list)
+    print("Concatenating", channel_name, "and", attribute_name, "over", file_list)
     # file_list = glob(os.path.join(data_dir, '*.tif'))
 
     # Append all data/channels, collect metadata lists
     array_list = []
     attrs = ()
-    first=True
+    first = True
     for x in file_list:
         xds = rioxarray.open_rasterio(x)
 
         if channel_name not in xds.coords:
-            raise ValueError(channel_name+" not a channel in the raster "+ x+" Options are",[t for t in xds.coords])
-            return(None)
+            raise ValueError(
+                channel_name + " not a channel in the raster " + x + " Options are",
+                [t for t in xds.coords],
+            )
+            return None
 
         if attribute_name not in xds.attrs:
-            raise ValueError(attribute_name+" not an attribute in the raster "+x+" Options are",[t for t in xds.attrs])
-            return(None)
+            raise ValueError(
+                attribute_name
+                + " not an attribute in the raster "
+                + x
+                + " Options are",
+                [t for t in xds.attrs],
+            )
+            return None
 
         array_list.append(xds)
         attrs = attrs + xds.attrs[attribute_name]
-        if first==True:
+        if first == True:
             coords = xds[channel_name].values
 
-            first=False
+            first = False
         else:
-            coords = np.append(coords,xds[channel_name].values+coords[-1])
+            coords = np.append(coords, xds[channel_name].values + coords[-1])
 
-
-    xdr = xr.concat(array_list,channel_name)
+    xdr = xr.concat(array_list, channel_name)
     # print(agg,coords,attrs)
     # xdr = xdr.assign_attrs({attr: attrs})
     xdr = xdr.assign_coords({channel_name: np.array(pd.to_datetime(attrs))})
-    xdr = xdr.rename({channel_name:"time"})
+    xdr = xdr.rename({channel_name: "time"})
     del xdr.attrs[attribute_name]
 
     return xdr
 
 
-def aggregate_temporal(xdr,period='yearly',agg=['mean'],outfile='temporal_agg'):
+def aggregate_temporal(xdr, period="yearly", agg=["mean"], outfile="temporal_agg"):
     """
     Make a data aggregation (mean, median, sum, etc) through time on an xarray.
     Expects xarray coordinates to be x, y, time. Saves every aggregation for
@@ -112,71 +122,70 @@ def aggregate_temporal(xdr,period='yearly',agg=['mean'],outfile='temporal_agg'):
     """
 
     # Check the aggregation methods are okay
-    agg_types = ['mean', 'median', 'sum', 'perc95', 'perc5', 'max', 'min']
+    agg_types = ["mean", "median", "sum", "perc95", "perc5", "max", "min"]
     aggcheck = [a for a in agg if a in agg_types]
     if aggcheck is None:
         raise ValueError("Invalid Aggregation type. Expected any of: %s" % agg_types)
     else:
         print("Finding", aggcheck, " out of possible", agg_types)
-        print("for",period," period.")
-
+        print("for", period, " period.")
 
     # Group by the appropriate time period
-    if period=='yearly':
-        xdr_groups = xdr.groupby('time.year')
+    if period == "yearly":
+        xdr_groups = xdr.groupby("time.year")
 
-    elif period=='monthly':
-        xdr_groups = xdr.groupby('time.month')
+    elif period == "monthly":
+        xdr_groups = xdr.groupby("time.month")
 
-    elif type(period)==int:
-        bins = int(np.floor(len(xdr)/period))
-        xdr_groups = xdr.groupby_bins('time', bins)
+    elif type(period) == int:
+        bins = int(np.floor(len(xdr) / period))
+        xdr_groups = xdr.groupby_bins("time", bins)
         # indexname='time_bins'
 
     else:
-        raise ValueError("Invalid temporal period. Expected any of: 'yearly', 'monthly', or an integer period")
+        raise ValueError(
+            "Invalid temporal period. Expected any of: 'yearly', 'monthly', or an integer period"
+        )
 
+    # What is more efficient? Make calcs on whole dataframe or on each group?
 
-    #What is more efficient? Make calcs on whole dataframe or on each group?
-
-    #Make ALL agg calcs (and only keep the requested ones later)
+    # Make ALL agg calcs (and only keep the requested ones later)
     aggdict = {}
-    aggdict['mean'] = xdr_groups.mean()
-    aggdict['median'] = xdr_groups.median()
-    aggdict['sum'] = xdr_groups.sum()
-    aggdict['perc95'] = xdr_groups.quantile(q=0.95)
-    aggdict['perc5'] = xdr_groups.quantile(q=0.05)
-    aggdict['max'] = xdr_groups.max()
-    aggdict['min'] = xdr_groups.min()
+    aggdict["mean"] = xdr_groups.mean()
+    aggdict["median"] = xdr_groups.median()
+    aggdict["sum"] = xdr_groups.sum()
+    aggdict["perc95"] = xdr_groups.quantile(q=0.95)
+    aggdict["perc5"] = xdr_groups.quantile(q=0.05)
+    aggdict["max"] = xdr_groups.max()
+    aggdict["min"] = xdr_groups.min()
 
-    #Keep track of the names of all files produced
+    # Keep track of the names of all files produced
     outfname_list = []
     agg_list = []
 
-    #For all the different aggregation methods
+    # For all the different aggregation methods
     for a in aggcheck:
-        #For each period of time in each of the groups, save it out!
+        # For each period of time in each of the groups, save it out!
         for p in aggdict[a]:
 
-            #Each temporal grouping results in different group labels
-            if period=='yearly': label=str(p['year'].values)
-            elif period=='monthly': label=str(p['month'].values).zfill(2)
-            elif type(period)==int: label=str(p['time_bins'].values)[1:11]
+            # Each temporal grouping results in different group labels
+            if period == "yearly":
+                label = str(p["year"].values)
+            elif period == "monthly":
+                label = str(p["month"].values).zfill(2)
+            elif type(period) == int:
+                label = str(p["time_bins"].values)[1:11]
 
-            p.rio.to_raster(outfile+"_"+a+"_"+label+".tif")
-            outfname_list.append(outfile+"_"+a+"_"+label+".tif")
+            p.rio.to_raster(outfile + "_" + a + "_" + label + ".tif")
+            outfname_list.append(outfile + "_" + a + "_" + label + ".tif")
             agg_list.append(a)
 
-            print(a,"of", label, "saved in:", outfile+"_"+a+"_"+label+".tif")
+            print(a, "of", label, "saved in:", outfile + "_" + a + "_" + label + ".tif")
 
     return outfname_list, agg_list
 
-
-
-
-
-#def temporal_aggregate_multiband(file_list=None, data_dir=None, agg=['mean'],
-#    outfile='aggregation', timesteps=1):
+    # def temporal_aggregate_multiband(file_list=None, data_dir=None, agg=['mean'],
+    #    outfile='aggregation', timesteps=1):
     """
     NOTE: NOT ALL IMPLEMENTED!!! Specifcally multiband data. But I don't think
     we want to deal with that, as it is already accounted for previously? Maybe.

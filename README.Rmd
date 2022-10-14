@@ -30,11 +30,11 @@ knitr::include_graphics("man/figures/logo_r.png")
 
 **Important: This is a pre-release version of `dataharvester` which is undergoing active development. Please report any bugs in the [issues](https://github.com/Sydney-Informatics-Hub/dataharvester/issues) tab.**
 
-`dataharvester` is an R interface to the [AgReFed](https://www.agrefed.org.au/) Data-Harvester.
-Use `dataharvester` to preprocess, aggregate, visualise and download geospatial data from a range of Australian and international data sources, including:
+`dataharvester` is an R interface to the [AgReFed](https://www.agrefed.org.au/) Geodata-Harvester.
+Use `dataharvester` to preprocess, aggregate, visualise and download geospatial data from a range of **Australian** (and international) data sources, including:
 
 - [Soil and Landscape Grid of Australia (SLGA)](https://is.gd/i8nF0Z)
-- [SILO Climate Database](https://is.gd/ifJ8tB)
+- [SILO Climate Database - Queensland Government, Australia](https://is.gd/ifJ8tB) 
 - [Digital Elevation Model (DEM) of Australia](https://is.gd/ZLFwGs)
 - [Digital Earth Australia (DEA) Geoscience Earth Observations](https://is.gd/gRSlVG)
 - [GSKY Data Server for DEA Geoscience Earth Observations](https://is.gd/zFHxfD)

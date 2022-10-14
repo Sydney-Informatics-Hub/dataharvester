@@ -46,7 +46,7 @@ from numba import jit
 
 import warnings
 
-from termcolor import colored
+from termcolor import colored, cprint
 from alive_progress import alive_bar, config_handler
 
 
@@ -63,34 +63,34 @@ config_handler.set_global(
 ## ------ Functions to show progress and provide feedback to the user ------ ##
 
 
-def spin(message=None, colour="cyan", events=1):
+def spin(message=None, colour="magenta", events=1):
     """Spin animation as a progress inidicator"""
     return alive_bar(events, title=colored("\u2299 " + message, color=colour))
 
 
 def msg_info(message):
     """Prints an info message"""
-    print(colored("\u2139", color="blue"), message)
+    cprint("\u2139 " + message, color="magenta")
 
 
 def msg_dl(message):
     """Prints a downloading message"""
-    print(colored("\u29e9", color="green"), message)
+    cprint("\u29e9 " + message, color="magenta")
 
 
 def msg_warn(message):
     """Prints a warning message"""
-    print(colored("\u2691", color="yellow"), message)
+    cprint("\u2691 " + message, color="yellow")
 
 
 def msg_err(message):
     """Prints an error message"""
-    print(colored("\u2716 " + message, color="red", attrs=["bold"]))
+    cprint("\u2716 " + message, color="red", attrs=["bold"])
 
 
 def msg_success(message):
     """Prints a success message"""
-    print(colored("\u2714", color="green"), message)
+    cprint("\u2714 " + message, color="magenta")
 
 
 ## ------------------------------------------------------------------------- ##

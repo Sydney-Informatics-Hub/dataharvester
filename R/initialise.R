@@ -16,8 +16,8 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
   # Ensure an envname is specified
   if (is.null(envname)) {
     stop(paste0(
-      "✘ Environment `envname` must be specified. We recommend",
-      " \"r=reticulate\" or a unique name e.g. \"dataharvester\""
+      "Argument `envname` must be specified, for example:\n",
+      "  initialise_harvester(envname = 'r-reticulate')"
     ))
   }
   # Check if environment can be loaded
@@ -39,11 +39,11 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
     }
   )
   .validate_dependencies(envname)
-
   if (earthengine) {
     message("• Checking Google Earth Engine authentication")
     authenticate_ee(auth_mode)
   }
+  return(invisible(TRUE))
 }
 
 #' Authenticate to Google Earth Engine API
@@ -54,11 +54,18 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
 #'
 #' @export
 authenticate_ee <- function(auth_mode = "gcloud") {
+  all_modes <- c("gcloud", "notebook", "rstudiocloud", "binder")
+  if (!(auth_mode %in% all_modes)) {
+    stop('Argument `auth_mode` must be one of "gcloud", "notebook", "rstudiocloud", "binder"')
+  }
   path <- system.file("python", package = "dataharvester")
   ee <- harvester_module("getdata_ee")
   # "gcloud", "notebook", "rstudiocloud", "binder"
-  if (auth_mode %in% c("rstudiocloud", "binder")) auth_mode <- "notebook"
+  if (auth_mode %in% c("rstudiocloud", "binder")) {
+    auth_mode <- "notebook"
+  }
   ee$initialise(auth_mode = auth_mode)
+  return(invisible(TRUE))
 }
 
 
@@ -71,7 +78,7 @@ authenticate_ee <- function(auth_mode = "gcloud") {
 #' @export
 validate_conda <- function(reinstall = FALSE) {
   # Is conda available? If not, install miniconda
-  message("• Checking Python/Conda install...")
+  message("\n\u2299 Checking Python/Conda install...")
   if (reinstall) {
     reticulate::miniconda_uninstall()
     reticulate::install_miniconda(force = TRUE, update = FALSE)
@@ -197,7 +204,7 @@ validate_conda <- function(reinstall = FALSE) {
 .validate_dependencies <- function(envname = "r-reticulate") {
   # Note: a Conda environment must be loaded first or this function will fail
   # List required packages
-  message("• Validating dependencies...", "\r", appendLF = FALSE)
+  message("\n\u2299 Validating dependencies...", "\r", appendLF = FALSE)
   checklist <- c(
     # pip
     "alive-progress",
@@ -231,6 +238,7 @@ validate_conda <- function(reinstall = FALSE) {
 
   if (dependencies_ok) {
     message("\u2714 All dependencies validated")
+    return(invisible(TRUE))
   } else {
     message(paste0(
       crayon::yellow(
@@ -243,5 +251,6 @@ validate_conda <- function(reinstall = FALSE) {
       )
     ))
     .install_dependencies(envname)
+    return(invisible(TRUE))
   }
 }

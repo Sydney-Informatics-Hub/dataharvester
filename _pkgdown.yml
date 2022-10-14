@@ -21,6 +21,7 @@ reference:
   - download_slga
   - init_logtable
   - update_logtable
+  - extract_values
 - title: Google Earth Engine
   desc: Functions to download and manipulate images from GEE
 - contents:
@@ -44,6 +45,7 @@ reference:
 - title: S3 methods
 - contents:
   - plot.rasterPath
+  - plot.getdata_ee.download
   - print.harvester
 - title: Example data
 - contents:
