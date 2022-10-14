@@ -1,3 +1,18 @@
+# dataharvester 0.0.14
+
+This release focuses on data extraction from rasters and plot functions that should "simply work". We also started to implement unit testing as the package code contains *some* R code.
+
+### What's changed
+
+- improved message outputs when using download functions. This was important as there was some overlap between Python and R message and print outputs. This update makes the feedback (to the user) less verbose and more consistent and prepares the package for a better logging feature (which will be finalise in a future update)
+- the folder path can now be retrieved directly from an object produced by `download_ee()`, which is useful for plotting and other data manipulation functions which rely on extracting data from a downloaded GeoTIFF file
+
+### What's new
+
+- `plot()` for `download_*()` objects, thanks to the `terra` package
+- `extract_values()` to extract values from GeoTIFF files
+- started to implement unit testing for some functions with `testthat`
+
 # dataharvester 0.0.13
 
 Another quick bugfix release.
