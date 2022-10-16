@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.14</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,24 @@
       
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.14" id="dataharvester-0014">dataharvester 0.0.14<a class="anchor" aria-label="anchor" href="#dataharvester-0014"></a></h2>
+<p>This release focuses on data extraction from rasters and plot functions that should “simply work”. We also started to implement unit testing as the package code contains <em>some</em> R code.</p>
+<div class="section level4">
+<h4 id="whats-changed-0-0-14">What’s changed<a class="anchor" aria-label="anchor" href="#whats-changed-0-0-14"></a></h4>
+<ul><li>improved message outputs when using download functions. This was important as there was some overlap between Python and R message and print outputs. This update makes the feedback (to the user) less verbose and more consistent and prepares the package for a better logging feature (which will be finalise in a future update)</li>
+<li>the folder path can now be retrieved directly from an object produced by <code><a href="../reference/download_ee.html">download_ee()</a></code>, which is useful for plotting and other data manipulation functions which rely on extracting data from a downloaded GeoTIFF file</li>
+</ul></div>
+<div class="section level4">
+<h4 id="whats-new-0-0-14">What’s new<a class="anchor" aria-label="anchor" href="#whats-new-0-0-14"></a></h4>
+<ul><li>
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for <code>download_*()</code> objects, thanks to the <code>terra</code> package</li>
+<li>
+<code><a href="../reference/extract_values.html">extract_values()</a></code> to extract values from GeoTIFF files</li>
+<li>started to implement unit testing for some functions with <code>testthat</code>
+</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.13" id="dataharvester-0013">dataharvester 0.0.13<a class="anchor" aria-label="anchor" href="#dataharvester-0013"></a></h2>
 <p>Another quick bugfix release.</p>
