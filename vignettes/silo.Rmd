@@ -1,8 +1,8 @@
 ---
-title: "`download_silo()`"
+title: "download_silo()"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{`download_silo()`}
+  %\VignetteIndexEntry{download_silo()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

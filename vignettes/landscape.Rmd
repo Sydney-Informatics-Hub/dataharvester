@@ -1,8 +1,8 @@
 ---
-title: "`download_landscape()`"
+title: "download_landscape()"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{`download_landscape()`}
+  %\VignetteIndexEntry{download_landscape()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

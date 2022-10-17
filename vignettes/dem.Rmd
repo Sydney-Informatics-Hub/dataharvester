@@ -1,8 +1,8 @@
 ---
-title: "`download_dem()`"
+title: "download_dem()"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{`download_dem()`}
+  %\VignetteIndexEntry{download_dem()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

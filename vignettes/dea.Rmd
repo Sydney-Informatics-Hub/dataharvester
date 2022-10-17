@@ -1,10 +1,10 @@
 ---
-title: "`download_dea()`"
+title: "download_dea()"
 # author: "Vignette Author"
 # date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{`download_dea()`}
+  %\VignetteIndexEntry{download_dea()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

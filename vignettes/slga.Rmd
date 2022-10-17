@@ -1,8 +1,8 @@
 ---
-title: "`download_slga()`"
+title: "download_slga()"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{`download_slga()`}
+  %\VignetteIndexEntry{download_slga()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
