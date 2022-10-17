@@ -17,6 +17,8 @@ harvest <- function(path_to_config,
   log_name = "download_log",
   plot = FALSE,
   contour = FALSE) {
+  # ensure that the full path is known when transferring to Python
+  path_to_config <- normalizePath(path_to_config)
   harvest <- harvester_module("harvest")
   harvest$run(path_to_config, log_name, preview = FALSE)
   config <- load_settings(path_to_config)
