@@ -48,6 +48,21 @@ With connectivity to the Earth Engine API, perform petabyte-scale operations whi
 
 For [all other Earth Engine collections](https://developers.google.com/earth-engine/datasets/), while `dataharvester` does not provide officual support, users can still perform basic operations to filter, reduce, visualise and download data.
 
+## Demo
+
+Below is an output when the following 3 lines of code is run on a configuration file, which downloads 16 images from 7 API sources:
+
+```r
+library(dataharvester)
+initialise_harvester("r-reticulate")
+harvest("~/Documents/democonfig.yaml", plot = TRUE, contour = FALSE)
+
+```
+
+
+
+![](man/figures/harvestdemo.gif)
+
 ## Installation
 
 Install the development version of this package from GitHub using `install_github()` from `remotes` or `devtools`:
