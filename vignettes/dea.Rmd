@@ -1,0 +1,454 @@
+---
+title: "`download_dea()`"
+# author: "Vignette Author"
+# date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{`download_dea()`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Description
+
+Digital Earth Australia’s (DEA) Landsat Surface Reflectance products take Landsat 5 Thematic Mapper (TM), Landsat 7 Enhanced Thematic Mapper Plus (ETM+) and Landsat 8 Operational Land Imager (OLI) imagery captured over the Australian continent and corrects for inconsistencies across land and coastal fringes. 
+
+The result is accurate and standardised surface reflectance data, which is instrumental in identifying and quantifying environmental change. DEA’s Landsat Surface Reflectance products form a single, cohesive Analysis Ready Data (ARD) package, which allows you to analyse surface reflectance data as is without the need to apply additional corrections.
+
+- Module name: getdata_dea.py
+- Bounding Box: variable (see Layers)
+- Resolution: variable (depending on layer, typically 25m)
+- Updates: Daily to yearly
+- Source: https://docs.dea.ga.gov.au/notebooks/DEA_datasets/DEA_Landsat_Surface_Reflectance.html
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+- Attribution: Digital Earth Australia (DEA)
+
+## Layers
+
+- ga_ls_ard_3':
+  - title: DEA Surface Reflectance (Landsat)
+  - description: Geoscience Australia Landsat 5 Thematic Mapper Analysis Ready Data Collection 3
+  - bounding box: (110.696007613984, -45.6734535062289, 156.154528040633, -8.13764292647926)
+  - date limits: ['1986-08-16', '2022-09-05']
+  - Number of bands: 7
+- 's2_nrt_granule_nbar_t':
+  - title: DEA Surface Reflectance (Sentinel-2 Near Real-Time)
+  - description: Sentinel-2A MSI ARD NRT - NBAR NBART and Pixel Quality
+  - bounding box: (109.989859933428, -45.2413329418709, 155.307643731418, -9.9300073889701)
+  - date limits: ['2022-06-20', '2022-09-19']
+  - Number of bands: 23
+- 's2_ard_granule_nbar_t':
+  - title: DEA Surface Reflectance (Sentinel-2)
+  - description: Sentinel-2A MSI Definitive ARD - NBART and Pixel Quality
+  - bounding box: (109.968510816964, -45.2234942244028, 156.101505058599, -9.02727104242043)
+  - date limits: ['2015-07-12', '2022-09-13']
+  - Number of bands: 12
+- 'ga_ls8c_nbart_gm_cyear_3':
+  - title: DEA GeoMAD (Landsat 8 OLI-TIRS)
+  - description: Geoscience Australia Landsat Nadir BRDF Adjusted Reflectance Terrain, Landsat 8 Geomedian Calendar Year Collection 3
+  - bounding box: (110.413246718272, -46.2302085135865, 157.044900204052, -8.10857383542487)
+  - date limits: ['2013-01-01', '2021-01-01']
+  - Number of bands: 10
+- 'ga_ls7e_nbart_gm_cyear_3':
+  - title: DEA GeoMAD (Landsat 7 ETM+)
+  - description: Geoscience Australia Landsat Nadir BRDF Adjusted Reflectance Terrain, Landsat 7 Geomedian Calendar Year Collection 3
+  - bounding box: (110.413246718272, -45.1432282004529, 156.432609321534, -8.21783704144064)
+  - date limits: ['1999-01-01', '2021-01-01']
+  - Number of bands: 10
+- 'ga_ls5t_nbart_gm_cyear_3':
+  - title: DEA GeoMAD (Landsat 5 TM)
+  - description: Geoscience Australia Landsat Nadir BRDF Adjusted Reflectance Terrain, Landsat 5 Geomedian Calendar Year Collection 3
+  - bounding box: (110.413246718272, -45.0401572488294, 156.432609321534, -7.21314878610402)
+  - date limits: ['1986-01-01', '2011-01-01']
+  - Number of bands: 10
+- 'ga_ls8c_ard_3':
+  - title: DEA Surface Reflectance (Landsat 8 OLI-TIRS)
+  - description: Geoscience Australia Landsat 8 Operational Land Imager and Thermal Infra-Red Scanner Analysis Ready Data Collection 3
+  - bounding box: (110.718297795307, -45.6734535062289, 156.154528040633, -9.07553770894522)
+  - date limits: ['2013-03-19', '2022-09-05']
+  - Number of bands: 9
+- 'ga_ls7e_ard_3':
+  - title: DEA Surface Reflectance (Landsat 7 ETM+)
+  - description: Geoscience Australia Landsat 7 Enhanced Thematic Mapper Plus Analysis Ready Data Collection 3
+  - bounding box: (110.696007613984, -44.1889410289207, 155.711647298981, -9.15270092381057)
+  - date limits: ['1999-05-28', '2022-04-06']
+  - Number of bands: 8
+- 'ga_ls5t_ard_3':
+  - title: DEA Surface Reflectance (Landsat 5 TM)
+  - description: Geoscience Australia Landsat 5 Thematic Mapper Analysis Ready Data Collection 3
+  - bounding box: (110.757249124468, -44.2624681575318, 155.662004153478, -8.13764292647926)
+  - date limits: ['1986-08-16', '2011-11-17']
+  - Number of bands: 7
+- 'ga_ls8c_ard_provisional_3':
+  - title: DEA Surface Reflectance (Landsat 8 OLI-TIRS, Provisional)
+  - description: Geoscience Australia Landsat 8 Operational Land Imager and Thermal Infra-Red Scanner Analysis Ready Data Collection 3 (provisional)
+  - bounding box: (110.746179078976, -44.2480872929322, 156.113923365678, -9.07570747846392)
+  - date limits: ['2022-06-20', '2022-09-19']
+  - Number of bands: 9
+- 'ga_ls7e_ard_provisional_3':
+  - title: DEA Surface Reflectance (Landsat 7 ETM+, Provisional)
+  - description: Geoscience Australia Landsat 7 Enhanced Thematic Mapper Plus Analysis Ready Data Collection 3 (provisional)
+  - bounding box: (113.36982861436, -42.7522970095266, 155.249275549932, -9.18167640172494)
+  - date limits: ['2022-06-22', '2022-08-24']
+  - Number of bands: 8
+- 'ga_ls_ard_provisional_3':
+  - title: DEA Surface Reflectance (Landsat, Provisional)
+  - description: Geoscience Australia Landsat 7 Enhanced Thematic Mapper Plus Analysis Ready Data Collection 3 (provisional)
+  - bounding box: (110.746179078976, -44.2480872929322, 156.113923365678, -9.07570747846392)
+  - date limits: ['2022-06-20', '2022-09-19']
+  - Number of bands: 7
+- 's2b_nrt_granule_nbar_t':
+  - title: DEA Surface Reflectance (Sentinel-2B MSI Near Real-Time)
+  - description: Sentinel-2B MSI ARD NRT - NBAR NBART and Pixel Quality
+  - bounding box: (109.989859933428, -45.2413329418709, 155.307643731418, -9.9300073889701)
+  - date limits: ['2022-06-20', '2022-09-19']
+  - Number of bands: 23
+- 's2a_nrt_granule_nbar_t':
+  - title: DEA Surface Reflectance (Sentinel-2A MSI Near Real-Time)
+  - description: Sentinel-2A MSI ARD NRT - NBAR NBART and Pixel Quality
+  - bounding box: (109.989859933428, -45.2413329418709, 155.307643731418, -9.9300073889701)
+  - date limits: ['2022-06-20', '2022-09-19']
+  - Number of bands: 23
+- 's2_nrt_provisional_granule_nbar_t':
+  - title: DEA Surface Reflectance (Sentinel-2, Provisional)
+  - description: Geoscience Australia Sentinel 2a MSI Analysis Ready Data Collection 3 (provisional)
+  - bounding box: (111.958960179236, -44.3413038768651, 155.219674237016, -9.93000738897011)
+  - date limits: ['2022-06-20', '2022-09-19']
+  - Number of bands: 12
+- 's2b_nrt_provisional_granule_nbar_t':
+  - title: DEA Surface Reflectance (Sentinel-2B MSI, Provisional)
+  - description: Geoscience Australia Sentinel 2b MSI Analysis Ready Data Collection 3 (provisional)
+  - bounding box: (111.959041001616, -44.341297231057, 155.219281688203, -9.93000738897011)
+  - date limits: ['2022-06-20', '2022-09-19']
+  - Number of bands: 12
+- 's2a_nrt_provisional_granule_nbar_t':
+  - title: DEA Surface Reflectance (Sentinel-2A MSI, Provisional)
+  - description: Geoscience Australia Sentinel 2a MSI Analysis Ready Data Collection 3 (provisional)
+  - bounding box: (111.958960179236, -44.3413038768651, 155.219674237016, -9.93000738897011)
+  - date limits: ['2022-06-20', '2022-09-19']
+  - Number of bands: 12
+- 's2a_ard_granule_nbar_t':
+  - title: DEA Surface Reflectance (Sentinel-2A MSI)
+  - description: Sentinel-2A MSI Definitive ARD - NBART and Pixel Quality
+  - bounding box: (109.968510816964, -45.2234942244028, 156.101505058599, -9.02727104242043)
+  - date limits: ['2015-07-12', '2022-09-13']
+  - Number of bands: 12
+- 's2b_ard_granule_nbar_t':
+  - title: DEA Surface Reflectance (Sentinel-2B MSI)
+  - description: Sentinel-2B MSI Definitive ARD - NBART and Pixel Quality
+  - bounding box: (110.294393028751, -44.7864137985832, 156.101505058599, -9.02727104242043)
+  - date limits: ['2017-06-30', '2022-09-13']
+  - Number of bands: 12
+- 'ga_ls_landcover':
+  - title: DEA Land Cover Calendar Year (Landsat)
+  - description: Geoscience Australia Landsat Land Cover Calendar Year Collection 2.0
+  - bounding box: (112.731828633068, -44.2342184871416, 154.267421772154, -9.93509678400507)
+  - date limits: ['1988-01-01', '2020-01-01']
+  - Number of bands: 2
+- 'ga_ls_landcover_descriptors':
+  - title: DEA Land Cover Environmental Descriptors
+  - description: Geoscience Australia Landsat Land Cover Calendar Year Collection 2.0
+  - bounding box: (112.731828633068, -44.2342184871416, 154.267421772154, -9.93509678400507)
+  - date limits: ['1988-01-01', '2020-01-01']
+  - Number of bands: 5
+- 'ga_ls_fc_3':
+  - title: DEA Fractional Cover (Landsat)
+  - description: Geoscience Australia Landsat Fractional Cover Collection 3
+  - bounding box: (110.696007613984, -45.6734535062289, 156.154528040633, -8.13764292647926)
+  - date limits: ['1986-08-16', '2022-09-05']
+  - Number of bands: 4
+- 'ga_ls_fc_pc_cyear_3':
+  - title: DEA Fractional Cover Percentiles Calendar Year (Landsat)
+  - description: Geoscience Australia Landsat Fractional Cover Percentile Calendar Year Collection 3
+  - bounding box: (112.343354889631, -44.2467683625153, 154.378185360282, -8.51120628432549)
+  - date limits: ['1987-01-01', '2021-01-01']
+  - Number of bands: 10
+- 'ga_ls_mangrove_cover_cyear_3':
+  - title: DEA Mangroves (Landsat)
+  - description: Geoscience Australia Landsat Mangrove Cover Calendar Year Collection 3
+  - bounding box: (112.492257439061, -39.1292216144938, 154.264053741666, -9.5698963139854)
+  - date limits: ['1987-01-01', '2021-01-01']
+  - Number of bands: 1
+- 's2_barest_earth':
+  - title: GA Barest Earth (Sentinel-2)
+  - description: The Sentinel-2 Barest Earth
+  - bounding box: (112.324372771065, -43.9381826788341, 154.70510751296, -8.82186564540388)
+  - date limits: ['2017-01-01', '2017-01-01']
+  - Number of bands: 10
+- 'ls8_barest_earth_mosaic':
+  - title: GA Barest Earth (Landsat 8 OLI/TIRS)
+  - description: Landsat-8 Barest Earth pixel composite albers 25 metre, 100km tile, Australian Albers Equal Area projection (EPSG:3577)
+  - bounding box: (111.492400120054, -44.3357065215098, 155.066563941708, -8.83515695199939)
+  - date limits: ['2013-01-01', '2013-01-01']
+  - Number of bands: 6
+- 'landsat_barest_earth':
+  - title: GA Barest Earth (Landsat)
+  - description: Landsat-5/Landsat-7/Landsat-8 combined Barest Earth pixel composite albers 25 metre, 100km tile, Australian Albers Equal Area projection (EPSG:3577)
+  - bounding box: (111.033686003887, -44.4285210281062, 155.790571411147, -8.49453875182811)
+  - date limits: ['1980-01-01', '1980-01-01']
+  - Number of bands: 6
+- 'ga_ls_tcw_percentiles_2':
+  - title: DEA Wetness Percentiles (Landsat)
+  - description: Geoscience Australia Landsat Tasseled Cap Wetness Percentiles Collection 2, 25 metre, 100km tile, Australian Albers Equal Area projection (EPSG:3577)
+  - bounding box: (112.501524524947, -44.315077785668, 154.340852639902, -9.07349125191758)
+  - date limits: ['1987-01-01', '1987-01-01']
+  - Number of bands: 3
+- 'ga_ls_tc_pc_cyear_3':
+  - title: DEA Tasseled Cap Indices Percentiles Calendar Year (Landsat)
+  - description: Geoscience Australia Landsat Tasseled Cap Percentile Calendar Year Collection 3
+  - bounding box: (112.343354889631, -44.2467683625153, 154.378185360282, -8.51120628432549)
+  - date limits: ['1987-01-01', '2021-01-01']
+  - Number of bands: 9
+- 'ga_ls_wo_3':
+  - title: DEA Water Observations (Landsat)
+  - description: Geoscience Australia Landsat Water Observations Collection 3
+  - bounding box: (110.696007613984, -45.6734414490927, 156.154528040633, -9.07557070726103)
+  - date limits: ['1986-08-16', '2022-09-05']
+  - Number of bands: 1
+- 'ga_ls_wo_fq_myear_3':
+  - title: DEA Water Observations Multi Year (Landsat)
+  - description: Geoscience Australia Landsat Water Observations Frequency Multi Year Collection 3
+  - bounding box: (110.413246718272, -46.1419438144744, 157.044900204052, -8.10857383542487)
+  - date limits: ['1986-01-01', '1986-01-01']
+  - Number of bands: 3
+- 'ga_ls_wo_fq_cyear_3':
+  - title: DEA Water Observations Calendar Year (Landsat)
+  - description: Geoscience Australia Landsat Water Observations Frequency Calendar Year Collection 3
+  - bounding box: (110.413246718272, -46.1419438144744, 157.044900204052, -8.10857383542487)
+  - date limits: ['1986-01-01', '2021-01-01']
+  - Number of bands: 3
+- 'ga_ls_wo_fq_apr_oct_3':
+  - title: DEA Water Observations April to October (Landsat)
+  - description: Geoscience Australia Landsat Water Observations Frequency April to October Collection 3
+  - bounding box: (110.413246718272, -46.1419438144744, 157.044900204052, -8.10857383542487)
+  - date limits: ['1986-04-01', '2021-04-01']
+  - Number of bands: 3
+- 'ga_ls_wo_fq_nov_mar_3':
+  - title: DEA Water Observations November to March (Landsat)
+  - description: Geoscience Australia Landsat Water Observations Frequency November to March Collection 3
+  - bounding box: (110.413246718272, -46.1419438144744, 157.044900204052, -8.21783704144064)
+  - date limits: ['1987-11-01', '2021-11-01']
+  - Number of bands: 3
+- 'wofs_filtered_summary':
+  - title: DEA Multi-Year Water Observation Frequency Filtered Statistics (Landsat, DEPRECATED)
+  - description: Water Observations from Space Statistics confidence filtered
+  - bounding box: (111.859562290899, -44.9351287319957, 155.169368098324, -9.00692244744483)
+  - date limits: ['1970-01-01', '1970-01-01']
+  - Number of bands: 2
+- 'wofs_summary_clear':
+  - title: DEA Multi-Year Clear Observation Statistics (Landsat, DEPRECATED)
+  - description: Water Observations from Space Statistics
+  - bounding box: (112.99986111, -44.0008652894921, 153.999861110328, -10.0001388899999)
+  - date limits: ['1970-01-01', '1970-01-01']
+  - Number of bands: 3
+- 'wofs_summary_wet':
+  - title: DEA Multi-Year Wet Observation Statistics (Landsat, DEPRECATED)
+  - description: Water Observations from Space Statistics
+  - bounding box: (112.99986111, -44.0008652894921, 153.999861110328, -10.0001388899999)
+  - date limits: ['1970-01-01', '1970-01-01']
+  - Number of bands: 3
+- 'Water Observations from Space Statistics':
+  - title: DEA Multi-Year Water Observation Frequency Statistics (Landsat, DEPRECATED)
+  - description: Water Observations from Space Statistics
+  - bounding box: (112.99986111, -44.0008652894921, 153.999861110328, -10.0001388899999)
+  - date limits: ['1970-01-01', '1970-01-01']
+  - Number of bands: 3
+- 'wofs_filtered_summary_confidence':
+  - title: DEA Multi-Year Water Observation Confidence Statistics (Landsat, DEPRECATED)
+  - description: Water Observations from Space Statistics confidence filtered
+  - bounding box: (111.859562290899, -44.9351287319957, 155.169368098324, -9.00692244744483)
+  - date limits: ['1970-01-01', '1970-01-01']
+  - Number of bands: 2
+- 'ITEM_V2.0.0':
+  - title: DEA Intertidal Extents (Landsat)
+  - description: Relative Extents Model
+  - bounding box: (112.459622677896, -43.7203758299765, 153.670408736335, -10.3096529183452)
+  - date limits: ['1986-01-01', '1986-01-01']
+  - Number of bands: 1
+- 'ITEM_V2.0.0_Conf':
+  - title: DEA Intertidal Extents confidence
+  - description: Average ndwi Standard Deviation, the Confidence Layer
+  - bounding box: (112.459622677896, -43.7203758299765, 153.670408736335, -10.3096529183452)
+  - date limits: ['1986-01-01', '1986-01-01']
+  - Number of bands: 1
+- 'NIDEM':
+  - title: DEA Intertidal Elevation (Landsat)
+  - description: National Intertidal Digital Elevation Model 25m 1.0.0
+  - bounding box: (112.223058990767, -43.8291965530654, 154.080299801132, -10.2371048142508)
+  - date limits: ['1986-01-01', '1986-01-01']
+  - Number of bands: 1
+- 'high_tide_composite':
+  - title: DEA High Tide Imagery (Landsat)
+  - description: High tide 20 percentage composites 25m v. 2.0.0
+  - bounding box: (112.223058990767, -43.8291965530654, 154.080299801132, -10.2371048142508)
+  - date limits: ['2000-01-01', '2000-01-01']
+  - Number of bands: 6
+- 'low_tide_composite':
+  - title: DEA Low Tide Imagery (Landsat)
+  - description: Low tide 20 percentage composites 25m v. 2.0.0
+  - bounding box: (112.223058990767, -43.8291965530654, 154.080299801132, -10.2371048142508)
+  - date limits: ['2000-01-01', '2000-01-01']
+  - Number of bands: 6
+- 'ga_s2_ba_provisional_3':
+  - title: DEA Burnt Area Characteristic Layers (Sentinel 2 Near Real-Time, Provisional)
+  - description: Sentinel 2 Burnt Area Collection 3 (Provisional)
+  - bounding box: (111.966746816605, -44.3414673034495, 155.213824039639, -9.93000738897011)
+  - date limits: ['2021-10-01', '2022-09-19']
+  - Number of bands: None
+- 'alos_displacement':
+  - title: ALOS Displacement
+  - description: CEMP InSAR ALOS Displacement
+  - bounding box: (150.330509919584, -34.5250413940276, 151.258021405841, -33.772472435988)
+  - date limits: ['2008-02-11', '2010-10-22']
+  - Number of bands: 4
+- 'alos_velocity':
+  - title: ALOS Velocity
+  - description: CEMP InSAR ALOS Velocity
+  - bounding box: (150.331038253243, -34.5250413940276, 151.258021405841, -33.772472435988)
+  - date limits: ['2009-06-15', '2009-06-15']
+  - Number of bands: 4
+- 'envisat_displacement':
+  - title: ENVISAT Displacement
+  - description: CEMP InSAR Envisat Displacement
+  - bounding box: (150.416357298779, -34.5283535864513, 151.184355816078, -33.5035077252927)
+  - date limits: ['2006-06-26', '2010-08-28']
+  - Number of bands: 4
+- 'envisat_velocity':
+  - title: ENVISAT Velocity
+  - description: CEMP InSAR Envisat Velocity
+  - bounding box: (150.416357298779, -34.5283535864513, 151.184355816078, -33.5035077252927)
+  - date limits: ['2008-06-15', '2008-06-15']
+  - Number of bands: 4
+- 'radarsat2_displacement':
+  - title: RADARSAT2 Displacement
+  - description: CEMP InSAR Radarsat-2 Displacement
+  - bounding box: (150.540420399293, -34.3792688432228, 151.151613477574, -33.8798432478719)
+  - date limits: ['2015-07-15', '2019-05-31']
+  - Number of bands: 4
+- 'radarsat2_velocity':
+  - title: RADARSAT2 Velocity
+  - description: CEMP InSAR Radarsat-2 Velocity
+  - bounding box: (150.540420399293, -34.3792688432228, 151.151613477574, -33.8798432478719)
+  - date limits: ['2017-06-15', '2017-06-15']
+  - Number of bands: 4
+- 'aster_false_colour':
+  - title: False Colour Mosaic
+  - description: ASTER
+  - bounding box: (112.917275536606, -44.013698912363, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 3
+- 'aster_regolith_ratios':
+  - title: Regolith Ratios
+  - description: ASTER
+  - bounding box: (112.917275536606, -44.013698912363, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 3
+- 'aster_aloh_group_composition':
+  - title: AlOH Group Composition
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_aloh_group_content':
+  - title: AlOH Group Content
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_feoh_group_content':
+  - title: FeOH Group Content
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_ferric_oxide_composition':
+  - title: Ferric Oxide Composition
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_ferric_oxide_content':
+  - title: Ferric Oxide Content
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_ferrous_iron_content_in_mgoh':
+  - title: Ferrous Iron Content in MgOH/Carbonate
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_ferrous_iron_index':
+  - title: Ferrous Iron Index
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_green_vegetation':
+  - title: Green Vegetation Content
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_gypsum_index':
+  - title: Gypsum Index
+  - description: ASTER
+  - bounding box: (112.917024138111, -43.7806027057097, 153.640358457438, -10.28257228)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_kaolin_group_index':
+  - title: Kaolin Group Index
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_mgoh_group_composition':
+  - title: MgOH Group Composition
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_mgoh_group_content':
+  - title: MgOH Group Content
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_opaque_index':
+  - title: Opaque Index
+  - description: ASTER
+  - bounding box: (112.917275536606, -43.7806433511675, 153.640054299875, -10.2856586)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_silica_index':
+  - title: TIR Silica index
+  - description: ASTER
+  - bounding box: (112.917024138111, -43.7806027057097, 153.640358457438, -10.28257228)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'aster_quartz_index':
+  - title: TIR Quartz Index
+  - description: ASTER
+  - bounding box: (112.917024138111, -43.7806027057097, 153.640358457438, -10.28257228)
+  - date limits: ['2000-02-01', '2000-02-01']
+  - Number of bands: 1
+- 'multi_scale_topographic_position':
+  - title: Multi-Scale Topographic Position
+  - description: Multi-scale Topographic Position Image
+  - bounding box: (112.9995833, -44.0004167, 153.9995833, -10.0004167)
+  - date limits: ['2018-01-01', '2018-01-01']
+  - Number of bands: 3
+- 'weathering_intensity':
+  - title: Weathering Intensity
+  - description: Weathering Intensity Model
+  - bounding box: (112.9995833, -44.0004167, 153.9995833, -10.0004167)
+  - date limits: ['2018-01-01', '2018-01-01']
+  - Number of bands: 1

@@ -1,0 +1,49 @@
+---
+title: "`download_silo()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{`download_silo()`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Description 
+
+SILO is containing continuous daily climate data for Australia from 1889 to present.
+
+- Module name: getdata_silo.py
+- Bounding Box = Long_min: 112.00, Lat_min: -44.00, Long_max: 154.00, Lat_max: -10.00
+- Updates: Daily
+- Resolution: native: 180 arcsec
+- Source: https://www.longpaddock.qld.gov.au/silo/gridded-data/
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+- Attribution: State of Queensland (Queensland Department of Environment and Science) 2020.
+
+## Layers
+
+- 'daily_rain' (Daily rainfall, mm)
+- 'monthly_rain' (Monthly rainfall, mm)
+- 'max_temp' (Maximum temperature, deg C)
+- 'min_temp'  (Minimum temperature. deg C)
+- 'vp' (Vapour pressure, hPa)
+- 'vp_deficit' (Vapour pressure deficit, hPa)
+- 'evap_pan' (Class A pan evaporation, mm)
+- 'evap_syn' (Synthetic estimate, mm)
+- 'evap_comb' (Combination: synthetic estimate pre-1970, class A pan 1970 onwards, mm)
+- 'evap_morton_lake' (Morton's shallow lake evaporation, mm)
+- 'radiation'	(Solar radiation: Solar exposure, consisting of both direct and diffuse components, MJ/m2)
+- 'rh_tmax'	(Relative humidity:	Relative humidity at the time of maximum temperature, %)
+- 'rh_tmin'	(Relative humidity at the time of minimum temperature, %)
+- 'et_short_crop' (Evapotranspiration FAO564 short crop, mm)
+- 'et_tall_crop' (ASCE5 tall crop6, mm)
+- 'et_morton_actual' (Morton's areal actual evapotranspiration, mm)
+- 'et_morton_potential'	(Morton's point potential evapotranspiration, mm)
+- 'et_morton_wet' (Morton's wet-environment areal potential evapotranspiration over land, mm)
+- 'mslp' (Mean sea level pressure Mean sea level pressure, hPa)
