@@ -1,0 +1,79 @@
+---
+title: "download_slga()"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{download_slga()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Description
+
+The Soil Facility produced a range of digital soil attribute products as Soil and Landscape Grid of Australia (SLGA). Each product contains six digital soil attribute maps, and their upper and lower confidence limits, representing the soil attribute at six depths: 0-5cm, 5-15cm, 15-30cm, 30-60cm, 60-100cm and 100-200cm. 
+
+- Module name: getdata_slga.py
+- Bounding Box: Long_min: 113.00, Lat_min: -44.00, Long_max: 154.00, Lat_max: -10.00
+- Period (temporal coverage; approximately): 1950-2013
+- Resolution: 3 arcsec
+- Source: https://www.clw.csiro.au/aclep/soilandlandscapegrid/ProductDetails-SoilAttributes.html
+- License: Creative Commons Attribution 3.0 (CC By)
+- Attribution: CSIRO Australia, TERN (University of Queensland), and Geoscience Australia
+
+## Layers
+
+- 'Bulk_Density':
+   - Title: Bulk Density (whole earth)
+   - Description: Bulk Density of the whole soil (including coarse fragments) in mass per unit volume by a method equivalent to the core method
+   - Unit: g/cm3
+- 'Organic_Carbon':
+   - Title: Organic Carbon
+   - Description: Mass fraction of carbon by weight in the < 2 mm soil material as determined by dry combustion at 900 Celcius
+   - Unit: %
+- 'Clay':
+   - Title: Clay
+   - Description: < 2 um mass fraction of the < 2 mm soil material determined using the pipette method
+   - Unit: %
+- 'Silt':
+   - Title: Silt
+   - Description: 2-20 um mass fraction of the < 2 mm soil material determined using the pipette method
+   - Unit: %
+- 'Sand':
+   - Title: Sand
+   - Description: 20 um - 2 mm mass fraction of the < 2 mm soil material determined using the pipette method
+   - Unit: %
+- 'pH_CaCl2':
+   - Title: pH (CaCl2)
+   - Description: pH of 1:5 soil/0.01M calcium chloride extract
+   - Unit: none
+- 'Available_Water_Capacity':
+   - Title: Available Water Capacity
+   - Description: Available water capacity computed for each of the specified depth increments
+   - Unit: %
+- 'Total_Nitrogen':
+   - Title: Total Nitrogen
+   - Description: Mass fraction of total nitrogen in the soil by weight
+   - Unit: %
+- 'Total_Phosphorus':
+   - Title: Total Phosphorus
+   - Description: Mass fraction of total phosphorus in the soil by weight
+   - Unit: %
+- 'Effective_Cation_Exchange_Capacity':
+   - Title: Effective Cation Exchange Capacity
+   - Description: Cations extracted using barium chloride (BaCl2) plus exchangeable H + Al
+   - Unit: meq/100g
+- 'Depth_of_Regolith':
+   - Title: Depth of Regolith
+   - Description: Depth to hard rock. Depth is inclusive of all regolith.
+   - Unit: m
+- 'Depth_of_Soil':
+   - Title: Depth of Soil
+   - Description: Depth of soil profile (A & B horizons)
+   - Unit: m
+

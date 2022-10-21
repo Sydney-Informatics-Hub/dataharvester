@@ -1,0 +1,67 @@
+---
+title: "download_radiometric()"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{download_radiometric()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Description
+
+This radiometric sub-collection of the Geoscience Australia Geophysics Reference Data Collection are compilations of radiometric data from an extensive archive of geophysical surveys dating back to 1947, which are contained in other sub-collections of this collection. The individual survey datasets have been acquired by Geoscience Australia and its State and Territory Government partners. The compilations of radiometric data involved the levelling and merging (mosaicking) of regularly interpolated grid (raster) data, from selected individual geophysical surveys, into near-seamless national scale grids for each datatype and creating derivations thereof. The selected individual surveys are chosen based on the spatial resolution and accuracy of individual surveys within a given area. 
+
+- Module name: getdata_radiometric.py
+- Resolution: 100m (0.001 deg)
+- Updates: None
+- Source: https://opus.nci.org.au/display/Help/Datasets
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+- Attribution: Geoscience Australia. The WCS service relies on GSKY - A Scalable, Distributed Geospatial Data Service from the National Centre for Environmental Information (NCI).
+
+## Layers
+
+- 'radmap2019_grid_dose_terr_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 unfiltered terrestrial dose rate
+   - description: The unfiltered terrestrial dose rate grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia, which is a merge of over 600 individual gamma-ray spectrometric surveys. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The unfiltered terrestrial dose rate grid is derived as a linear combination of the unfiltered K, U and Th grids, and has a cell size of about 100m (0.001 degrees).
+- 'radmap2019_grid_dose_terr_filtered_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 filtered terrestrial dose rate
+   - description: The filtered terrestrial dose rate grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia, made of a combination of over 600 individual survey grids. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The terrestrial dose rate grid is derived as a linear combination of the filtered K, U and Th grids. A low pass filter is applied to the unfiltered grid to generate the filtered terrestrial dose rate grid. The grid cell size is about 100m (0.001 degrees).
+- 'radmap2019_grid_k_conc_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 unfiltered pct potassium
+   - description: The unfiltered potassium grid is a derivative of the 2019 radiometric grid of Australia. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector. The 2019 unfiltered potassium grid has a cell size of about 100 m (0.001 degrees) and shows potassium element concentrations of the Australia region. Potassium is the seventh most abundant element in the Earth's crust. The potassium concentration grid can be used to locate minerals and compounds containing potassium.
+- 'radmap2019_grid_k_conc_filtered_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 filtered pct potassium grid
+   - description: The filtered potassium grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium, uranium and thorium. The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The 2019 filtered potassium grid has a cell size of about 100m (0.001 degrees) and shows potassium element concentrations of the Australia region. It was obtained by applying a low-pass filter to the original potassium grid. Potassium is the seventh most abundant element in the Earth's crust. This potassium concentration grid can be used to locate minerals and compounds containing potassium.
+- 'radmap2019_grid_th_conc_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 unfiltered ppm thorium
+   - description: The unfiltered thorium grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia which is a merge of over 600 individual gamma-ray spectrometric surveys. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The 2019 unfiltered thorium grid has a cell size of about 100 m (0.001 degrees) and shows thorium element concentrations of the Australia region.
+- 'radmap2019_grid_th_conc_filtered_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 filtered ppm thorium
+   - description: The filtered thorium grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector. The 2019 filtered thorium grid was derived by seamlessly merging over 600 airborne gamma-ray spectrometric surveys. The final grid has a cell size of about 100m (0.001 degrees) and shows thorium element concentrations of the Australia region.
+- 'radmap2019_grid_thk_ratio_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 ratio thorium over potassium
+   - description: The thorium over potassium grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The 2019 thorium over potassium was derived by seamlessly merging over 600 airborne gamma-ray spectrometric surveys. The final grid has a cell size of about 100m (0.001 degrees) and is derived from the filtered thorium and potassium grids.
+- 'radmap2019_grid_u2th_ratio_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 ratio uranium squared over thorium
+   - description: The uranium squared over thorium grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The 2019 uranium squared over thorium was derived by seamlessly merging over 600 airborne gamma-ray spectrometric surveys. The final grid has a cell size of about 100m (0.001 degrees) and is derived from the filtered uranium and thorium grids.
+- 'radmap2019_grid_u_conc_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 unfiltered ppm uranium
+   - description: The unfiltered uranium grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia which is a merge of over 600 individual gamma-ray spectrometric surveys. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium, uranium and thorium. The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The 2019 unfiltered uranium grid has a cell size of about 100m (0.001 degrees) and shows uranium element concentrations of the Australia region.
+- 'radmap2019_grid_u_conc_filtered_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 filtered ppm uranium
+   - description: The filtered uranium grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The 2019 filtered uranium grid was derived by seamlessly merging over 600 airborne gamma-ray spectrometric surveys. The final grid has a cell size of about 100m (0.001 degrees) and shows uranium element concentrations of the Australia region.
+- 'radmap2019_grid_uk_ratio_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 ratio uranium over potassium
+   - description: The uranium over potassium grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia comprising over 600 airborne gamma-ray spectrometric surveys. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The 2019 uranium over potassium grid has a cell size of about 100 m (0.001 degrees) and is derived from the filtered uranium and potassium grids.
+- 'radmap2019_grid_uth_ratio_awags_rad_2019'
+   - title: Radiometric Grid of Australia (Radmap) v4 2019 ratio uranium over thorium
+   - description: The uranium over thorium grid is a derivative of the 2019 radiometric or gamma-ray grid of Australia which is a merge of over 600 individual gamma-ray spectrometric surveys. The radiometric, or gamma-ray spectrometric method, measures the natural variations in the gamma-rays detected near the Earth's surface as the result of the natural radioactive decay of potassium (K), uranium (U) and thorium (Th). The data are collected on airborne geophysical surveys conducted by Commonwealth, State and Northern Territory Governments and the private sector.The 2019 uranium over thorium grid has a cell size of about 100 m (0.001 degrees) and is derived from the filtered uranium and thorium grids.
