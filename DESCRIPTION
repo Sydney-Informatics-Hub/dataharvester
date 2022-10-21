@@ -1,6 +1,6 @@
 Package: dataharvester
 Title: Download and Process Geospatial Data
-Version: 0.0.14
+Version: 0.0.15
 Authors@R: 
     c(person("Januar", 
              "Harianto",
@@ -35,9 +35,12 @@ Imports:
     terra,
     yaml
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: 
     R (>= 4.1.0)
 LazyData: true
 URL: https://sydney-informatics-hub.github.io/dataharvester/
+VignetteBuilder: knitr
