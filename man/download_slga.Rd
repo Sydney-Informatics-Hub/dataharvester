@@ -40,3 +40,21 @@ a list of filenames (after files have been downloaded or processed)
 Wrapper funtion to get layers from the Soil and Landscape Grid of Australia
 (SLGA).
 }
+\details{
+\subsection{Layers}{
+\itemize{
+\item \code{Bulk_Density}
+\item \code{Organic_Carbon}
+\item \code{Clay}
+\item \code{Silt}
+\item \code{Sand}
+\item \code{pH_CaCl2}
+\item \code{Available_Water_Capacity}
+\item \code{Total_Nitrogen}
+\item \code{Total_Phosphorus}
+\item \code{Effective_Cation_Exchange_Capacity}
+\item \code{Depth_of_Regolith}
+\item \code{Depth_of_Soil}
+}
+}
+}
