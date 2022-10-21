@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.15</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,6 +23,17 @@
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/dea.html">download_dea()</a>
+    <a class="dropdown-item" href="../articles/dem.html">download_dem()</a>
+    <a class="dropdown-item" href="../articles/landscape.html">download_landscape()</a>
+    <a class="dropdown-item" href="../articles/radiometric.html">download_radiometric()</a>
+    <a class="dropdown-item" href="../articles/silo.html">download_silo()</a>
+    <a class="dropdown-item" href="../articles/slga.html">download_slga()</a>
+  </div>
 </li>
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -41,6 +52,19 @@
       
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.15" id="dataharvester-0015">dataharvester 0.0.15<a class="anchor" aria-label="anchor" href="#dataharvester-0015"></a></h2>
+<p>In this release we fixed a few bugs and added several vignettes for the various download functions.</p>
+<div class="section level4">
+<h4 id="whats-changed-0-0-15">What’s changed<a class="anchor" aria-label="anchor" href="#whats-changed-0-0-15"></a></h4>
+<ul><li>fixed relative path strings not being recognised by Python modules in <code><a href="../reference/harvest.html">harvest()</a></code>
+</li>
+<li>added a demo .gif to README so that readers can preview functionality</li>
+</ul></div>
+<div class="section level4">
+<h4 id="whats-new-0-0-15">What’s new<a class="anchor" aria-label="anchor" href="#whats-new-0-0-15"></a></h4>
+<ul><li>created 5 new vignettes to document layers available for downloading from the various data sources</li></ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.14" id="dataharvester-0014">dataharvester 0.0.14<a class="anchor" aria-label="anchor" href="#dataharvester-0014"></a></h2>
 <p>This release focuses on data extraction from rasters and plot functions that should “simply work”. We also started to implement unit testing as the package code contains <em>some</em> R code.</p>

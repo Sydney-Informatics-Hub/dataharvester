@@ -32,7 +32,7 @@
     
     <a class="navbar-brand me-2" href="index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.15</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,17 @@
 </li>
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/dea.html">download_dea()</a>
+    <a class="dropdown-item" href="articles/dem.html">download_dem()</a>
+    <a class="dropdown-item" href="articles/landscape.html">download_landscape()</a>
+    <a class="dropdown-item" href="articles/radiometric.html">download_radiometric()</a>
+    <a class="dropdown-item" href="articles/silo.html">download_silo()</a>
+    <a class="dropdown-item" href="articles/slga.html">download_slga()</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="news/index.html">Changelog</a>
@@ -86,10 +97,20 @@
 </ul>
 <p>For <a href="https://developers.google.com/earth-engine/datasets/" class="external-link">all other Earth Engine collections</a>, while <code>dataharvester</code> does not provide officual support, users can still perform basic operations to filter, reduce, visualise and download data.</p>
 <div class="section level2">
+<h2 id="demo">Demo<a class="anchor" aria-label="anchor" href="#demo"></a>
+</h2>
+<p>Below is an output when the following 3 lines of code is run on a configuration file, which downloads 16 images from 7 API sources:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sydney-informatics-hub.github.io/dataharvester/">dataharvester</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/initialise_harvester.html">initialise_harvester</a></span><span class="op">(</span><span class="st">"r-reticulate"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/harvest.html">harvest</a></span><span class="op">(</span><span class="st">"~/Documents/democonfig.yaml"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, contour <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/harvestdemo.gif"></p>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>Install the development version of this package from GitHub using <code>install_github()</code> from <code>remotes</code> or <code>devtools</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes") # uncomment and run this line if necessary</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sydney-informatics-hub/dataharvester"</span><span class="op">)</span></span>
 <span></span>
@@ -103,19 +124,19 @@
 </h3>
 <p>Run <code><a href="reference/initialise_harvester.html">initialise_harvester()</a></code> after loading the package. The function helps you initialise the package, verifies package dependencies and connect to the Earth Engine API. Note that the default environment is <code>r-reticulate</code>, but you can provide a different name if this environment is being used in other projects.</p>
 <p>The first initialisation may take a few minutes if dependencies need to be installed.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sydney-informatics-hub.github.io/dataharvester/">dataharvester</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/initialise_harvester.html">initialise_harvester</a></span><span class="op">(</span><span class="st">"r-reticulate"</span>, earthengine <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><strong>Note</strong>: connecting to the Earth Engine API requires an existing Google account. Depending on your OS, a web browser popup may appear where you will be guided to connect to the API. Otherwise, a link will be provided, and you will need to follow the instructions to finalise the authentication process. More information can be found in the documentation.</p>
 <p>Then, run <code><a href="reference/harvest.html">harvest()</a></code>, which parses a YAML config file:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/harvest.html">harvest</a></span><span class="op">(</span>path_to_config <span class="op">=</span> <span class="st">"path/to/config.yaml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="manual-downloads">Manual downloads<a class="anchor" aria-label="anchor" href="#manual-downloads"></a>
 </h3>
 <p>The <code><a href="reference/harvest.html">harvest()</a></code> function is essentially a wrapper for all the API calls available in the Data-Harvester. Individual functions are available for each of the data sources. For example, the code below downloads Bulk Density data from SLGA for a specified region and saves it to the <code>downloads</code> folder in your working directory:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">slga</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_slga.html">download_slga</a></span><span class="op">(</span></span>
 <span>  layer <span class="op">=</span> <span class="st">"Bulk_Density"</span>,</span>
 <span>  bounding_box <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">149.769345</span>, <span class="op">-</span><span class="fl">30.335861</span>, <span class="fl">149.949173</span>, <span class="op">-</span><span class="fl">30.206271</span><span class="op">)</span>,</span>
@@ -135,7 +156,7 @@
 <li>Downloading of image(s) at specified resolution and location</li>
 <li>Splitting of large images automatically to allow file sizes that exceed the limit(s) set by the API (~32 MB)</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Make sure that GEE API is initialised</span></span>
 <span><span class="fu"><a href="reference/initialise_harvester.html">initialise_harvester</a></span><span class="op">(</span><span class="st">"r-reticulate"</span>, earthengine <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co"># 1. Define dataset</span></span>
@@ -153,7 +174,7 @@
 <span><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/download_ee.html">download_ee</a></span><span class="op">(</span><span class="va">img</span>, bands <span class="op">=</span> <span class="st">"NDVI"</span>, scale <span class="op">=</span> <span class="fl">100</span>, out_path <span class="op">=</span> <span class="st">"downloads/"</span><span class="op">)</span></span></code></pre></div>
 <p>Note that the above functions can be chained/simplified using native (<code>|&gt;</code>) or <code>dplyr</code> (<code>%&gt;%</code>) pipes.</p>
 <p>These functions are not meant to provide full functionality from the GEE API. At any time, a user may take an Earth Engine object and process it directly using the API - in this case, with <a href="https://github.com/r-spatial/rgee" class="external-link"><code>rgee</code></a> in R.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extract ee.Image or ee.ImageCollection object</span></span>
 <span><span class="va">gee_obj</span> <span class="op">&lt;-</span> <span class="va">img</span><span class="op">$</span><span class="va">ee_image</span></span>
 <span></span>
@@ -164,7 +185,7 @@
 <h2 id="spatialtemporal-buffering">Spatial/temporal buffering<a class="anchor" aria-label="anchor" href="#spatialtemporal-buffering"></a>
 </h2>
 <p><strong>NEW</strong> Once data is downloaded, <code>dataharvester</code> provides functions to assist in data aggregation over space and time. <em>This will be documented soon.</em></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co">#TODO</span></span></code></pre></div>
 </div>

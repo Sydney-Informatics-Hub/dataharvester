@@ -3,7 +3,13 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   dataharvester: dataharvester.html
-last_built: 2022-10-16T07:07Z
+  dea: dea.html
+  dem: dem.html
+  landscape: landscape.html
+  radiometric: radiometric.html
+  silo: silo.html
+  slga: slga.html
+last_built: 2022-10-21T02:46Z
 urls:
   reference: https://sydney-informatics-hub.github.io/dataharvester/reference
   article: https://sydney-informatics-hub.github.io/dataharvester/articles
