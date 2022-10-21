@@ -3,6 +3,22 @@
 #' Wrapper funtion to get layers from the Soil and Landscape Grid of Australia
 #' (SLGA).
 #'
+#' @details
+#' ## Layers
+#'
+#' - `Bulk_Density`
+#' - `Organic_Carbon`
+#' - `Clay`
+#' - `Silt`
+#' - `Sand`
+#' - `pH_CaCl2`
+#' - `Available_Water_Capacity`
+#' - `Total_Nitrogen`
+#' - `Total_Phosphorus`
+#' - `Effective_Cation_Exchange_Capacity`
+#' - `Depth_of_Regolith`
+#' - `Depth_of_Soil`
+#'
 #' @param layer `r params(layer)`
 #' @param bounding_box `r params(bounding_box)`
 #' @param out_path `r params(out_path)`
