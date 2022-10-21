@@ -1,3 +1,12 @@
+# dataharvester 0.0.16
+
+Quick bugfix updates.
+
+### What's changed
+ - fix error in plotting when using `harvest()` if path points to a file instead of a folder
+ - fix error in preprocessing Earth Engine data when `spectral` is `None` - this should not happen since the spectral index calculation feature is optionals
+
+
 # dataharvester 0.0.15
 
 In this release we fixed a few bugs and added several vignettes for the various download functions.
