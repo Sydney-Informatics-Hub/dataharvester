@@ -1,3 +1,16 @@
+# dataharvester 0.0.15
+
+In this release we fixed a few bugs and added several vignettes for the various download functions.
+
+### What's changed
+
+- fixed relative path strings not being recognised by Python modules in `harvest()`
+- added a demo .gif to README so that readers can preview functionality
+
+### What's new
+
+- created 5 new vignettes to document layers available for downloading from the various data sources
+
 # dataharvester 0.0.14
 
 This release focuses on data extraction from rasters and plot functions that should "simply work". We also started to implement unit testing as the package code contains *some* R code.
