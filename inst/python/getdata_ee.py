@@ -166,8 +166,7 @@ class collect:
             collection = gee_process["collection"]
             if coords is not None:
                 coords = gee_process["coords"]
-
-            # If date and endate are provided, overwrite everything
+            # If date and endate are provided in YAML, overwrite existing
             try:
                 gee_process["date"]
             except KeyError:
@@ -225,7 +224,17 @@ class collect:
                 pass
             self.gee_download = gee_download
 
-        # check that collection exists in GEE catalog
+        # Check that end_date exists, if not, generate exception
+        if end_date is None:
+            raise ValueError(
+                "Please provide an `end_date` argument to define date range"
+            )
+        # Check that date is not equal to end_date, if so, generate exception
+        if date == end_date:
+            raise ValueError(
+                "Please provide a different `end_date` argument to define date range"
+            )
+        # Check that collection exists in GEE catalog
         valid = validate_collection(collection)
 
         # Finalise
