@@ -1,6 +1,6 @@
 Package: dataharvester
 Title: Download and Process Geospatial Data
-Version: 0.0.16
+Version: 0.1.0
 Authors@R: 
     c(person("Januar", 
              "Harianto",
