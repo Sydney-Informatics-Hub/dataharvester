@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.16</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -107,6 +107,80 @@
 
 <p>a list of filenames (after files have been downloaded or processed)</p>
     </div>
+    <div class="section level2">
+    <h2 id="layers">Layers<a class="anchor" aria-label="anchor" href="#layers"></a></h2>
+    
+<ul><li><p><code>ga_ls_ard_3</code>: DEA Surface Reflectance (Landsat)</p></li>
+<li><p><code>s2_nrt_granule_nbar_t</code>: DEA Surface Reflectance (Sentinel-2 Near Real-Time)</p></li>
+<li><p><code>s2_ard_granule_nbar_t</code>: DEA Surface Reflectance (Sentinel-2)</p></li>
+<li><p><code>ga_ls8c_nbart_gm_cyear_3</code>: DEA GeoMAD (Landsat 8 OLI-TIRS)</p></li>
+<li><p><code>ga_ls7e_nbart_gm_cyear_3</code>: DEA GeoMAD (Landsat 7 ETM+)</p></li>
+<li><p><code>ga_ls5t_nbart_gm_cyear_3</code>: DEA GeoMAD (Landsat 5 TM)</p></li>
+<li><p><code>ga_ls8c_ard_3</code>: DEA Surface Reflectance (Landsat 8 OLI-TIRS)</p></li>
+<li><p><code>ga_ls7e_ard_3</code>: DEA Surface Reflectance (Landsat 7 ETM+)</p></li>
+<li><p><code>ga_ls5t_ard_3</code>: DEA Surface Reflectance (Landsat 5 TM)</p></li>
+<li><p><code>ga_ls8c_ard_provisional_3</code>: DEA Surface Reflectance (Landsat 8 OLI-TIRS, Provisional)</p></li>
+<li><p><code>ga_ls7e_ard_provisional_3</code>: DEA Surface Reflectance (Landsat 7 ETM+, Provisional)</p></li>
+<li><p><code>ga_ls_ard_provisional_3</code>: DEA Surface Reflectance (Landsat, Provisional)</p></li>
+<li><p><code>s2b_nrt_granule_nbar_t</code>: DEA Surface Reflectance (Sentinel-2B MSI Near Real-Time)</p></li>
+<li><p><code>s2a_nrt_granule_nbar_t</code>: DEA Surface Reflectance (Sentinel-2A MSI Near Real-Time)</p></li>
+<li><p><code>s2_nrt_provisional_granule_nbar_t</code>: DEA Surface Reflectance (Sentinel-2, Provisional)</p></li>
+<li><p><code>s2b_nrt_provisional_granule_nbar_t</code>: DEA Surface Reflectance (Sentinel-2B MSI, Provisional)</p></li>
+<li><p><code>s2a_nrt_provisional_granule_nbar_t</code>: DEA Surface Reflectance (Sentinel-2A MSI, Provisional)</p></li>
+<li><p><code>s2a_ard_granule_nbar_t</code>: DEA Surface Reflectance (Sentinel-2A MSI)</p></li>
+<li><p><code>s2b_ard_granule_nbar_t</code>: DEA Surface Reflectance (Sentinel-2B MSI)</p></li>
+<li><p><code>ga_ls_landcover</code>: DEA Land Cover Calendar Year (Landsat)</p></li>
+<li><p><code>ga_ls_landcover_descriptors</code>: DEA Land Cover Environmental Descriptors</p></li>
+<li><p><code>ga_ls_fc_3</code>: DEA Fractional Cover (Landsat)</p></li>
+<li><p><code>ga_ls_fc_pc_cyear_3</code>: DEA Fractional Cover Percentiles Calendar Year (Landsat)</p></li>
+<li><p><code>ga_ls_mangrove_cover_cyear_3</code>: DEA Mangroves (Landsat)</p></li>
+<li><p><code>s2_barest_earth</code>: GA Barest Earth (Sentinel-2)</p></li>
+<li><p><code>ls8_barest_earth_mosaic</code>: GA Barest Earth (Landsat 8 OLI/TIRS)</p></li>
+<li><p><code>landsat_barest_earth</code>: GA Barest Earth (Landsat)</p></li>
+<li><p><code>ga_ls_tcw_percentiles_2</code>: DEA Wetness Percentiles (Landsat)</p></li>
+<li><p><code>ga_ls_tc_pc_cyear_3</code>: DEA Tasseled Cap Indices Percentiles Calendar Year (Landsat)</p></li>
+<li><p><code>ga_ls_wo_3</code>: DEA Water Observations (Landsat)</p></li>
+<li><p><code>ga_ls_wo_fq_myear_3</code>: DEA Water Observations Multi Year (Landsat)</p></li>
+<li><p><code>ga_ls_wo_fq_cyear_3</code>: DEA Water Observations Calendar Year (Landsat)</p></li>
+<li><p><code>ga_ls_wo_fq_apr_oct_3</code>: DEA Water Observations April to October (Landsat)</p></li>
+<li><p><code>ga_ls_wo_fq_nov_mar_3</code>: DEA Water Observations November to March (Landsat)</p></li>
+<li><p><code>wofs_filtered_summary</code>: DEA Multi-Year Water Observation Frequency Filtered Statistics (Landsat, DEPRECATED)</p></li>
+<li><p><code>wofs_summary_clear</code>: DEA Multi-Year Clear Observation Statistics (Landsat, DEPRECATED)</p></li>
+<li><p><code>wofs_summary_wet</code>: DEA Multi-Year Wet Observation Statistics (Landsat, DEPRECATED)</p></li>
+<li><p><code>Water Observations from Space Statistics</code>: DEA Multi-Year Water Observation Frequency Statistics (Landsat, DEPRECATED)</p></li>
+<li><p><code>wofs_filtered_summary_confidence</code>: DEA Multi-Year Water Observation Confidence Statistics (Landsat, DEPRECATED)</p></li>
+<li><p><code>ITEM_V2.0.0</code>: DEA Intertidal Extents (Landsat)</p></li>
+<li><p><code>ITEM_V2.0.0_Conf</code>: DEA Intertidal Extents confidence</p></li>
+<li><p><code>NIDEM</code>: DEA Intertidal Elevation (Landsat)</p></li>
+<li><p><code>high_tide_composite</code>: DEA High Tide Imagery (Landsat)</p></li>
+<li><p><code>low_tide_composite</code>: DEA Low Tide Imagery (Landsat)</p></li>
+<li><p><code>ga_s2_ba_provisional_3</code>: DEA Burnt Area Characteristic Layers (Sentinel 2 Near Real-Time, Provisional)</p></li>
+<li><p><code>alos_displacement</code>: ALOS Displacement</p></li>
+<li><p><code>alos_velocity</code>: ALOS Velocity</p></li>
+<li><p><code>envisat_displacement</code>: ENVISAT Displacement</p></li>
+<li><p><code>envisat_velocity</code>: ENVISAT Velocity</p></li>
+<li><p><code>radarsat2_displacement</code>: RADARSAT2 Displacement</p></li>
+<li><p><code>radarsat2_velocity</code>: RADARSAT2 Velocity</p></li>
+<li><p><code>aster_false_colour</code>: False Colour Mosaic</p></li>
+<li><p><code>aster_regolith_ratios</code>: Regolith Ratios</p></li>
+<li><p><code>aster_aloh_group_composition</code>: AlOH Group Composition</p></li>
+<li><p><code>aster_aloh_group_content</code>: AlOH Group Content</p></li>
+<li><p><code>aster_feoh_group_content</code>: FeOH Group Content</p></li>
+<li><p><code>aster_ferric_oxide_composition</code>: Ferric Oxide Composition</p></li>
+<li><p><code>aster_ferric_oxide_content</code>: Ferric Oxide Content</p></li>
+<li><p><code>aster_ferrous_iron_content_in_mgoh</code>: Ferrous Iron Content in MgOH/Carbonate</p></li>
+<li><p><code>aster_ferrous_iron_index</code>: Ferrous Iron Index</p></li>
+<li><p><code>aster_green_vegetation</code>: Green Vegetation Content</p></li>
+<li><p><code>aster_gypsum_index</code>: Gypsum Index</p></li>
+<li><p><code>aster_kaolin_group_index</code>: Kaolin Group Index</p></li>
+<li><p><code>aster_mgoh_group_composition</code>: MgOH Group Composition</p></li>
+<li><p><code>aster_mgoh_group_content</code>: MgOH Group Content</p></li>
+<li><p><code>aster_opaque_index</code>: Opaque Index</p></li>
+<li><p><code>aster_silica_index</code>: TIR Silica index</p></li>
+<li><p><code>aster_quartz_index</code>: TIR Quartz Index</p></li>
+<li><p><code>multi_scale_topographic_position</code>: Multi-Scale Topographic Position</p></li>
+<li><p><code>weathering_intensity</code>: Weathering Intensity</p></li>
+</ul></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
