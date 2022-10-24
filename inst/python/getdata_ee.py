@@ -346,31 +346,28 @@ class collect:
             except Exception:
                 pass
         # Spectral index
+        # Validation: check if spectral index is supported
+        full_list = list(get_indices().keys())
+        spectral_list = [spectral] if isinstance(spectral, str) else spectral
+        if not set(spectral_list).issubset(full_list):
+            raise Exception(
+                cprint(
+                    "✘ At least one of your spectral indices is not valid. "
+                    "Please check the list of available indices at "
+                    "https://awesome-ee-spectral-indices.readthedocs.io/en/latest/."
+                    " Processing cancelled",
+                    "red",
+                    attrs=["bold"],
+                )
+            )
+
         if spectral is not None:
             with spin(f"Computing spectral index: {spectral}") as s:
                 try:
-                    # Validation: check if spectral index is supported
-                    full_list = list(get_indices().keys())
-                    spectral_list = (
-                        [spectral] if isinstance(spectral, str) else spectral
-                    )
-                    if not set(spectral_list).issubset(full_list):
-                        raise Exception(
-                            cprint(
-                                "✘ At least one of your spectral indices is not valid. "
-                                "Please check the list of available indices at "
-                                "https://awesome-ee-spectral-indices.readthedocs.io/en/latest/."
-                                " Processing cancelled",
-                                "red",
-                                attrs=["bold"],
-                            )
-                        )
                     img = img.spectralIndices(spectral, online=True)
                 except Exception:
                     pass
                 s(1)
-        else:
-            pass
         # Function to map to collection
         def clip_collection(image):
             return image.clip(aoi)
