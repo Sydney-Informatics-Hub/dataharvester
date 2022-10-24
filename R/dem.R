@@ -4,9 +4,7 @@
 #' second grid.
 #'
 #' @details
-#' Only the layer `DEM_1s` is used.
-#'
-#'
+#' Only the layer `DEM_1s` is used right now and can be called with just `DEM`.
 #'
 #' @param layer `r params(layer)`
 #' @param out_path `r params(out_path)`
