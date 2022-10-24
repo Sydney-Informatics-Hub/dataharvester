@@ -22,3 +22,6 @@ a list of filenames (after files have been downloaded or processed)
 Wrapper funtion to get the layers from the Geoscience Australia DEM 1 arc
 second grid.
 }
+\details{
+Only the layer \code{DEM_1s} is used.
+}

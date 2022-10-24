@@ -115,7 +115,7 @@ def run(path_to_config, log_name="download_log", preview=False, return_df=False)
         )
     # DEA
     if "DEA" in list_sources:
-        cprint("\n\u29d7 Downloading DEA data...", attrs=["bold"])
+        cprint("\n⌛ Downloading DEA data...", attrs=["bold"])
         # get data from DEA
         dea_layernames = settings["target_sources"]["DEA"]
         outpath_dea = os.path.join(settings["outpath"], "dea")
