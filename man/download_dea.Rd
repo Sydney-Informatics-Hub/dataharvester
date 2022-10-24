@@ -36,3 +36,78 @@ a list of filenames (after files have been downloaded or processed)
 \description{
 Wrapper funtion to get the layers from Digital Earth Australia collections.
 }
+\section{Layers}{
+\itemize{
+\item \code{ga_ls_ard_3}: DEA Surface Reflectance (Landsat)
+\item \code{s2_nrt_granule_nbar_t}: DEA Surface Reflectance (Sentinel-2 Near Real-Time)
+\item \code{s2_ard_granule_nbar_t}: DEA Surface Reflectance (Sentinel-2)
+\item \code{ga_ls8c_nbart_gm_cyear_3}: DEA GeoMAD (Landsat 8 OLI-TIRS)
+\item \code{ga_ls7e_nbart_gm_cyear_3}: DEA GeoMAD (Landsat 7 ETM+)
+\item \code{ga_ls5t_nbart_gm_cyear_3}: DEA GeoMAD (Landsat 5 TM)
+\item \code{ga_ls8c_ard_3}: DEA Surface Reflectance (Landsat 8 OLI-TIRS)
+\item \code{ga_ls7e_ard_3}: DEA Surface Reflectance (Landsat 7 ETM+)
+\item \code{ga_ls5t_ard_3}: DEA Surface Reflectance (Landsat 5 TM)
+\item \code{ga_ls8c_ard_provisional_3}: DEA Surface Reflectance (Landsat 8 OLI-TIRS, Provisional)
+\item \code{ga_ls7e_ard_provisional_3}: DEA Surface Reflectance (Landsat 7 ETM+, Provisional)
+\item \code{ga_ls_ard_provisional_3}: DEA Surface Reflectance (Landsat, Provisional)
+\item \code{s2b_nrt_granule_nbar_t}: DEA Surface Reflectance (Sentinel-2B MSI Near Real-Time)
+\item \code{s2a_nrt_granule_nbar_t}: DEA Surface Reflectance (Sentinel-2A MSI Near Real-Time)
+\item \code{s2_nrt_provisional_granule_nbar_t}: DEA Surface Reflectance (Sentinel-2, Provisional)
+\item \code{s2b_nrt_provisional_granule_nbar_t}: DEA Surface Reflectance (Sentinel-2B MSI, Provisional)
+\item \code{s2a_nrt_provisional_granule_nbar_t}: DEA Surface Reflectance (Sentinel-2A MSI, Provisional)
+\item \code{s2a_ard_granule_nbar_t}: DEA Surface Reflectance (Sentinel-2A MSI)
+\item \code{s2b_ard_granule_nbar_t}: DEA Surface Reflectance (Sentinel-2B MSI)
+\item \code{ga_ls_landcover}: DEA Land Cover Calendar Year (Landsat)
+\item \code{ga_ls_landcover_descriptors}: DEA Land Cover Environmental Descriptors
+\item \code{ga_ls_fc_3}: DEA Fractional Cover (Landsat)
+\item \code{ga_ls_fc_pc_cyear_3}: DEA Fractional Cover Percentiles Calendar Year (Landsat)
+\item \code{ga_ls_mangrove_cover_cyear_3}: DEA Mangroves (Landsat)
+\item \code{s2_barest_earth}: GA Barest Earth (Sentinel-2)
+\item \code{ls8_barest_earth_mosaic}: GA Barest Earth (Landsat 8 OLI/TIRS)
+\item \code{landsat_barest_earth}: GA Barest Earth (Landsat)
+\item \code{ga_ls_tcw_percentiles_2}: DEA Wetness Percentiles (Landsat)
+\item \code{ga_ls_tc_pc_cyear_3}: DEA Tasseled Cap Indices Percentiles Calendar Year (Landsat)
+\item \code{ga_ls_wo_3}: DEA Water Observations (Landsat)
+\item \code{ga_ls_wo_fq_myear_3}: DEA Water Observations Multi Year (Landsat)
+\item \code{ga_ls_wo_fq_cyear_3}: DEA Water Observations Calendar Year (Landsat)
+\item \code{ga_ls_wo_fq_apr_oct_3}: DEA Water Observations April to October (Landsat)
+\item \code{ga_ls_wo_fq_nov_mar_3}: DEA Water Observations November to March (Landsat)
+\item \code{wofs_filtered_summary}: DEA Multi-Year Water Observation Frequency Filtered Statistics (Landsat, DEPRECATED)
+\item \code{wofs_summary_clear}: DEA Multi-Year Clear Observation Statistics (Landsat, DEPRECATED)
+\item \code{wofs_summary_wet}: DEA Multi-Year Wet Observation Statistics (Landsat, DEPRECATED)
+\item \verb{Water Observations from Space Statistics}: DEA Multi-Year Water Observation Frequency Statistics (Landsat, DEPRECATED)
+\item \code{wofs_filtered_summary_confidence}: DEA Multi-Year Water Observation Confidence Statistics (Landsat, DEPRECATED)
+\item \code{ITEM_V2.0.0}: DEA Intertidal Extents (Landsat)
+\item \code{ITEM_V2.0.0_Conf}: DEA Intertidal Extents confidence
+\item \code{NIDEM}: DEA Intertidal Elevation (Landsat)
+\item \code{high_tide_composite}: DEA High Tide Imagery (Landsat)
+\item \code{low_tide_composite}: DEA Low Tide Imagery (Landsat)
+\item \code{ga_s2_ba_provisional_3}: DEA Burnt Area Characteristic Layers (Sentinel 2 Near Real-Time, Provisional)
+\item \code{alos_displacement}: ALOS Displacement
+\item \code{alos_velocity}: ALOS Velocity
+\item \code{envisat_displacement}: ENVISAT Displacement
+\item \code{envisat_velocity}: ENVISAT Velocity
+\item \code{radarsat2_displacement}: RADARSAT2 Displacement
+\item \code{radarsat2_velocity}: RADARSAT2 Velocity
+\item \code{aster_false_colour}: False Colour Mosaic
+\item \code{aster_regolith_ratios}: Regolith Ratios
+\item \code{aster_aloh_group_composition}: AlOH Group Composition
+\item \code{aster_aloh_group_content}: AlOH Group Content
+\item \code{aster_feoh_group_content}: FeOH Group Content
+\item \code{aster_ferric_oxide_composition}: Ferric Oxide Composition
+\item \code{aster_ferric_oxide_content}: Ferric Oxide Content
+\item \code{aster_ferrous_iron_content_in_mgoh}: Ferrous Iron Content in MgOH/Carbonate
+\item \code{aster_ferrous_iron_index}: Ferrous Iron Index
+\item \code{aster_green_vegetation}: Green Vegetation Content
+\item \code{aster_gypsum_index}: Gypsum Index
+\item \code{aster_kaolin_group_index}: Kaolin Group Index
+\item \code{aster_mgoh_group_composition}: MgOH Group Composition
+\item \code{aster_mgoh_group_content}: MgOH Group Content
+\item \code{aster_opaque_index}: Opaque Index
+\item \code{aster_silica_index}: TIR Silica index
+\item \code{aster_quartz_index}: TIR Quartz Index
+\item \code{multi_scale_topographic_position}: Multi-Scale Topographic Position
+\item \code{weathering_intensity}: Weathering Intensity
+}
+}
+

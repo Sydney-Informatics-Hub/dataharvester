@@ -166,8 +166,7 @@ class collect:
             collection = gee_process["collection"]
             if coords is not None:
                 coords = gee_process["coords"]
-
-            # If date and endate are provided, overwrite everything
+            # If date and endate are provided in YAML, overwrite existing
             try:
                 gee_process["date"]
             except KeyError:
@@ -225,7 +224,17 @@ class collect:
                 pass
             self.gee_download = gee_download
 
-        # check that collection exists in GEE catalog
+        # Check that end_date exists, if not, generate exception
+        if end_date is None:
+            raise ValueError(
+                "Please provide an `end_date` argument to define date range"
+            )
+        # Check that date is not equal to end_date, if so, generate exception
+        if date == end_date:
+            raise ValueError(
+                "Please provide a different `end_date` argument to define date range"
+            )
+        # Check that collection exists in GEE catalog
         valid = validate_collection(collection)
 
         # Finalise
@@ -346,28 +355,31 @@ class collect:
             except Exception:
                 pass
         # Spectral index
-        # Validation: check if spectral index is supported
-        full_list = list(get_indices().keys())
-        spectral_list = [spectral] if isinstance(spectral, str) else spectral
-        if not set(spectral_list).issubset(full_list):
-            raise Exception(
-                cprint(
-                    "✘ At least one of your spectral indices is not valid. "
-                    "Please check the list of available indices at "
-                    "https://awesome-ee-spectral-indices.readthedocs.io/en/latest/."
-                    " Processing cancelled",
-                    "red",
-                    attrs=["bold"],
-                )
-            )
-
         if spectral is not None:
             with spin(f"Computing spectral index: {spectral}") as s:
                 try:
+                    # Validation: check if spectral index is supported
+                    full_list = list(get_indices().keys())
+                    spectral_list = (
+                        [spectral] if isinstance(spectral, str) else spectral
+                    )
+                    if not set(spectral_list).issubset(full_list):
+                        raise Exception(
+                            cprint(
+                                "✘ At least one of your spectral indices is not valid. "
+                                "Please check the list of available indices at "
+                                "https://awesome-ee-spectral-indices.readthedocs.io/en/latest/."
+                                " Processing cancelled",
+                                "red",
+                                attrs=["bold"],
+                            )
+                        )
                     img = img.spectralIndices(spectral, online=True)
                 except Exception:
                     pass
                 s(1)
+        else:
+            pass
         # Function to map to collection
         def clip_collection(image):
             return image.clip(aoi)

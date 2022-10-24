@@ -96,7 +96,7 @@ def run(path_to_config, log_name="download_log", preview=False, return_df=False)
         # Try to initialise API if Earth Engine is selected
         getdata_ee.initialise()
 
-        cprint("\n\u29d7 Downloading Google Earth Engine data...", attrs=["bold"])
+        cprint("\n⌛ Downloading Google Earth Engine data...", attrs=["bold"])
         # get data from GEE
         gee = getdata_ee.collect(config=path_to_config)
         gee = getdata_ee.harvest(gee, coords=settings["target_bbox"])

@@ -23,5 +23,5 @@ Wrapper funtion to get the layers from the Geoscience Australia DEM 1 arc
 second grid.
 }
 \details{
-Only the layer \code{DEM_1s} is used.
+Only the layer \code{DEM_1s} is used right now and can be called with just \code{DEM}.
 }
