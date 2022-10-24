@@ -1,11 +1,19 @@
+# dataharvester 0.1.0
+
+Pre-release version - `dataharvester` is now stable enough for pre-release (hopefully). Also fixes some bugs.
+
+### What's changed
+
+- fixed error in preprocessing Earth Engine data when `spectral` is `None` - this should not happen since the spectral index calculation feature is optionals
+- fixed missing symbol in a print statement in `harvest()`
+
 # dataharvester 0.0.16
 
 Quick bugfix updates.
 
 ### What's changed
- - fix error in plotting when using `harvest()` if path points to a file instead of a folder
- - fix error in preprocessing Earth Engine data when `spectral` is `None` - this should not happen since the spectral index calculation feature is optionals
 
+- fixed error in plotting when using `harvest()` if path points to a file instead of a folder
 
 # dataharvester 0.0.15
 
