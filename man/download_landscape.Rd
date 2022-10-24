@@ -21,3 +21,27 @@ a list of filenames (after files have been downloaded or processed)
 \description{
 Download from SLGA Landscape Attributes
 }
+\details{
+\subsection{Layers}{
+\itemize{
+\item \code{Prescott_index}
+\item \code{net_radiation_jan}
+\item \code{net_radiation_july}
+\item \code{total_shortwave_sloping_surf_jan}
+\item \code{total_shortwave_sloping_surf_july}
+\item \code{Slope}
+\item \code{Slope_median_300m}
+\item \code{Slope_relief_class}
+\item \code{Aspect}
+\item \code{Relief_1000m}
+\item \code{Relief_300m}
+\item \code{Topographic_wetness_index}
+\item \code{TPI_mask}
+\item \code{SRTM_TopographicPositionIndex}
+\item \code{Contributing_area}
+\item \code{MrVBF}
+\item \code{Plan_curvature}
+\item \code{Profile_curvature}
+}
+}
+}

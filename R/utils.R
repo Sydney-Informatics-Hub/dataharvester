@@ -141,6 +141,10 @@ plot_rasters <- function(path,
     recursive = TRUE,
     full.names = TRUE
   )
+  # If 1 image, just use the path supplied
+  if (length(images) == 0) {
+    images <-  path
+  }
   message(length(images), " images found")
   # Generate matrix grid
   mar <- c(1, 1, 1.5, 1)

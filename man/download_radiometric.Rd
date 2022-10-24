@@ -33,3 +33,21 @@ a list of filenames (after files have been downloaded or processed)
 \description{
 Download from Geosciences Australia's Radiometric Map of Australia
 }
+\details{
+\subsection{Layers}{
+\itemize{
+\item \code{radmap2019_grid_dose_terr_awags_rad_2019}
+\item \code{radmap2019_grid_dose_terr_filtered_awags_rad_2019}
+\item \code{radmap2019_grid_k_conc_awags_rad_2019}
+\item \code{radmap2019_grid_k_conc_filtered_awags_rad_2019}
+\item \code{radmap2019_grid_th_conc_awags_rad_2019}
+\item \code{radmap2019_grid_th_conc_filtered_awags_rad_2019}
+\item \code{radmap2019_grid_thk_ratio_awags_rad_2019}
+\item \code{radmap2019_grid_u2th_ratio_awags_rad_2019}
+\item \code{radmap2019_grid_u_conc_awags_rad_2019}
+\item \code{radmap2019_grid_u_conc_filtered_awags_rad_2019}
+\item \code{radmap2019_grid_uk_ratio_awags_rad_2019}
+\item \code{radmap2019_grid_uth_ratio_awags_rad_2019}
+}
+}
+}

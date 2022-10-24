@@ -3,6 +3,11 @@
 #' Wrapper funtion to get the layers from the Geoscience Australia DEM 1 arc
 #' second grid.
 #'
+#' @details
+#' Only the layer `DEM_1s` is used.
+#'
+#'
+#'
 #' @param layer `r params(layer)`
 #' @param out_path `r params(out_path)`
 #' @param bounding_box `r params(bounding_box)`
