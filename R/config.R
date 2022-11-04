@@ -39,14 +39,17 @@ load_config <- function(x = NULL, choose = 1) {
     config <- default_config
     message(
       crayon::green("\U2713"), " | ",
-      "Default config loaded")
+      "Default config loaded"
+    )
   }
 
   # Otherwise, check if x points to a yaml file in the following folders:
   # - working folder, or 'settings' or 'config' folder in working folder
   # - previous folder, or 'settings' or 'config' folder in previous folder
-  check_folders <- c("", "settings/", "config/", "../",
-                     "../settings/", "../config")
+  check_folders <- c(
+    "", "settings/", "config/", "../",
+    "../settings/", "../config"
+  )
   full_paths <- paste0(check_folders, x, ".yaml")
   # generate valid file paths
   valid_paths <- full_paths[which(file.exists(full_paths))]
@@ -56,15 +59,19 @@ load_config <- function(x = NULL, choose = 1) {
     if (file.exists(x)) {
       config <- read_yaml(x)
       cat("Config imported from", x, "\n")
-    } else stop("Config file does not exist, please check name or path")
+    } else {
+      stop("Config file does not exist, please check name or path")
+    }
   } else if (length(valid_paths) == 1) {
     config <- read_yaml(valid_paths)
     cat("Config imported from", valid_paths, "\n")
   } else if (length(valid_paths) > 1) {
     config <- read_yaml(valid_paths[choose])
     cat("More than one config .yaml found. \n",
-        "Loaded [1] ", valid_paths[1],
-        ". Use `which` argument to select a different file:", "\n", sep = "")
+      "Loaded [1] ", valid_paths[1],
+      ". Use `which` argument to select a different file:", "\n",
+      sep = ""
+    )
     cat(sapply(1:length(valid_paths), function(i) {
       paste0("[", i, "] ", valid_paths[i])
     }), "\n")
@@ -308,14 +315,18 @@ config_dates <- function(x, dates = NULL, interval = "year") {
     selected_date <- as.character(format(Sys.Date(), "%Y"))
   } else if (length(dates) > 1) {
     selected_date <- as.character(dates[1])
-    cat("More than 1 date provided,",
-        "will select first date for now...\n")
+    cat(
+      "More than 1 date provided,",
+      "will select first date for now...\n"
+    )
   } else if (length(dates) == 1) {
     selected_date <- as.character(dates)
   }
   x$target_dates <- selected_date
   cat("***       target_dates --> ",
-      selected_date, "\n", sep = "")
+    selected_date, "\n",
+    sep = ""
+  )
 
   # INTERVAL
   if (interval %in% c("year", "month", "day")) {
@@ -548,7 +559,9 @@ write_config <- function(x, name = NULL, folder = "../settings/") {
   # Write to folder
   write_yaml(x, file = paste0(folder, name, ".yaml"))
   cat("\nConfiguration file '", name, "' saved to folder '",
-      folder, "'\n", sep = "")
+    folder, "'\n",
+    sep = ""
+  )
   return(invisible(x))
 }
 
@@ -750,17 +763,19 @@ is_valid_source <- function(source, layers) {
   # perform check
   # for each item in vector of layers, match to the source list
   newlayers <- sapply(1:length(layers), function(i) {
-
     if (layers[i] %in% products) {
       out <- layers[i]
     } else {
       out <- products[agrep(layers[i], products, .1,
-                        ignore.case = TRUE)]
+        ignore.case = TRUE
+      )]
     }
     # if unable to match, print warning
     if (length(out) == 0) {
-      warning(paste0(toupper(source), " layer, '", layers[i],
-        "' cannot be matched. Downloads may fail."), call. = FALSE)
+      warning(paste0(
+        toupper(source), " layer, '", layers[i],
+        "' cannot be matched. Downloads may fail."
+      ), call. = FALSE)
       out <- layers[i]
     }
     return(out)

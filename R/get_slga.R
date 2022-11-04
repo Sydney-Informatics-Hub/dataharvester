@@ -31,7 +31,9 @@
       max(longs) + 0.05,
       max(lats) + 0.05
     )
-  } else boundbox <- settings$target_bbox
+  } else {
+    boundbox <- settings$target_bbox
+  }
 
   # Run get_slga_layers()
   cli::cli_h1("Farming SLGA layers")
@@ -76,4 +78,3 @@
   class(out) <- append(class(out), "agrefed.wrap")
   return(invisible(out))
 }
-

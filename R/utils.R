@@ -15,8 +15,10 @@ harvester_module <- function(module_name) {
   # path <- system.file("python", package = "dataharvester")
   filename <- paste0("python/", module_name, ".py")
   path <- dirname(system.file(filename, package = "dataharvester"))
-  out <- reticulate::import_from_path(module_name, path = path,
-    delay_load = TRUE)
+  out <- reticulate::import_from_path(module_name,
+    path = path,
+    delay_load = TRUE
+  )
   return(out)
 }
 
@@ -143,7 +145,7 @@ plot_rasters <- function(path,
   )
   # If 1 image, just use the path supplied
   if (length(images) == 0) {
-    images <-  path
+    images <- path
   }
   message(length(images), " images found")
   # Generate matrix grid
@@ -158,8 +160,7 @@ plot_rasters <- function(path,
     )
     if (contour) terra::contour(r, alpha = 0.5, add = TRUE, nlevels = 5)
     if (points) {
-      terra::points(y, x, col = 'firebrick', pch = 20, cex = 1)
-
+      terra::points(y, x, col = "firebrick", pch = 20, cex = 1)
     }
   }
   par(mfrow = c(1, 1))

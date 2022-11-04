@@ -5,7 +5,7 @@
 #'
 #' @export
 initialise_harvester <- function(envname = NULL, earthengine = FALSE,
-  auth_mode = "gcloud") {
+                                 auth_mode = "gcloud") {
   # Check if conda exists
   restart <- validate_conda()
   if (restart) {
@@ -143,7 +143,7 @@ validate_conda <- function(reinstall = FALSE) {
 
   # check if windows user - can't install google-cloud-sdk if so
 
-  if(.Platform$OS.type == "windows") {
+  if (.Platform$OS.type == "windows") {
     windows <- TRUE
   } else {
     windows <- FALSE

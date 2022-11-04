@@ -1,5 +1,5 @@
 # Deprecated but code is useful (will delete after logtable functions are copied)
-.get_dea <- function(x, config = NULL, agg = c("mean", "perc95", "perc5"),...) {
+.get_dea <- function(x, config = NULL, agg = c("mean", "perc95", "perc5"), ...) {
   # Is object pased on by wrap_config()? If yes, settings can be extracted
   # from this object
   if ("agrefed.wrap" %in% class(x) & is.null(config)) {
@@ -30,7 +30,9 @@
       max(longs) + 0.05,
       max(lats) + 0.05
     )
-  } else boundbox <- settings$target_bbox
+  } else {
+    boundbox <- settings$target_bbox
+  }
 
   # Run get_dea_layers()
   cli::cli_h1("Farming DEA layers")
