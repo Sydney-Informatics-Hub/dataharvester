@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,53 +81,117 @@
 
     
     
-<p><strong>Important: <code>dataharvester</code> is in early pre-release and is still undergoing active development. Please report any bugs in the <a href="https://github.com/Sydney-Informatics-Hub/dataharvester/issues" class="external-link">issues</a> tab on GitHub.</strong></p>
-<p>The <code>dataharvester</code> package is a wrapper for several Python modules developed for the <a href="https://www.agrefed.org.au/" class="external-link">Agricultural Research Federation</a> and allows users to preprocess, aggregate, visualise and download an expanding range of geospatial data from a range of Australian and international data sources via publicly available APIs. Called the Data-Harvester, the aim is to improve the sharing and reuse of Australian agricultural research datasets, metadata, and data related products.</p>
-<p>Use of the <code>dataharvester</code> package is <strong>not</strong> limited to agricultural researches only. In many cases, <code>dataharvester</code> taps into API sources that are useful to environmental scientists, ecologists, geologists and other researchers.</p>
-<p>An advantage of using the <code>dataharvester</code> package is a standardised and consistent syntax to download from multiple APIs. In addition, the user is shielded from most of the Python interface, although some dependencies such as GDAL and the Google Cloud API must be manually configured for Windows users. In most cases, these are “simple” to install as they are available as installers and detailed instructions are provided <a href="">here</a>.</p>
-<p>Below, we briefly describe the <code>dataharvester</code> workflow.</p>
+<p><strong>Important: <code>dataharvester</code> is in early pre-release
+and is still undergoing active development. Please report any bugs in
+the <a href="https://github.com/Sydney-Informatics-Hub/dataharvester/issues" class="external-link">issues</a>
+tab on GitHub.</strong></p>
+<p>The <code>dataharvester</code> package is a wrapper for several
+Python modules developed for the <a href="https://www.agrefed.org.au/" class="external-link">Agricultural Research Federation</a>
+and allows users to preprocess, aggregate, visualise and download an
+expanding range of geospatial data from a range of Australian and
+international data sources via publicly available APIs. Called the
+Data-Harvester, the aim is to improve the sharing and reuse of
+Australian agricultural research datasets, metadata, and data related
+products.</p>
+<p>Use of the <code>dataharvester</code> package is <strong>not</strong>
+limited to agricultural researches only. In many cases,
+<code>dataharvester</code> taps into API sources that are useful to
+environmental scientists, ecologists, geologists and other
+researchers.</p>
+<p>An advantage of using the <code>dataharvester</code> package is a
+standardised and consistent syntax to download from multiple APIs. In
+addition, the user is shielded from most of the Python interface,
+although some dependencies such as GDAL and the Google Cloud API must be
+manually configured for Windows users. In most cases, these are “simple”
+to install as they are available as installers and detailed instructions
+are provided <a href="">here</a>.</p>
+<p>Below, we briefly describe the <code>dataharvester</code>
+workflow.</p>
 <div class="section level2">
 <h2 id="initialise">Initialise<a class="anchor" aria-label="anchor" href="#initialise"></a>
 </h2>
-<p>Before using the package, the user must ensure that they have all the necessary dependencies installed for all of <code>dataharvester</code> functions to work. This step takes approximately 15 minutes to complete. Once done, subsequent initialisations will take a couple of seconds.</p>
-<p>A Binder.org environment specific for <code>dataharvester</code> is also available for users who just want to download small datasets quickly without wanting to set up Python and R - instructios <a href="">here</a>.</p>
-<p>To use <code>dataharvester</code> on your local computer, the first step is to install the package from GitHub. The <code>remotes</code> package is necessary for this as we are downloading from an external source – un-comment and run <code>install.packages("remotes")</code> if necessary.</p>
+<p>Before using the package, the user must ensure that they have all the
+necessary dependencies installed for all of <code>dataharvester</code>
+functions to work. This step takes approximately 15 minutes to complete.
+Once done, subsequent initialisations will take a couple of seconds.</p>
+<p>A Binder.org environment specific for <code>dataharvester</code> is
+also available for users who just want to download small datasets
+quickly without wanting to set up Python and R - instructios <a href="">here</a>.</p>
+<p>To use <code>dataharvester</code> on your local computer, the first
+step is to install the package from GitHub. The <code>remotes</code>
+package is necessary for this as we are downloading from an external
+source – un-comment and run <code>install.packages("remotes")</code> if
+necessary.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"sydney-informatics-hub/dataharvester"</span><span class="op">)</span></span></code></pre></div>
-<p>Once the package has been installed, initialise with the <code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code> function. An environment name must be provided here to provide a location for dependencies, and the default environment for R is normally <code>"r-reticulate"</code>. For users who use Python and have already configured <code>"r-reticulate"</code> for other projects, choose any other environment name in this step.</p>
+<p>Once the package has been installed, initialise with the
+<code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code> function. An environment name must
+be provided here to provide a location for dependencies, and the default
+environment for R is normally <code>"r-reticulate"</code>. For users who
+use Python and have already configured <code>"r-reticulate"</code> for
+other projects, choose any other environment name in this step.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/initialise_harvester.html">initialise_harvester</a></span><span class="op">(</span><span class="st">"r-reticulate"</span><span class="op">)</span></span></code></pre></div>
-<p>R will automatically use the <code>reticulate</code> package to configure, install and setup a Python environment through miniconda with minimal prompts to the user. Follow the prompts (if any) in the R console, and the environment should be set up in a few minutes. If you encounter issues, it is likely that you have configured Python manually in RStudio’s settings or <code>.Rprofile</code>. We assume that you are able to troubleshoot by yourself here, although the most common solutions are to:</p>
+<p>R will automatically use the <code>reticulate</code> package to
+configure, install and setup a Python environment through miniconda with
+minimal prompts to the user. Follow the prompts (if any) in the R
+console, and the environment should be set up in a few minutes. If you
+encounter issues, it is likely that you have configured Python manually
+in RStudio’s settings or <code>.Rprofile</code>. We assume that you are
+able to troubleshoot by yourself here, although the most common
+solutions are to:</p>
 <ul>
-<li>specify a different environment name in <code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code>, or</li>
-<li>use the command line interface to create a new conda environment, and then refer to it in <code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code> as the function will be able to auto-detect currently-available environments.</li>
+<li>specify a different environment name in
+<code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code>, or</li>
+<li>use the command line interface to create a new conda environment,
+and then refer to it in <code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code> as the
+function will be able to auto-detect currently-available
+environments.</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="preprocesss">Preprocesss<a class="anchor" aria-label="anchor" href="#preprocesss"></a>
 </h2>
-<p>Preprocessing steps occur for data that can be manipulated on external servers before they are downloaded. For now, this is exclusive to the Google Earth Engine (GEE) API since it can process images on Google Cloud. Access to the GEE API requires additional authentication steps which can be done with <code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code> using an additional argument, <code>earthengine= TRUE</code>:</p>
+<p>Preprocessing steps occur for data that can be manipulated on
+external servers before they are downloaded. For now, this is exclusive
+to the Google Earth Engine (GEE) API since it can process images on
+Google Cloud. Access to the GEE API requires additional authentication
+steps which can be done with <code><a href="../reference/initialise_harvester.html">initialise_harvester()</a></code> using
+an additional argument, <code>earthengine= TRUE</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/initialise_harvester.html">initialise_harvester</a></span><span class="op">(</span><span class="st">"r-reticulate"</span>, earthengine <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>When this function is evaluated, the Google Cloud CLI will take over and help you authenticate with an existing Google account. A new browser window may pop up to help you generate an API token so that you can gain access to the GEE API. This step is swift on a local machine - but if you are using a binder.org environment or RStudio Cloud, you may need to perform a different authentication method described <a href="">here</a>.</p>
+<p>When this function is evaluated, the Google Cloud CLI will take over
+and help you authenticate with an existing Google account. A new browser
+window may pop up to help you generate an API token so that you can gain
+access to the GEE API. This step is swift on a local machine - but if
+you are using a binder.org environment or RStudio Cloud, you may need to
+perform a different authentication method described <a href="">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="download">Download<a class="anchor" aria-label="anchor" href="#download"></a>
 </h2>
-<p>In most cases, data are downloaded as geospatial images (i.e. GeoTIFF) which can then be further processed. Download functions are standardised in both naming prefix and syntax. In most cases, downloads are requested using a <code>download_*()</code> function with the minimal inputs for:</p>
+<p>In most cases, data are downloaded as geospatial images
+(i.e. GeoTIFF) which can then be further processed. Download functions
+are standardised in both naming prefix and syntax. In most cases,
+downloads are requested using a <code>download_*()</code> function with
+the minimal inputs for:</p>
 <ol style="list-style-type: decimal">
 <li>the product or layer name(s) to access (defined by the API),</li>
-<li>a path to a folder, where downloads will be stored (for processing, if needed), and</li>
+<li>a path to a folder, where downloads will be stored (for processing,
+if needed), and</li>
 <li>an area of interest defined by a bounding box in <a href="https://epsg.io/4326" class="external-link">EPSG:4326</a>
 </li>
 </ol>
-<p>Each <code>download_*</code> function has additional arguments that are unique for the API used, but the three arguments will be sufficient to request and download data products from the respective servers:</p>
+<p>Each <code>download_*</code> function has additional arguments that
+are unique for the API used, but the three arguments will be sufficient
+to request and download data products from the respective servers:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The code below is an example and will NOT evaluate:</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>download_<span class="sc">*</span>(<span class="at">layer =</span> <span class="sc">&lt;</span>layername<span class="sc">&gt;</span>,</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">out_path =</span> <span class="sc">&lt;</span>path to folder<span class="sc">&gt;</span>,</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">bbox =</span> <span class="sc">&lt;</span>xmin, ymin, xmax, ymax<span class="sc">&gt;</span>)</span></code></pre></div>
-<p>For more information on downloads, refer to each download function in the Reference section:</p>
+<p>For more information on downloads, refer to each download function in
+the Reference section:</p>
 <ul>
 <li><code><a href="../reference/download_dea.html">download_dea()</a></code></li>
 <li><code><a href="../reference/download_dem.html">download_dem()</a></code></li>
@@ -141,19 +205,25 @@
 <div class="section level2">
 <h2 id="process-and-sample-data">Process and sample data<a class="anchor" aria-label="anchor" href="#process-and-sample-data"></a>
 </h2>
-<p>Once data has been downloaded, functions are available to process the data further, which include:</p>
+<p>Once data has been downloaded, functions are available to process the
+data further, which include:</p>
 <ul>
-<li>sampling for data based on available sampling coordinates, with <code>raster_query()</code>
+<li>sampling for data based on available sampling coordinates, with
+<code>raster_query()</code>
 </li>
 <li>temporal aggregation, using <code>aggregate_temporal()</code>
 </li>
 </ul>
-<p>Of course, since downloaded data are in open GeoTIFF and CSV formats, users may also utilise other R packges (e.g. <code>terra</code>) to manipulate the data on their own.</p>
+<p>Of course, since downloaded data are in open GeoTIFF and CSV formats,
+users may also utilise other R packges (e.g. <code>terra</code>) to
+manipulate the data on their own.</p>
 </div>
 <div class="section level2">
 <h2 id="whats-next">What’s next<a class="anchor" aria-label="anchor" href="#whats-next"></a>
 </h2>
-<p>The Data-Harvester is still being actively developed and more functions will soon be available for statistical modelling and machine learning workflows.</p>
+<p>The Data-Harvester is still being actively developed and more
+functions will soon be available for statistical modelling and machine
+learning workflows.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
