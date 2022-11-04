@@ -1,3 +1,7 @@
+# dataharvester 0.1.1
+
+Minor bug fixes and enhancements (mostly on the dev side for continuous integration). A bigger update will come soon!
+
 # dataharvester 0.1.0
 
 Pre-release version - `dataharvester` is now stable enough for pre-release (hopefully). Also fixes some bugs.
