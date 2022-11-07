@@ -12,6 +12,10 @@
 #' @param preview `logical`: preview rasters by plotting the first band only
 #' @param contour `logical`: add contour lines to the plot. Defaults to FALSE
 #'
+#' @importFrom grDevices n2mfrow
+#' @importFrom graphics par
+#' @importFrom utils read.csv
+#'
 #' @export
 harvest <- function(path_to_config,
                     log_name = "download_log",
