@@ -1,5 +1,5 @@
 ^README.Rmd
-^dataharvestR\.Rproj$
+^dataharvester\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.ccache$
@@ -9,3 +9,4 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^codecov\.yml$
