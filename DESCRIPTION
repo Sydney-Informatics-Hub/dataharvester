@@ -29,12 +29,13 @@ Imports:
     crayon,
     dplyr,
     lubridate,
+    purrr,
     reticulate,
-    rlang,
     rstudioapi,
     terra,
     yaml
 Suggests: 
+    covr,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
