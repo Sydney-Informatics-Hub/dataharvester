@@ -21,7 +21,7 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
     ))
   }
   # Check if environment can be loaded
-  message("• Verifying Python configuration...", "\r", appendLF = FALSE)
+  message("\u2299 Verifying Python configuration...", "\r", appendLF = FALSE)
   tryCatch(
     {
       reticulate::use_condaenv(envname)
@@ -35,12 +35,12 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
       reticulate::conda_create(envname, python_version = "3.9")
       .install_dependencies(envname)
       reticulate::use_condaenv(envname)
-      message("• Using Conda environment: ", envname)
+      message("\u2299 Using Conda environment: ", envname)
     }
   )
   .validate_dependencies(envname)
   if (earthengine) {
-    message("• Checking Google Earth Engine authentication")
+    message("\u2299 Checking Google Earth Engine authentication")
     authenticate_ee(auth_mode)
   }
   return(invisible(TRUE))
@@ -90,7 +90,7 @@ validate_conda <- function(reinstall = FALSE) {
         return(invisible(FALSE))
       },
       error = function(e) {
-        message(crayon::red("✘ Conda binary not found"))
+        message(crayon::red("\u2716 Conda binary not found"))
         text_out <- paste0(
           "You must use Anaconda/Miniconda to use `dataharvester`.",
           crayon::bold("\n\nDownload and install Miniconda. "),
@@ -247,7 +247,7 @@ validate_conda <- function(reinstall = FALSE) {
     ))
     message(paste0(
       crayon::yellow(
-        "• Re-installing all dependencies just to be sure..."
+        "\u2299 Re-installing all dependencies just to be sure..."
       )
     ))
     .install_dependencies(envname)
