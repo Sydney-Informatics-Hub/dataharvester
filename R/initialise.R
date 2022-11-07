@@ -33,12 +33,12 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
         "' not found, will create one now"
       )
       reticulate::conda_create(envname, python_version = "3.9")
-      .install_dependencies(envname)
+      install_dependencies(envname)
       reticulate::use_condaenv(envname)
       message("\u2299 Using Conda environment: ", envname)
     }
   )
-  .validate_dependencies(envname)
+  validate_dependencies(envname)
   if (earthengine) {
     message("\u2299 Checking Google Earth Engine authentication")
     authenticate_ee(auth_mode)
@@ -133,7 +133,10 @@ validate_conda <- function(reinstall = FALSE) {
 }
 
 
-.install_dependencies <- function(envname) {
+#' Install Python dependencies for dataharvester
+#'
+#' @noRd
+install_dependencies <- function(envname) {
   # Create environment first
   # Horrible way to check if we are on RStudio Cloud by checking GDAL version
   use_pygdal <- FALSE
@@ -200,8 +203,12 @@ validate_conda <- function(reinstall = FALSE) {
   )
 }
 
-
-.validate_dependencies <- function(envname = "r-reticulate") {
+#' Validate Python dependencies for dataharvester
+#'
+#' Better validations are needed, but this will do for now.
+#'
+#' @noRd
+validate_dependencies <- function(envname = "r-reticulate") {
   # Note: a Conda environment must be loaded first or this function will fail
   # List required packages
   message("\n\u2299 Validating dependencies...", "\r", appendLF = FALSE)
@@ -250,7 +257,7 @@ validate_conda <- function(reinstall = FALSE) {
         "\u2299 Re-installing all dependencies just to be sure..."
       )
     ))
-    .install_dependencies(envname)
+    install_dependencies(envname)
     return(invisible(TRUE))
   }
 }
