@@ -62,68 +62,6 @@ match_multi <- function(arg) {
   }
 }
 
-#' Create a dataframe to store raster download and processing information
-#'
-#' This functions does not have any arguments. The dataframe can be updated with
-#' the [update_logtable()] function.
-#'
-#' @return a data frame object
-#' @export
-init_logtable <- function() {
-  # Import module
-  utils <- harvester_module("utils")
-  # Run
-  out <- utils$init_logtable()
-  return(out)
-}
-
-#' Update download and processing dataframe
-#'
-#' Update the dataframe table with the information from the raster download or
-#' processing. The dataframe is simultaneoulsy saved to a csv file in default
-#' output directory.
-#'
-#' @param logname `string`: name of data frame object created from
-#'   `init_logfile()`
-#' @param file_name `string`: file name(s) to add to the data frame
-#' @param layer `string`: layer name(s) to add to the data frame
-#' @param source `string`: the download source, abbreviated. For example, "DEA"
-#' @param settings `object`: a settings object
-#' @param layertitles `string` : layer title(s) to add to the data frame, used
-#'   in certain situations e.g. labels for summary plots
-#' @param agfunctions aggregation/summary functions used (e.g. mean) or an
-#'   specified aggregation requested (e.g. 0-5 m) for the layer
-#' @param loginfos `string`: status of layer, e.g. "processed"
-#'
-#' @return a data frame object
-#' @export
-#'
-#' @examples
-#' NULL
-update_logtable <- function(logname,
-                            file_name,
-                            layer,
-                            source,
-                            settings,
-                            layertitles = list(),
-                            agfunctions = list(),
-                            loginfos = list()) {
-  # Import module
-  utils <- harvester_module("utils")
-  # Run
-  out <- utils$update_logtable(
-    df_log,
-    filenames,
-    layernames,
-    datasource,
-    settings,
-    layertitles,
-    agfunctions,
-    loginfos
-  )
-  return(out)
-}
-
 
 #' Preview all images in a folder, recursively
 #'
