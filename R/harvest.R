@@ -3,8 +3,7 @@
 #' The [harvest()] function requires a YAML configuration file to work and will
 #' perform data aggregation, downloading and logging based on what is parsed
 #' from the YAML file. For more information on 'headless' functionality, see the
-#' documentation online (site not live yet). A YAML template can be generated
-#' using the function [create_yaml()]
+#' documentation online (site not live yet).
 #'
 #' @param path_to_config `string`: path to YAML config file, e.g. "settings/"
 #' @param log_name `string`: name of output log file which contains some
