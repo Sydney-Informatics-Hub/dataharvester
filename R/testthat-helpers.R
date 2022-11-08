@@ -4,20 +4,20 @@
 
 skip_if_no_python <- function() {
   if (identical(getOption("reticulate.python.disabled"), TRUE)) {
-    skip("Python bindings not available for testing")
+    testthat::skip("Python bindings not available for testing")
   }
 
   if (!reticulate::py_available(initialize = TRUE)) {
-    skip("Python bindings not available for testing")
+    testthat::skip("Python bindings not available for testing")
   }
 }
 
 skip_if_no_conda <- function(env = "r-reticulate") {
-  skip_on_cran()
+  testthat::skip_on_cran()
   skip_if_no_python()
 
   if (is.null(tryCatch(reticulate::conda_binary(), error = function(e) NULL))) {
-    skip("conda not available for testing (can't find conda binary)")
+    testthat::skip("conda not available for testing (can't find conda binary)")
   }
 
   tryCatch(
@@ -26,7 +26,7 @@ skip_if_no_conda <- function(env = "r-reticulate") {
       reticulate::use_condaenv(env)
     },
     error = function(e) {
-      skip("conda environment not available for testing (can't load env)")
+      testthat::skip("conda environment not available for testing (can't load env)")
     }
   )
 
@@ -36,7 +36,7 @@ skip_if_no_conda <- function(env = "r-reticulate") {
       reticulate::import("rasterio")
     },
     error = function(e) {
-      skip("rasterio not available for testing (can't load rasterio)")
+      testthat::skip("rasterio not available for testing (can't load rasterio)")
     }
   )
 }
