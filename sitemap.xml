@@ -52,39 +52,6 @@
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/collect_ee.html</loc>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_bbox.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_crs.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_dates.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_dea.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_dem.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_paths.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_res.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_silo.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_slga.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/config_xy_names.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/create_yaml.html</loc>
-  </url>
-  <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/download_dea.html</loc>
   </url>
   <url>
@@ -115,13 +82,7 @@
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/init_logtable.html</loc>
-  </url>
-  <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/initialise_harvester.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/load_config.html</loc>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/load_settings.html</loc>
@@ -139,18 +100,6 @@
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/preprocess_ee.html</loc>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/print.harvester.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/update_logtable.html</loc>
-  </url>
-  <url>
     <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/validate_conda.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/wrap_config.html</loc>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/dataharvester/reference/write_config.html</loc>
   </url>
 </urlset>

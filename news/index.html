@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,24 @@
       
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.2" id="dataharvester-012">dataharvester 0.1.2<a class="anchor" aria-label="anchor" href="#dataharvester-012"></a></h2>
+<p>This update prepares the <code>dataharvester</code> package for continuous integration and code coverage</p>
+<div class="section level4">
+<h4 id="whats-changed-0-1-2">What’s changed<a class="anchor" aria-label="anchor" href="#whats-changed-0-1-2"></a></h4>
+<ul><li>removed deprecated and unused <code>get_*()</code> functions. Most of these functions are unused and have been superseded with <code>download_*()</code> functions</li>
+<li>removed <code>logtable</code>-related functions as these are accessed directly in the Python code. There should be no reason to use these in the R code</li>
+<li>removed unused config functions (<code>config_*()</code> and <code>*_config()</code>). These will be re-coded in the near future, but the removal NOW prevents the need to deprecate these functions (since they are currently unused)</li>
+<li>lots of fixes to documentation, imports, suggests and formatting to meet R CMD check requirements (100%)</li>
+<li>example code are not run, to prevent errors in R CMD check via GitHub Actions</li>
+</ul></div>
+<div class="section level4">
+<h4 id="whats-new-0-1-2">What’s new<a class="anchor" aria-label="anchor" href="#whats-new-0-1-2"></a></h4>
+<ul><li>integration to codecov</li>
+<li>added new GitHub Actions scripts to automate R CMD check and code coverage</li>
+<li>new badges to README for R CMD check and code coverage</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="dataharvester-011">dataharvester 0.1.1<a class="anchor" aria-label="anchor" href="#dataharvester-011"></a></h2>
 <p>Minor bug fixes and enhancements (mostly on the dev side for continuous integration). A bigger update will come soon!</p>
@@ -176,7 +194,7 @@
 <ul><li>
 <code>plot_rasters()</code> function to scan a folder recursively and plot the first band of all GeoTIFF images</li>
 <li>
-<code><a href="../reference/create_yaml.html">create_yaml()</a></code> function to generate template and skeleton YAML files. The function is incomplete, but it will be finalised in the next version</li>
+<code>create_yaml()</code> function to generate template and skeleton YAML files. The function is incomplete, but it will be finalised in the next version</li>
 <li>fixed encoding and missing link errors in documentation (#7)</li>
 <li>fixed conda openSSL error (#8)</li>
 </ul></div>
@@ -227,7 +245,7 @@
 <p>General bug fixes, added new functions that will someday replace <code>get_*()</code> functions.</p>
 <div class="section level4">
 <h4 id="whats-new-0-0-2">What’s new:<a class="anchor" aria-label="anchor" href="#whats-new-0-0-2"></a></h4>
-<ul><li>⚡: <code><a href="../reference/init_logtable.html">init_logtable()</a></code> and <code><a href="../reference/update_logtable.html">update_logtable()</a></code> to store download info</li>
+<ul><li>⚡: <code>init_logtable()</code> and <code>update_logtable()</code> to store download info</li>
 <li>⚡: <code><a href="../reference/download_slga.html">download_slga()</a></code> to download from SLGA</li>
 <li>⚡: <code><a href="../reference/download_dem.html">download_dem()</a></code> to download from DEM</li>
 <li>⚡: <code>match_single()</code> and <code>match_multi()</code> to validate args</li>

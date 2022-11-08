@@ -18,7 +18,7 @@ images."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
     
     <a class="navbar-brand me-2" href="../index.html">dataharvester</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,19 +103,17 @@ aggregated data. If NULL (default), will calculate the mean per period</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="va">img</span> <span class="op">&lt;-</span> <span class="fu"><a href="collect_ee.html">collect_ee</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  collection <span class="op">=</span> <span class="st">"LANDSAT/LC09/C02/T1_L2"</span>,</span></span>
 <span class="r-in"><span>  coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">149.769345</span>, <span class="op">-</span><span class="fl">30.335861</span>, <span class="fl">149.949173</span>, <span class="op">-</span><span class="fl">30.206271</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  date <span class="op">=</span> <span class="st">"2021-06-01"</span>,</span></span>
 <span class="r-in"><span>  end_date <span class="op">=</span> <span class="st">"2022-06-01"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Error loading Python module getdata_ee</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="preprocess_ee.html">preprocess_ee</a></span><span class="op">(</span><span class="va">img</span>, spectral <span class="op">=</span> <span class="st">"NDVI"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in preprocess_ee(img, spectral = "NDVI"):</span> object 'img' not found</span>
-<span class="r-in"><span><span class="co"># aggregate_ee(img, reduce_by = "median")</span></span></span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">aggregate_ee</span><span class="op">(</span><span class="va">img</span>, reduce_by <span class="op">=</span> <span class="st">"median"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
