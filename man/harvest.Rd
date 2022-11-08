@@ -25,6 +25,5 @@ information about downloaded files}
 The \code{\link[=harvest]{harvest()}} function requires a YAML configuration file to work and will
 perform data aggregation, downloading and logging based on what is parsed
 from the YAML file. For more information on 'headless' functionality, see the
-documentation online (site not live yet). A YAML template can be generated
-using the function \code{\link[=create_yaml]{create_yaml()}}
+documentation online (site not live yet).
 }
