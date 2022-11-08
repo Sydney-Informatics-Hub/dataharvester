@@ -52,13 +52,12 @@ download images for all other \verb{*_ee()} functions
 Define Google Earth Engine data to collect
 }
 \examples{
-NULL
-
+\dontrun{
 collect_ee(
   collection = "LANDSAT/LC09/C02/T1_L2",
   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
   date = "2021-06-01",
   end_date = "2022-06-01"
 )
-
+}
 }

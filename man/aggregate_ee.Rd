@@ -26,7 +26,7 @@ that processing times can increase substantially with an increased number of
 images.
 }
 \examples{
-
+\dontrun{
 img <- collect_ee(
   collection = "LANDSAT/LC09/C02/T1_L2",
   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
@@ -35,6 +35,6 @@ img <- collect_ee(
 )
 
 preprocess_ee(img, spectral = "NDVI")
-# aggregate_ee(img, reduce_by = "median")
-
+aggregate_ee(img, reduce_by = "median")
+}
 }
