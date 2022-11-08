@@ -17,9 +17,10 @@ harvest(
 \item{log_name}{\code{string}: name of output log file which contains some
 information about downloaded files}
 
-\item{contour}{\code{logical}: add contour lines to the plot. Defaults to FALSE}
+\item{plot}{\code{logical}: present a matrix plot of the first band of every image
+downloaded. Defaults to FALSE}
 
-\item{preview}{\code{logical}: preview rasters by plotting the first band only}
+\item{contour}{\code{logical}: add contour lines to the plot. Defaults to FALSE}
 }
 \description{
 The \code{\link[=harvest]{harvest()}} function requires a YAML configuration file to work and will

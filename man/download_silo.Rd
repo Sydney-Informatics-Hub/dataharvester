@@ -22,9 +22,11 @@ download_silo(
 
 \item{years}{Year(s) to download data from (if available), e.g. \code{2019:2021} or \code{c(2015, 2020)}}
 
-\item{format_out}{}
+\item{format_out}{Exported file format. Only \code{"tif"} is currently available.
+Defaults to \code{"tif"}}
 
-\item{delete_temp}{Delete any temporary files that were created. Defaults to \code{FALSE}}
+\item{delete_temp}{Delete any temporary files that were created. Defaults to
+\code{FALSE}}
 }
 \value{
 a list of filenames (after files have been downloaded or processed)

@@ -2,6 +2,9 @@
 #'
 #' @param envname Use this Conda environment. Defaults to `"r-reticulate"`
 #' @param earthengine Initialise Earth Engine if `TRUE.` Defaults to `FALSE`
+#' @param auth_mode Authentication mode to access the GEE API. Using `"gcloud"`
+#'   normally works. The remaining three options are identical (`"notebook",
+#'   "rstudiocloud", "binder"`), just named differently for context
 #'
 #' @export
 initialise_harvester <- function(envname = NULL, earthengine = FALSE,
@@ -52,6 +55,10 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
 #' API. An API token containing the user's credentials is saved locally and can
 #' be used to authenticate vial Application Default Credentials.
 #'
+#' @param auth_mode Authentication mode to access the GEE API. Using `"gcloud"`
+#'   normally works. The remaining three options are identical (`"notebook",
+#'   "rstudiocloud", "binder"`), just named differently for context
+#'
 #' @export
 authenticate_ee <- function(auth_mode = "gcloud") {
   all_modes <- c("gcloud", "notebook", "rstudiocloud", "binder")
@@ -72,8 +79,7 @@ authenticate_ee <- function(auth_mode = "gcloud") {
 
 #' Check if conda is available
 #'
-#' @param reply `logical` if `interactive()`, function will prompt user for
-#'   response. Defaults to TRUE when `interactive()` is chosen.
+#' @param reinstall Force re-install of miniconda. Defaults to FALSE
 #'
 #' @export
 validate_conda <- function(reinstall = FALSE) {

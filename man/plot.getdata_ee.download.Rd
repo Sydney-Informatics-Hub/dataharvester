@@ -9,3 +9,4 @@
 \description{
 Plot Earth Engine object
 }
+\keyword{internal}

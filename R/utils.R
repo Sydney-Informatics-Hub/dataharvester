@@ -91,6 +91,7 @@ plot_rasters <- function(path,
 
 
 #' Plot GeoTIFF object
+#' @keywords internal
 #' @export
 plot.rasterPath <- function(x, choose = NULL, band = NULL, ...) {
   # Filter files
@@ -108,6 +109,7 @@ plot.rasterPath <- function(x, choose = NULL, band = NULL, ...) {
 }
 
 #' Plot Earth Engine object
+#' @keywords internal
 #' @export
 plot.getdata_ee.download <- function(x, band = NULL, ...) {
   raster <- terra::rast(paste0(x$outpath, x$filenames))
