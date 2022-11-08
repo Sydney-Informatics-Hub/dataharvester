@@ -33,10 +33,6 @@ reference:
   desc: Functions to programmatically edit the current YAML configuration file.
 - contents:
   - load_settings
-- title: S3 methods
-- contents:
-  - plot.rasterPath
-  - plot.getdata_ee.download
 - title: Example data
 - contents:
   - Llara
