@@ -19,7 +19,8 @@ params <- function(value, default = NULL) {
     years = years,
     crs = crs,
     resolution = resolution,
-    verbose = verbose)
+    verbose = verbose
+  )
   # Join
   out <- all_params[[val]]
   if (!is.null(default)) {

@@ -1,6 +1,6 @@
 #' Load settings from YAML file
 #'
-#' @param path Path to settings file in YAML format/extension.
+#' @param path_to_yaml Path to settings file in YAML format/extension.
 #'
 #' @return A settings namespace object
 #' @export

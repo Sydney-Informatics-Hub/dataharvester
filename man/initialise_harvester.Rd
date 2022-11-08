@@ -10,6 +10,9 @@ initialise_harvester(envname = NULL, earthengine = FALSE, auth_mode = "gcloud")
 \item{envname}{Use this Conda environment. Defaults to \code{"r-reticulate"}}
 
 \item{earthengine}{Initialise Earth Engine if \code{TRUE.} Defaults to \code{FALSE}}
+
+\item{auth_mode}{Authentication mode to access the GEE API. Using \code{"gcloud"}
+normally works. The remaining three options are identical (\verb{"notebook", "rstudiocloud", "binder"}), just named differently for context}
 }
 \description{
 Initialise and validate Data-Harvester, including dependencies

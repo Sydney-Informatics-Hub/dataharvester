@@ -9,3 +9,4 @@
 \description{
 Plot GeoTIFF object
 }
+\keyword{internal}

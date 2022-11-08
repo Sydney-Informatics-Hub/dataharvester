@@ -1,5 +1,10 @@
 ---
 title: "Introduction to dataharvester"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to dataharvester}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 **Important: `dataharvester` is in early pre-release and is still undergoing active development. Please report any bugs in the [issues](https://github.com/Sydney-Informatics-Hub/dataharvester/issues) tab on GitHub.**
 

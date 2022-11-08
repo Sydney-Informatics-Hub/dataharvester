@@ -19,8 +19,6 @@ reference:
   - download_radiometric
   - download_silo
   - download_slga
-  - init_logtable
-  - update_logtable
   - extract_values
 - title: Google Earth Engine
   desc: Functions to download and manipulate images from GEE
@@ -33,20 +31,8 @@ reference:
   - harvest
 - title: Configuration
   desc: Functions to programmatically edit the current YAML configuration file.
-        Note this section will be deprecated in favour of a new system and is
-        only available as reference
 - contents:
-  - starts_with("config_")
-  - create_yaml
-  - wrap_config
-  - write_config
-  - load_config
   - load_settings
-- title: S3 methods
-- contents:
-  - plot.rasterPath
-  - plot.getdata_ee.download
-  - print.harvester
 - title: Example data
 - contents:
   - Llara

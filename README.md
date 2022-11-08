@@ -11,6 +11,9 @@
 [![pkgdown](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml)
 [![issues -
 dataharvester](https://img.shields.io/github/issues/Sydney-Informatics-Hub/dataharvester)](https://github.com/Sydney-Informatics-Hub/dataharvester/issues)
+[![R-CMD-check](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/Sydney-Informatics-Hub/dataharvester/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Sydney-Informatics-Hub/dataharvester?branch=main)
 <!-- badges: end -->
 
 ------------------------------------------------------------------------
@@ -26,36 +29,36 @@ tab.**
 geospatial data from a range of **Australian** (and international) data
 sources, including:
 
--   [Soil and Landscape Grid of Australia (SLGA)](https://is.gd/i8nF0Z)
--   [SILO Climate Database - Queensland Government,
-    Australia](https://is.gd/ifJ8tB)
--   [Digital Elevation Model (DEM) of Australia](https://is.gd/ZLFwGs)
--   [Digital Earth Australia (DEA) Geoscience Earth
-    Observations](https://is.gd/gRSlVG)
--   [GSKY Data Server for DEA Geoscience Earth
-    Observations](https://is.gd/zFHxfD)
--   [Google Earth Engine](https://is.gd/VdO3Jx)
+- [Soil and Landscape Grid of Australia (SLGA)](https://is.gd/i8nF0Z)
+- [SILO Climate Database - Queensland Government,
+  Australia](https://is.gd/ifJ8tB)
+- [Digital Elevation Model (DEM) of Australia](https://is.gd/ZLFwGs)
+- [Digital Earth Australia (DEA) Geoscience Earth
+  Observations](https://is.gd/gRSlVG)
+- [GSKY Data Server for DEA Geoscience Earth
+  Observations](https://is.gd/zFHxfD)
+- [Google Earth Engine](https://is.gd/VdO3Jx)
 
 With connectivity to the Earth Engine API, perform petabyte-scale
 operations which include temporal cloud/shadow masking and automatic
 calculation of spectral indices (e.g. NDVI) for the following
 collections:
 
--   Landsat
-    [5](https://developers.google.com/earth-engine/datasets/catalog/landsat-5)
-    (TM),
-    [7](https://developers.google.com/earth-engine/datasets/catalog/landsat-7)
-    (ETM+),
-    [8](https://developers.google.com/earth-engine/datasets/catalog/landsat-8)
-    (OLI/TRS) and
-    [9](https://developers.google.com/earth-engine/datasets/catalog/landsat-9)
-    (OLI-2/TRS-2)
--   [Sentinel-2](https://developers.google.com/earth-engine/datasets/catalog/sentinel-2)
-    (Surface Reflectance) and
-    [Sentinel-3](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S3_OLCI)
-    (Ocean and Land Colour Instrument)
--   [MODIS](https://developers.google.com/earth-engine/datasets/catalog/modis)
-    (or Moderate Resolution Imaging Spectroradiometer) products
+- Landsat
+  [5](https://developers.google.com/earth-engine/datasets/catalog/landsat-5)
+  (TM),
+  [7](https://developers.google.com/earth-engine/datasets/catalog/landsat-7)
+  (ETM+),
+  [8](https://developers.google.com/earth-engine/datasets/catalog/landsat-8)
+  (OLI/TRS) and
+  [9](https://developers.google.com/earth-engine/datasets/catalog/landsat-9)
+  (OLI-2/TRS-2)
+- [Sentinel-2](https://developers.google.com/earth-engine/datasets/catalog/sentinel-2)
+  (Surface Reflectance) and
+  [Sentinel-3](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S3_OLCI)
+  (Ocean and Land Colour Instrument)
+- [MODIS](https://developers.google.com/earth-engine/datasets/catalog/modis)
+  (or Moderate Resolution Imaging Spectroradiometer) products
 
 For [all other Earth Engine
 collections](https://developers.google.com/earth-engine/datasets/),
@@ -141,15 +144,15 @@ Access to the Google Earth Engine API is aimed at simplifying the most
 common tasks for beginners. For example, below is example code that
 performs all of the following (in 9 lines of code):
 
--   Access to the Google Earth Engine Data Catalog
--   Filter by date and coordinates
--   Scaling, offsetting, cloud and shadow masking
--   Automatically calculate Awesome Spectral Indices (e.g. NDVI)
--   Pixel stretching for image preview
--   Mapping of results
--   Downloading of image(s) at specified resolution and location
--   Splitting of large images automatically to allow file sizes that
-    exceed the limit(s) set by the API (\~32 MB)
+- Access to the Google Earth Engine Data Catalog
+- Filter by date and coordinates
+- Scaling, offsetting, cloud and shadow masking
+- Automatically calculate Awesome Spectral Indices (e.g. NDVI)
+- Pixel stretching for image preview
+- Mapping of results
+- Downloading of image(s) at specified resolution and location
+- Splitting of large images automatically to allow file sizes that
+  exceed the limit(s) set by the API (\~32 MB)
 
 ``` r
 # Make sure that GEE API is initialised

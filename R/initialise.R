@@ -2,10 +2,13 @@
 #'
 #' @param envname Use this Conda environment. Defaults to `"r-reticulate"`
 #' @param earthengine Initialise Earth Engine if `TRUE.` Defaults to `FALSE`
+#' @param auth_mode Authentication mode to access the GEE API. Using `"gcloud"`
+#'   normally works. The remaining three options are identical (`"notebook",
+#'   "rstudiocloud", "binder"`), just named differently for context
 #'
 #' @export
 initialise_harvester <- function(envname = NULL, earthengine = FALSE,
-  auth_mode = "gcloud") {
+                                 auth_mode = "gcloud") {
   # Check if conda exists
   restart <- validate_conda()
   if (restart) {
@@ -21,7 +24,7 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
     ))
   }
   # Check if environment can be loaded
-  message("• Verifying Python configuration...", "\r", appendLF = FALSE)
+  message("\u2299 Verifying Python configuration...", "\r", appendLF = FALSE)
   tryCatch(
     {
       reticulate::use_condaenv(envname)
@@ -33,14 +36,14 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
         "' not found, will create one now"
       )
       reticulate::conda_create(envname, python_version = "3.9")
-      .install_dependencies(envname)
+      install_dependencies(envname)
       reticulate::use_condaenv(envname)
-      message("• Using Conda environment: ", envname)
+      message("\u2299 Using Conda environment: ", envname)
     }
   )
-  .validate_dependencies(envname)
+  validate_dependencies(envname)
   if (earthengine) {
-    message("• Checking Google Earth Engine authentication")
+    message("\u2299 Checking Google Earth Engine authentication")
     authenticate_ee(auth_mode)
   }
   return(invisible(TRUE))
@@ -51,6 +54,10 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
 #' Utilises google-cloud-sdk to initialise and authenticate to the Earth Engine
 #' API. An API token containing the user's credentials is saved locally and can
 #' be used to authenticate vial Application Default Credentials.
+#'
+#' @param auth_mode Authentication mode to access the GEE API. Using `"gcloud"`
+#'   normally works. The remaining three options are identical (`"notebook",
+#'   "rstudiocloud", "binder"`), just named differently for context
 #'
 #' @export
 authenticate_ee <- function(auth_mode = "gcloud") {
@@ -72,8 +79,7 @@ authenticate_ee <- function(auth_mode = "gcloud") {
 
 #' Check if conda is available
 #'
-#' @param reply `logical` if `interactive()`, function will prompt user for
-#'   response. Defaults to TRUE when `interactive()` is chosen.
+#' @param reinstall Force re-install of miniconda. Defaults to FALSE
 #'
 #' @export
 validate_conda <- function(reinstall = FALSE) {
@@ -90,7 +96,7 @@ validate_conda <- function(reinstall = FALSE) {
         return(invisible(FALSE))
       },
       error = function(e) {
-        message(crayon::red("✘ Conda binary not found"))
+        message(crayon::red("\u2716 Conda binary not found"))
         text_out <- paste0(
           "You must use Anaconda/Miniconda to use `dataharvester`.",
           crayon::bold("\n\nDownload and install Miniconda. "),
@@ -133,7 +139,10 @@ validate_conda <- function(reinstall = FALSE) {
 }
 
 
-.install_dependencies <- function(envname) {
+#' Install Python dependencies for dataharvester
+#'
+#' @noRd
+install_dependencies <- function(envname) {
   # Create environment first
   # Horrible way to check if we are on RStudio Cloud by checking GDAL version
   use_pygdal <- FALSE
@@ -143,7 +152,7 @@ validate_conda <- function(reinstall = FALSE) {
 
   # check if windows user - can't install google-cloud-sdk if so
 
-  if(.Platform$OS.type == "windows") {
+  if (.Platform$OS.type == "windows") {
     windows <- TRUE
   } else {
     windows <- FALSE
@@ -200,8 +209,12 @@ validate_conda <- function(reinstall = FALSE) {
   )
 }
 
-
-.validate_dependencies <- function(envname = "r-reticulate") {
+#' Validate Python dependencies for dataharvester
+#'
+#' Better validations are needed, but this will do for now.
+#'
+#' @noRd
+validate_dependencies <- function(envname = "r-reticulate") {
   # Note: a Conda environment must be loaded first or this function will fail
   # List required packages
   message("\n\u2299 Validating dependencies...", "\r", appendLF = FALSE)
@@ -247,10 +260,10 @@ validate_conda <- function(reinstall = FALSE) {
     ))
     message(paste0(
       crayon::yellow(
-        "• Re-installing all dependencies just to be sure..."
+        "\u2299 Re-installing all dependencies just to be sure..."
       )
     ))
-    .install_dependencies(envname)
+    install_dependencies(envname)
     return(invisible(TRUE))
   }
 }

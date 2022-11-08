@@ -23,6 +23,8 @@ knitr::include_graphics("man/figures/logo_r.png")
 [![License](https://img.shields.io/badge/License-GPLV3-blue)](#license)
 [![pkgdown](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/pkgdown.yaml)
 [![issues - dataharvester](https://img.shields.io/github/issues/Sydney-Informatics-Hub/dataharvester)](https://github.com/Sydney-Informatics-Hub/dataharvester/issues)
+[![R-CMD-check](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Sydney-Informatics-Hub/dataharvester/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/Sydney-Informatics-Hub/dataharvester/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Sydney-Informatics-Hub/dataharvester?branch=main)
 <!-- badges: end -->
 
 

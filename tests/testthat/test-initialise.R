@@ -28,13 +28,4 @@ test_that("error if auth_mode is not in earthengine authenticate list", {
   expect_error(authenticate_ee(auth_mode = "monkey"))
 })
 
-# Already run with initialise_harvster():
-# test_that("validating dependencies work if env is loaded", {
-#   skip_on_cran()
-#   skip_if_no_conda()
-#   expect_true(.validate_dependencies(envname = "r-reticulate"))
-# })
-
-
-
 

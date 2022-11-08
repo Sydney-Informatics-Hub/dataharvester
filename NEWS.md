@@ -1,3 +1,25 @@
+# dataharvester 0.1.2
+
+This update prepares the `dataharvester` package for continuous integration and code coverage
+
+### What's changed
+
+- removed deprecated and unused `get_*()` functions. Most of these functions are unused and have been superseded with `download_*()` functions
+- removed `logtable`-related functions as these are accessed directly in the Python code. There should be no reason to use these in the R code
+- removed unused config functions (`config_*()` and `*_config()`). These will be re-coded in the near future, but the removal NOW prevents the need to deprecate these functions (since they are currently unused)
+- lots of fixes to documentation, imports, suggests and formatting to meet R CMD check requirements (100%)
+- example code are not run, to prevent errors in R CMD check via GitHub Actions
+
+### What's new
+
+- integration to codecov
+- added new GitHub Actions scripts to automate R CMD check and code coverage
+- new badges to README for R CMD check and code coverage
+
+# dataharvester 0.1.1
+
+Minor bug fixes and enhancements (mostly on the dev side for continuous integration). A bigger update will come soon!
+
 # dataharvester 0.1.0
 
 Pre-release version - `dataharvester` is now stable enough for pre-release (hopefully). Also fixes some bugs.

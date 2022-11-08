@@ -6,6 +6,10 @@
 \usage{
 authenticate_ee(auth_mode = "gcloud")
 }
+\arguments{
+\item{auth_mode}{Authentication mode to access the GEE API. Using \code{"gcloud"}
+normally works. The remaining three options are identical (\verb{"notebook", "rstudiocloud", "binder"}), just named differently for context}
+}
 \description{
 Utilises google-cloud-sdk to initialise and authenticate to the Earth Engine
 API. An API token containing the user's credentials is saved locally and can
