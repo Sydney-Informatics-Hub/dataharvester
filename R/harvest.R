@@ -35,11 +35,3 @@ harvest <- function(path_to_config,
     plot_rasters(config$outpath, contour = contour)
   }
 }
-
-#' Create a YAML configuration file for editing
-#'
-#' @return a YAML file
-#' @export
-create_yaml <- function() {
-  NULL
-}
