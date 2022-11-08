@@ -1,18 +1,7 @@
-# dd_source_python <- function(modulename, rpackage, report = FALSE) {
-#   filename <- paste0("python/", modulename, ".py")
-#   path <- dirname(system.file(filename, package = rpackage))
-#   if (report) {
-#     message(paste0("Loading ", modulename, " module from ", path))
-#   }
-#   reticulate::import_from_path(modulename, path, convert = FALSE)
-# }
-
 #' (Internal) Source module stored in inst folder
 #'
-#' @export
 #' @noRd
 harvester_module <- function(module_name) {
-  # path <- system.file("python", package = "dataharvester")
   filename <- paste0("python/", module_name, ".py")
   path <- dirname(system.file(filename, package = "dataharvester"))
   out <- reticulate::import_from_path(module_name,
@@ -24,7 +13,6 @@ harvester_module <- function(module_name) {
 
 #' (Internal) Match to one value in a function's argument
 #'
-#' @export
 #' @noRd
 match_single <- function(arg) {
   # credit: https://stackoverflow.com/a/72438444
@@ -44,7 +32,6 @@ match_single <- function(arg) {
 
 #' (Internal) Match to multiple values in a function's argument
 #'
-#' @export
 #' @noRd
 match_multi <- function(arg) {
   # credit: https://stackoverflow.com/a/72438444
@@ -68,8 +55,6 @@ match_multi <- function(arg) {
 #' @param path path to folder
 #' @param contour show contour lines. Defaults to FALSE
 #' @noRd
-#'
-#' @export
 plot_rasters <- function(path,
                          contour = FALSE,
                          points = FALSE,
@@ -102,14 +87,6 @@ plot_rasters <- function(path,
     }
   }
   par(mfrow = c(1, 1))
-}
-
-
-raster_query <- function(longs, lats, download_log = NULL, rasters = NULL, names = NULL) {
-  # Import module
-  utils <- harvester_module("utils")
-  out <- utils$raster_query(longs, lats, rasters, titles = names)
-  return(out)
 }
 
 
