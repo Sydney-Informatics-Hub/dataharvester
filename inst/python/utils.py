@@ -46,8 +46,9 @@ from numba import jit
 
 import warnings
 
-from termcolor import cprint, colored
+from termcolor import colored, cprint
 from alive_progress import alive_bar, config_handler
+
 
 config_handler.set_global(
     force_tty=True,
@@ -59,10 +60,40 @@ config_handler.set_global(
     elapsed="{elapsed}",
 )
 
+## ------ Functions to show progress and provide feedback to the user ------ ##
 
-def spin(message=None, colour=None):
+
+def spin(message=None, colour="magenta", events=1):
     """Spin animation as a progress inidicator"""
-    return alive_bar(1, title=colored(f"{message} ", colour))
+    return alive_bar(events, title=colored("\u2299 " + message, color=colour))
+
+
+def msg_info(message):
+    """Prints an info message"""
+    cprint("\u2139 " + message, color="magenta")
+
+
+def msg_dl(message):
+    """Prints a downloading message"""
+    cprint("\u29e9 " + message, color="magenta")
+
+
+def msg_warn(message):
+    """Prints a warning message"""
+    cprint("\u2691 " + message, color="yellow")
+
+
+def msg_err(message):
+    """Prints an error message"""
+    cprint("\u2716 " + message, color="red", attrs=["bold"])
+
+
+def msg_success(message):
+    """Prints a success message"""
+    cprint("\u2714 " + message, color="magenta")
+
+
+## ------------------------------------------------------------------------- ##
 
 
 def plot_rasters(rasters, longs=None, lats=None, titles=None):
@@ -76,6 +107,9 @@ def plot_rasters(rasters, longs=None, lats=None, titles=None):
     """
     # Set the value for reasonable shaped plot based on the number of datasets
     figlen = int(np.ceil(len(rasters) / 3))
+    # Make a blank canvas if there is no data
+    figlen = 2 if figlen < 2 else figlen
+
     # Create the figure
     fig, axes = plt.subplots(figlen, 3, figsize=(12, figlen * 3))
 
@@ -89,7 +123,7 @@ def plot_rasters(rasters, longs=None, lats=None, titles=None):
             j = 0
             i += 1
 
-        # print(a,i,j,rast)
+        # print(a,i,j,figlen,rast)
         src = rasterio.open(rast)
         # Only read first Band for flexibility without complexity
         data = src.read(1)
@@ -116,6 +150,10 @@ def plot_rasters(rasters, longs=None, lats=None, titles=None):
         j += 1
 
     fig.tight_layout()
+    plt.show()
+
+
+
 
 
 def _getFeatures(gdf):

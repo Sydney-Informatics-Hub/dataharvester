@@ -3,6 +3,9 @@
 #' Wrapper funtion to get the layers from the Geoscience Australia DEM 1 arc
 #' second grid.
 #'
+#' @details
+#' Only the layer `DEM_1s` is used right now and can be called with just `DEM`.
+#'
 #' @param layer `r params(layer)`
 #' @param out_path `r params(out_path)`
 #' @param bounding_box `r params(bounding_box)`
@@ -11,15 +14,12 @@
 #' @return a list of filenames (after files have been downloaded or processed)
 #' @export
 download_dem <- function(layer,
-                         out_path,
                          bounding_box,
+                         out_path,
                          resolution = 1) {
   # Import module
-  path <- system.file("python", package = "dataharvester")
-  dem <- reticulate::import_from_path("getdata_dem",
-    path = path,
-    delay_load = TRUE
-  )
+  dem <- harvester_module("getdata_dem")
   out <- dem$get_dem_layers(as.list(layer), out_path, bounding_box)
+  class(out) <- append(class(out), "rasterPath")
   return(out)
 }

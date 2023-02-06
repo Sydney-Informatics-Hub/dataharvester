@@ -2,3 +2,37 @@ url: https://sydney-informatics-hub.github.io/dataharvester/
 template:
   bootstrap: 5
 
+
+reference:
+- title: Authentication
+  desc: Validate Python environment and Google Earth Engine credentials
+- contents:
+  - initialise_harvester
+  - validate_conda
+  - authenticate_ee
+- title: Downloading and processing
+  desc: Functions to download and manipulate images from various APIs
+- contents:
+  - download_dea
+  - download_dem
+  - download_landscape
+  - download_radiometric
+  - download_silo
+  - download_slga
+  - extract_values
+- title: Google Earth Engine
+  desc: Functions to download and manipulate images from GEE
+- contents:
+  - download_ee
+  - collect_ee
+  - preprocess_ee
+  - aggregate_ee
+  - map_ee
+  - harvest
+- title: Configuration
+  desc: Functions to programmatically edit the current YAML configuration file.
+- contents:
+  - load_settings
+- title: Example data
+- contents:
+  - Llara

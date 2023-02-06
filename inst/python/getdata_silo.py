@@ -31,38 +31,18 @@ import datetime
 import requests
 
 # from urllib import request
-from pathlib import Path
-
-# from netCDF4 import Dataset
-# import rasterio
-# import rioxarray as rio
+from netCDF4 import Dataset
+import rasterio
+import rioxarray as rio
 import xarray
 
-# logger setup
-import write_logs
-import logging
+import utils
+from utils import spin
 
 # from datacube.utils.cog import write_cog
-from termcolor import cprint, colored
-from alive_progress import alive_bar, config_handler
-
-config_handler.set_global(
-    force_tty=True,
-    bar=None,
-    spinner="waves",
-    monitor=False,
-    stats=False,
-    receipt=True,
-    elapsed="{elapsed}",
-)
 
 
-def spin(message=None, colour=None):
-    """Spin animation as a progress inidicator"""
-    return alive_bar(1, title=colored(f"{message} ", colour))
-
-
-def download_file(url, year, outpath="."):
+def download_file(url, layername, year, outpath="."):
     """
     download file from url
 
@@ -74,12 +54,10 @@ def download_file(url, year, outpath="."):
     file : str
     """
     local_filename = os.path.join(outpath, url.split("/")[-1])
-    filename_only = Path(outpath).name
     if os.path.exists(local_filename):
-        cprint(f"⚑ {filename_only} already exists, skipping download", "yellow")
-        # logging.info(f"  | Location: {local_filename}")
+        utils.msg_warn(f"{layername} for {year} already exists, skipping download")
         return local_filename
-    with spin(f"⇩ {filename_only} for year: {str(year)}", "blue") as s:
+    with spin(f"Downloading {layername} for {year}") as s:
         with requests.get(url, stream=True) as r:
             with open(local_filename, "wb") as f:
                 shutil.copyfileobj(r.raw, f)
@@ -197,13 +175,7 @@ def xarray2tif(ds, outpath, outfname, layername):
 
 
 def get_SILO_raster(
-    layername,
-    years,
-    outpath,
-    bbox=None,
-    format_out="nc",
-    delete_temp=False,
-    verbose=False,
+    layername, years, outpath, bbox=None, format_out="nc", delete_temp=False
 ):
     """
     Get raster data from SILO for certain climate variable and save data as geotif.
@@ -255,12 +227,6 @@ def get_SILO_raster(
     e.g. url = "https://s3-ap-southeast-2.amazonaws.com/silo-open-data/Official/annual/monthly_rain/2005.monthly_rain.nc"
     """
 
-    # Logger setup
-    if verbose:
-        write_logs.setup(level="info")
-    else:
-        write_logs.setup()
-
     # Check if layername is valid
     silodict = get_silodict()
     layerdict = silodict["layernames"]
@@ -279,48 +245,43 @@ def get_SILO_raster(
 
     # Check if format is valid
     if format_out not in ["nc", "tif"]:
-        logging.error("Output format not valid. Choose from: 'nc' or 'tif'")
         raise ValueError("Output format not valid. Choose from: 'nc' or 'tif'")
 
     # Check if years are in the range of available years
     url_info = "https://www.longpaddock.qld.gov.au/silo/gridded-data/"
     for year in years:
         if year > current_year:
-            logging.error(f"! | Choose years <= {current_year}")
             raise ValueError(f"Choose years <= {current_year}")
             return False
         if year < 1889:
-            logging.error(
-                "! | data is not available for years < 1889. ",
-                f"see for more details: {url_info}",
-            )
+            print(f"data is not available for years < 1889.")
+            print(f"see for more details: {url_info}")
             return False
         if (year < 1970) & (layername == "evap_pan"):
-            logging.error(
-                f"! | {layername} is not available for years < 1970. Automatically set to evap_comb"
+            print(
+                f"{layername} is not available for years < 1970. Automatically set to evap_comb"
             )
-            logging.error(f"see for more details: {url_info}")
+            print(f"see for more details: {url_info}")
             layername = "evap_comb"
         if (year < 1957) & (layername == "mslp"):
-            logging.error(
-                f"! | {layername} is not available for years < 1957.",
-                f"see for more details: {url_info}",
-            )
+            print(f"{layername} is not available for years < 1957.")
+            print(f"see for more details: {url_info}")
             return False
 
     # Silo base url
     silo_baseurl = (
         "https://s3-ap-southeast-2.amazonaws.com/silo-open-data/Official/annual/"
     )
-    # print(f"Processing {layername} (SILO)...")
+
     fnames_out = []
     # Download data for each year and save as geotif
     for year in years:
         # Get url
         url = silo_baseurl + layername + "/" + str(year) + "." + layername + ".nc"
         # Download file
-        # logging.info(f"Downloading data from {url} ...")
-        filename = download_file(url, year, outpath)
+        # print(f'Downloading data for year {year} from {url} ...')
+        filename = download_file(url, layername, year, outpath)
+
         # Open file in Xarray
         ds = xarray.open_dataset(filename)
         # select data in bbox:
@@ -341,11 +302,10 @@ def get_SILO_raster(
         # Remove file
         if delete_temp:
             os.remove(filename)
-        # if not file_exists:
-        #     print(f"⇩ {layername} for year: {str(year)}")
-        # logging.info(f"  | Saved as geotif: {os.path.join(outpath, outfname)}")
+        # print("Saved " + layername + " for year " + str(year) + " as geotif: ")
+        # print(os.path.join(outpath,outfname))
         fnames_out.append(os.path.join(outpath, outfname))
-    # logging.print(f"SILO download(s) complete: {layername}")
+
     # Convert netcdf to geotif
     # nc_to_geotif(filename, outpath, layername, year)
     # https://pratiman-91.github.io/2020/08/01/NetCDF-to-GeoTIFF-using-Python.html

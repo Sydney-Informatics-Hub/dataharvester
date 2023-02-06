@@ -29,23 +29,18 @@
 #' @export
 #'
 #' @examples
-#' NULL
-#'
+#'\dontrun{
 #' collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
 #'   date = "2021-06-01",
 #'   end_date = "2022-06-01"
 #' )
-#'
+#'}
 collect_ee <- function(collection = NULL, coords = NULL, date = NULL,
                        end_date = NULL, buffer = NULL, bound = FALSE,
                        config = NULL) {
-  path <- system.file("python", package = "dataharvester")
-  ee <- reticulate::import_from_path("getdata_ee",
-    path = path,
-    delay_load = TRUE
-  )
+  ee <- harvester_module("getdata_ee")
   out <- ee$collect(
     collection, coords, date,
     end_date, buffer, bound, config
@@ -84,8 +79,7 @@ collect_ee <- function(collection = NULL, coords = NULL, date = NULL,
 #' @export
 #'
 #' @examples
-#' NULL
-#'
+#'\dontrun{
 #' img <- collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
@@ -94,7 +88,7 @@ collect_ee <- function(collection = NULL, coords = NULL, date = NULL,
 #' )
 #'
 #' preprocess_ee(img, spectral = "NDVI")
-#'
+#'}
 preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
                           spectral = NULL, clip = TRUE) {
   object$preprocess(mask_clouds, reduce, spectral, clip)
@@ -109,7 +103,7 @@ preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
 #' that processing times can increase substantially with an increased number of
 #' images.
 #'
-#' @param object `object`: a data object produced by [collect_e()]
+#' @param object `object`: a data object produced by [collect_ee()]
 #' @param frequency `str`, `optional`: either `"month"` or `"year"` are accepted
 #' @param reduce_by `str`, `optional`: summary statistic or technique to perform on
 #'   aggregated data. If NULL (default), will calculate the mean per period
@@ -119,7 +113,7 @@ preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
 #' @export
 #'
 #' @examples
-#'
+#'\dontrun{
 #' img <- collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
@@ -128,8 +122,8 @@ preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
 #' )
 #'
 #' preprocess_ee(img, spectral = "NDVI")
-#' # aggregate_ee(img, reduce_by = "median")
-#'
+#' aggregate_ee(img, reduce_by = "median")
+#'}
 aggregate_ee <- function(object, frequency = "month", reduce_by = NULL) {
   object$aggregate(frequency, reduce_by)
   return(object)
@@ -140,7 +134,7 @@ aggregate_ee <- function(object, frequency = "month", reduce_by = NULL) {
 #' A [folium](http://python-visualization.github.io/folium/) map is produced and
 #' image(s) collected so far are displayed as layer(s) on top of the map.
 #'
-#' @param object `object`: a data object produced by [collect_e()]
+#' @param object `object`: a data object produced by [collect_ee()]
 #' @param bands `string`, `optional`: a string or list of strings representing
 #'   the bands to be visualised. If NULL, will present a list of available bands
 #'   to visualise
@@ -177,7 +171,7 @@ map_ee <- function(object, bands = NULL, minmax = NULL, palette = NULL) {
 #' Images are saved as GeoTIFF (.tif) files containing geospatial data, unless
 #' otherwise specified in `out_format`.
 #'
-#' @param object `object`: a data object produced by [collect_e()]
+#' @param object `object`: a data object produced by [collect_ee()]
 #' @param bands `string`: a string or list of strings representing the bands to
 #'   be downloaded
 #' @param scale `numeric`, `optional`: a number represeting the scale of a pixel
@@ -197,5 +191,6 @@ map_ee <- function(object, bands = NULL, minmax = NULL, palette = NULL) {
 download_ee <- function(object, bands = NULL, scale = NULL, out_path = NULL,
                         out_format = NULL, overwrite = TRUE) {
   object$download(bands, scale, out_path, out_format, overwrite)
+  class(object) <- append(class(object), "getdata_ee.download")
   return(object)
 }

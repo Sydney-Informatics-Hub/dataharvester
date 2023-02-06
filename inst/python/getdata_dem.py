@@ -34,38 +34,21 @@ Author: Sebastian Haan
 import logging
 import os
 from datetime import datetime, timezone
+import utils
+from utils import spin
 
 import rasterio
 
 # logger setup
 import write_logs
-from alive_progress import alive_bar, config_handler
 from owslib.wcs import WebCoverageService
 from rasterio.plot import show
-from termcolor import cprint, colored
+from termcolor import cprint
 
 try:
     from osgeo import gdal
 except ImportError:
     import gdal
-
-# Progress bar config for alive-progress
-config_handler.set_global(
-    force_tty=True,
-    bar=None,
-    spinner="waves",
-    monitor=False,
-    stats=False,
-    receipt=True,
-    elapsed="{elapsed}",
-)
-
-
-def spin(message=None, colour=None):
-    """
-    Spin animation as a progress inidicator
-    """
-    return alive_bar(1, title=colored(f"{message} ", colour))
 
 
 def get_demdict():
@@ -208,18 +191,18 @@ def getwcs_dem(
     os.makedirs(outpath, exist_ok=True)
     # Create WCS object and get data
     try:
-        with spin("• Retrieving coverage from WCS server", "blue") as s:
+        with spin("Retrieving coverage from WCS server") as s:
             wcs = WebCoverageService(url, version="1.0.0", timeout=300)
             s(1)
         layername = wcs["1"].title
-        date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        date = datetime.now(timezone.utc).strftime("%Y_%m_%d")
         fname_out = layername.replace(" ", "_") + "_" + date + ".tif"
         outfname = os.path.join(outpath, fname_out)
         if os.path.exists(outfname):
-            cprint(f"⚑ {fname_out} already exists, skipping download", "yellow")
+            utils.msg_warn(f"{fname_out} already exists, skipping download")
             # logging.warning(f"△ | download skipped: {outfname} already exists")
         else:
-            with spin(f"⇩ Downloading {fname_out}", "blue") as s:
+            with spin(f"Downloading {fname_out}") as s:
                 data = wcs.getCoverage(
                     identifier="1",
                     bbox=bbox,
@@ -234,8 +217,9 @@ def getwcs_dem(
             with open(outfname, "wb") as f:
                 f.write(data.read())
             # logging.print(f"✓ | DEM downloaded to: {outfname}")
-    except:
-        logging.error("Download failed")
+    except Exception as e:
+        print(e)
+        utils.msg_err("Download failed, is the server down?")
         return False
     return outfname
 
@@ -280,7 +264,7 @@ def get_dem_layers(layernames, outpath, bbox, resolution=1, crs="EPSG:4326"):
                 dem_ok = True
             outfname = dem2aspect(outfname_dem)
         else:
-            cprint(f"⚑ Layername {layername} not recognised, skipping", "yellow")
+            utils.msg_warn(f"Layername {layername} not recognised, skipping")
             outfname = None
         outfnames.append(outfname)
     return outfnames
@@ -315,8 +299,7 @@ def dem2slope(fname_dem):
     fname_out = os.path.join(path, "Slope_" + fname)
     gdal.DEMProcessing(fname_out, fname_dem, "slope")
     logging.info(f"✔  DEM slope from: {fname_dem}")
-    # logging.print(f"✔ DEM slope generated at: {fname_out}")
-    cprint(f"✔ DEM slope generated at: {fname_out}", "blue")
+    utils.msg_success(f"DEM slope generated at: {fname_out}")
     return fname_out
 
 
@@ -336,7 +319,7 @@ def dem2aspect(fname_dem):
     fname_out = os.path.join(path, "Aspect_" + fname)
     gdal.DEMProcessing(fname_out, fname_dem, "aspect")
     logging.info(f"✓ | DEM aspect from: {fname_dem}")
-    logging.print(f"✓ | DEM aspect generated at: {fname_out}")
+    utils.msg_success(f"Aspect (from DEM) generated at: {fname_out}")
     return fname_out
 
 

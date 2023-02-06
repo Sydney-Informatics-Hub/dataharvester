@@ -46,8 +46,7 @@ cloud/shadow masking may not be available. Must be used on an object created
 by the function, \code{\link[=collect_ee]{collect_ee()}}
 }
 \examples{
-NULL
-
+\dontrun{
 img <- collect_ee(
   collection = "LANDSAT/LC09/C02/T1_L2",
   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
@@ -56,5 +55,5 @@ img <- collect_ee(
 )
 
 preprocess_ee(img, spectral = "NDVI")
-
+}
 }

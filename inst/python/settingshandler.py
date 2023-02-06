@@ -3,6 +3,7 @@
 import yaml
 import urllib
 import json
+import os
 from types import SimpleNamespace
 
 # Defaul settings yaml file

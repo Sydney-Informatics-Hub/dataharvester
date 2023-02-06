@@ -1,0 +1,95 @@
+---
+title: "Introduction to dataharvester"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to dataharvester}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+**Important: `dataharvester` is in early pre-release and is still undergoing active development. Please report any bugs in the [issues](https://github.com/Sydney-Informatics-Hub/dataharvester/issues) tab on GitHub.**
+
+The `dataharvester` package is a wrapper for several Python modules developed for the [Agricultural Research Federation](https://www.agrefed.org.au/) and allows users to preprocess, aggregate, visualise and download an expanding range of geospatial data from a range of Australian and international data sources via publicly available APIs. Called the Data-Harvester, the aim is to improve the sharing and reuse of Australian agricultural research datasets, metadata, and data related products. 
+
+Use of the `dataharvester` package is **not** limited to agricultural researches only. In many cases, `dataharvester` taps into API sources that are useful to environmental scientists, ecologists, geologists and other researchers.
+
+An advantage of using the `dataharvester` package is a standardised and consistent syntax to download from multiple APIs. In addition, the user is shielded from most of the Python interface, although some dependencies such as GDAL and the Google Cloud API must be manually configured for Windows users. In most cases, these are "simple" to install as they are available as installers and detailed instructions are provided [here](). 
+
+Below, we briefly describe the `dataharvester` workflow.
+
+## Initialise
+
+Before using the package, the user must ensure that they have all the necessary dependencies installed for all of `dataharvester` functions to work. This step takes approximately 15 minutes to complete. Once done, subsequent initialisations will take a couple of seconds.
+
+A Binder.org environment specific for `dataharvester` is also available for users who just want to download small datasets quickly without wanting to set up Python and R - instructios [here]().
+
+To use `dataharvester` on your local computer, the first step is to install the package from GitHub. The `remotes` package is necessary for this as we are downloading from an external source -- un-comment and run `install.packages("remotes")` if necessary.
+
+```{r eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("sydney-informatics-hub/dataharvester")
+```
+
+Once the package has been installed, initialise with the `initialise_harvester()` function. An environment name must be provided here to provide a location for dependencies, and the default environment for R is normally `"r-reticulate"`. For users who use Python and have already configured `"r-reticulate"` for other projects, choose any other environment name in this step.
+
+```{r eval=FALSE}
+initialise_harvester("r-reticulate")
+```
+
+R will automatically use the `reticulate` package to configure, install and setup a Python environment through miniconda with minimal prompts to the user. Follow the prompts (if any) in the R console, and the environment should be set up in a few minutes. If you encounter issues, it is likely that you have configured Python manually in RStudio's settings or `.Rprofile`. We assume that you are able to troubleshoot by yourself here, although the most common solutions are to:
+
+- specify a different environment name in `initialise_harvester()`, or
+- use the command line interface to create a new conda environment, and then refer to it in `initialise_harvester()` as the function will be able to auto-detect currently-available environments.
+
+
+## Preprocesss
+
+Preprocessing steps occur for data that can be manipulated on external servers before they are downloaded. For now, this is exclusive to the Google Earth Engine (GEE) API since it can process images on Google Cloud. Access to the GEE API requires additional authentication steps which can be done with `initialise_harvester()` using an additional argument, `earthengine= TRUE`:
+
+```{r eval=FALSE}
+initialise_harvester("r-reticulate", earthengine = TRUE)
+```
+
+When this function is evaluated, the Google Cloud CLI will take over and help you authenticate with an existing Google account. A new browser window may pop up to help you generate an API token so that you can gain access to the GEE API. This step is swift on a local machine - but if you are using a binder.org environment or RStudio Cloud, you may need to perform a different authentication method described [here]().
+
+
+## Download
+
+In most cases, data are downloaded as geospatial images (i.e. GeoTIFF) which can then be further processed. Download functions are standardised in both naming prefix and syntax. In most cases, downloads are requested using a `download_*()` function with the minimal inputs for:
+
+1. the product or layer name(s) to access (defined by the API),
+2. a path to a folder, where downloads will be stored (for processing, if needed), and
+3. an area of interest defined by a bounding box in [EPSG:4326](https://epsg.io/4326)
+ 
+Each `download_*` function has additional arguments that are unique for the API used, but the three arguments will be sufficient to request and download data products from the respective servers:
+
+```{r eval=FALSE}
+# The code below is an example and will NOT evaluate:
+download_*(layer = <layername>,
+           out_path = <path to folder>,
+           bbox = <xmin, ymin, xmax, ymax>)
+
+```
+
+For more information on downloads, refer to each download function in the Reference section:
+
+- `download_dea()`
+- `download_dem()`
+- `download_landscape()`
+- `download_radiometric()`
+- `download_silo()`
+- `download_slga()`
+- `download_gee()`
+
+## Process and sample data
+
+Once data has been downloaded, functions are available to process the data further, which include:
+
+- sampling for data based on available sampling coordinates, with `raster_query()` 
+- temporal aggregation, using `aggregate_temporal()`
+
+Of course, since downloaded data are in open GeoTIFF and CSV formats, users may also utilise other R packges (e.g. `terra`) to manipulate the data on their own.
+
+## What's next
+
+The Data-Harvester is still being actively developed and more functions will soon be available for statistical modelling and machine learning workflows.
+

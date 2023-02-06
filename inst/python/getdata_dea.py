@@ -48,28 +48,12 @@ from rasterio import MemoryFile
 from rasterio.plot import show
 from datetime import datetime, timezone
 from termcolor import cprint, colored
-from alive_progress import alive_bar, config_handler
-
+import utils
+from utils import spin
 
 # logger setup
 import write_logs
 import logging
-
-# Progress bar config for alive-progress
-config_handler.set_global(
-    force_tty=True,
-    bar=None,
-    spinner="waves",
-    monitor=False,
-    stats=False,
-    receipt=True,
-    elapsed="{elapsed}",
-)
-
-
-def spin(message=None, colour=None):
-    """Spin animation as a progress inidicator"""
-    return alive_bar(1, title=colored(f"{message} ", colour))
 
 
 def get_deadict():
@@ -548,12 +532,12 @@ def get_wcsmap(
     nheight = int(height / resolution * 3600)
     # Get data
     if os.path.exists(outfname):
-        cprint(f"⚑ {layername}.tif already exists, skipping download", "yellow")
+        utils.msg_warn(f"{layername}.tif already exists, skipping download")
         # logging.warning(f"▲ | Download skipped: {layername} already exists")
         # logging.info(f"  | Location: {outfname}")
     else:
         try:
-            with spin(f"⇩ {layername}.tif for date: {date}", "blue") as s:
+            with spin(f"Downloading {layername}.tif for {date}") as s:
                 wcs = WebCoverageService(url, version="1.0.0", timeout=300)
                 if date == "None":
                     data = wcs.getCoverage(
@@ -578,7 +562,7 @@ def get_wcsmap(
                     )
                 s(1)
         except:
-            print("Download failed")
+            utils.msg_err("Download failed")
             return False
         # Save data
         with open(outfname, "wb") as f:
@@ -648,7 +632,7 @@ def get_dea_layers(
                 crs=crs,
                 format_out=format_out,
             )
-        fnames_out.append(outfnames)
+        fnames_out += outfnames
     # logging.print(f"DEA download(s) complete (saved to: {outpath})")
     return fnames_out
 
@@ -746,8 +730,6 @@ def get_dea_images(
             datestring = datetime.fromisoformat(date[:-1]).astimezone(timezone.utc)
             fname_out = f"{layername}_{datestring.year}-{datestring.month}-{datestring.day}{fname_end}"
         outfname = os.path.join(outpath, fname_out)
-        if os.path.exists(outfname):
-            outfnames.append(outfname)
         # Get data
         download_ok = get_wcsmap(
             outfname,
@@ -764,7 +746,6 @@ def get_dea_images(
             outfnames.append(outfname)
         else:
             cprint(f"✘ {layername} for date {date} failed to download", "red")
-    # return [item for sublist in outfnames for item in sublist]
     return outfnames
 
 

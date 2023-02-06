@@ -1,0 +1,102 @@
+---
+title: "download_landscape()"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{download_landscape()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Description
+
+The landscape attribute products available from the Soil and Landscape Grid of Australia (SLGA) were derived from DEM-S, the smoothed version of the national 1 second resolution Digital Elevation Model, which was derived from the 1 second resolution Shuttle Radar Topography Mission (SRTM) data acquired by NASA in February 2000.
+
+- Module name: getdata_landscape.py
+- Resolution: 3 arcsec
+- Updates: None
+- Source: https://www.clw.csiro.au/aclep/soilandlandscapegrid/ProductDetails.html"
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+- Attribution: CSIRO Australia, TERN (University of Queensland)
+- Bounding Box: (112.99958, -44.00042, 153.99958, -10.0004)
+
+## Layers
+
+- 'Prescott_index'
+   - key: '1'
+   - title: Prescott Index
+   - description: Prescott Index derived from 1 second DEM-S version 0.1
+- 'net_radiation_jan'
+   - key: '2'
+   - title: Net Radiation [January]
+   - description: None
+- 'net_radiation_july'
+   - key: '3'
+   - title: Net Radiation [July]
+   - description: None
+- 'total_shortwave_sloping_surf_jan'
+   - key: '4'
+   - title: Total Shortwave Sloping Surf [January]
+   - description: None
+- 'total_shortwave_sloping_surf_july'
+   - key: '5'
+   - title: Total Shortwave Sloping Surf [July]
+   - description: None
+- 'Slope'
+   - key: '6'
+   - title: Slope [percent]
+   - description: Percent slope (3” resolution) derived from 1 second DEM-S version 0.1
+- 'Slope_median_300m'
+   - key: '7'
+   - title: Slope [percent] Median 300m Radius
+   - description: Median of Percent slope at 300m radius (3” resolution) derived from 1 second DEM-S version 0.1
+- 'Slope_relief_class'
+   - key: '8'
+   - title: Slope Relief Class
+   - description: Slope relief (3” resolution) derived from 1 second DEM-S version 0.1
+- 'Aspect'
+   - key: '9'
+   - title: Aspect
+   - description: Aspect (3” resolution) derived from 1 second DEM-S version 0.1
+- 'Relief_1000m'
+   - key: '10'
+   - title: Relief [1000m radius]
+   - description: 1000 m elevation range (3” resolution) derived from 1 second DEM-S version 0.1
+- 'Relief_300m'
+   - key: '11'
+   - title: Relief [300m radius]
+   - description: 300 m elevation range (3” resolution) derived from 1 second DEM-S version 0.1
+- 'Topographic_wetness_index'
+   - key: '12'
+   - title: Topographic Wetness Index
+   - description: Topographic Wetness Index (3” resolution) derived from 1 second DEM-H version 1.0
+- 'TPI_mask'
+   - key: '13'
+   - title: TPI Mask
+   - description: None
+- 'SRTM_TopographicPositionIndex'
+   - key: '14'
+   - title: SRTM_TopographicPositionIndex
+   - description: Topographic position index (3” resolution) derived from 1 second DEM-S version 0.1
+- 'Contributing_area'
+   - key: '15'
+   - title: Contributing Area [partial]
+   - description: Contributing Area - Multiple Flow Direction (Partial), 3” resolution, derived from 1 second DEM-H version 1.0
+- 'MrVBF'
+   - key: '16'
+   - title: MrVBF
+   - description: Multi-resolution Valley Bottom Flatness (MrVBF) at 3 second resolution derived from 1 second DEM-S version 1.0
+- 'Plan_curvature'
+   - key: '17'
+   - title: Plan Curvature
+   - description: Plan curvature (3” resolution) derived from 1 second DEM-S version 0.1
+- 'Profile_curvature'
+   - key: '18'
+   - title: Profile Curvature
+   - description: Profile curvature (3”resolution) derived from 1 second DEM-S version 0.1
