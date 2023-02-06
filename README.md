@@ -1,4 +1,3 @@
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 <img src="man/figures/logo_r.png" width="300" style="display: block; margin: auto;" />
