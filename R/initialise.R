@@ -51,33 +51,8 @@ initialise_harvester <- function(
     initialise_earthengine(auth_mode = auth_mode)
   }
 
-#' Authenticate to Google Earth Engine API
-#'
-#' Utilises google-cloud-sdk to initialise and authenticate to the Earth Engine
-#' API. An API token containing the user's credentials is saved locally and can
-#' be used to authenticate vial Application Default Credentials.
-#'
-#' @param auth_mode Authentication mode to access the GEE API. Using `"gcloud"`
-#'   normally works. The remaining three options are identical (`"notebook",
-#'   "rstudiocloud", "binder"`), just named differently for context
-#'
-#' @export
-authenticate_ee <- function(auth_mode = "gcloud") {
-  all_modes <- c("gcloud", "notebook", "rstudiocloud", "binder")
-  if (!(auth_mode %in% all_modes)) {
-    stop('Argument `auth_mode` must be one of "gcloud", "notebook", "rstudiocloud", "binder"')
-  }
-  path <- system.file("python", package = "dataharvester")
-  ee <- harvester_module("getdata_ee")
-  # "gcloud", "notebook", "rstudiocloud", "binder"
-  if (auth_mode %in% c("rstudiocloud", "binder")) {
-    auth_mode <- "notebook"
-  }
-  ee$initialise(auth_mode = auth_mode)
   return(invisible(TRUE))
 }
-
-
 
 #' Check if conda is available
 #'

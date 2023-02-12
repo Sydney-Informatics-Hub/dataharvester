@@ -1,3 +1,35 @@
+#' Authenticate to Google Earth Engine API
+#'
+#' Utilises google-cloud-sdk to initialise and authenticate to the Earth Engine
+#' API. An API token containing the user's credentials is saved locally and can
+#' be used to authenticate vial Application Default Credentials.
+#'
+#' @param auth_mode Authentication mode to access the GEE API. Using `"gcloud"`
+#'   normally works. The remaining three options are identical (`"notebook",
+#'   "rstudiocloud", "binder"`), just named differently for context
+#'
+#' @export
+initialise_earthengine <- function(auth_mode = NULL) {
+  eh <- reticulate::import("eeharvest")
+  all_modes <- c("gcloud", "notebook", "rstudiocloud", "binder")
+  if (is.null(auth_mode)) {
+    auth_mode <- "gcloud"
+  }
+  if (!(auth_mode %in% all_modes)) {
+    stop(paste0(
+      'Argument `auth_mode` must be one of "gcloud", "notebook", ',
+      '"rstudiocloud", "binder"'
+    ))
+    if (auth_mode %in% c("rstudiocloud", "binder")) {
+      auth_mode <- "notebook"
+    }
+  }
+  # authenticate
+  eh$initialise(auth_mode = auth_mode)
+  return(invisible(TRUE))
+}
+
+
 #' Define Google Earth Engine data to collect
 #'
 #' @param collection `string`: name of a Google Earth Engine collection.
