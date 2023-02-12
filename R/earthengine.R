@@ -254,8 +254,13 @@ map_ee <- function(object, bands = NULL, minmax = NULL, palette = NULL) {
 #' @examples
 #' NULL
 download_ee <- function(object, bands = NULL, scale = NULL, out_path = NULL,
-                        out_format = NULL, overwrite = TRUE) {
-  object$download(bands, scale, out_path, out_format, overwrite)
+                        overwrite = TRUE) {
+  object$download(
+    bands = bands,
+    scale = scale,
+    outpath = out_path,
+    overwrite = overwrite
+  )
   class(object) <- append(class(object), "getdata_ee.download")
   return(object)
 }
