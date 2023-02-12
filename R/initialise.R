@@ -84,13 +84,14 @@ authenticate_ee <- function(auth_mode = "gcloud") {
 #' @export
 validate_conda <- function(reinstall = FALSE) {
   # Is conda available? If not, install miniconda
-  message("\n\u2299 Checking Python/Conda install...")
+  message("\u2299 Checking Python/Conda install...")
   if (reinstall) {
     reticulate::miniconda_uninstall()
     reticulate::install_miniconda(force = TRUE, update = FALSE)
   } else {
     tryCatch(
       {
+        # Report current conda binary and version
         conda_binary <- reticulate::conda_binary()
         message("\u2714 Conda binary: ", conda_binary)
         return(invisible(FALSE))
@@ -98,10 +99,10 @@ validate_conda <- function(reinstall = FALSE) {
       error = function(e) {
         message(crayon::red("\u2716 Conda binary not found"))
         text_out <- paste0(
-          "You must use Anaconda/Miniconda to use `dataharvester`.",
           crayon::bold("\n\nDownload and install Miniconda. "),
-          "Miniconda is a minimalinstaller for Python and Conda.",
-          " For more information please see: ",
+          "Miniconda is a minimal installer for Python and Conda and",
+          "\n is necessary for `dataharvester` to work.",
+          "\nFor more information please see: ",
           "https://docs.conda.io/en/latest/miniconda.html"
         )
         message(paste(strwrap(text_out, width = 80), collapse = "\n"))
@@ -119,10 +120,11 @@ validate_conda <- function(reinstall = FALSE) {
             reticulate::install_miniconda(
               update = FALSE, force = TRUE
             )
+            # Explain how to uninstall miniconda manually
             text_out <- paste0(
-              "You may remove miniconda entirely by running:\n",
-              "\nreticulate::miniconda_uninstall()\n",
-              "\nin your R console.\n"
+              "You may remove miniconda at any time by running:",
+              "\n`reticulate::miniconda_uninstall()`",
+              "\nin the R console.\n"
             )
             message(text_out)
             return(invisible(TRUE))
