@@ -20,10 +20,17 @@ Description: Access, download and process geospatial image data from a growing
     list of Australian databases in one simplified interface. Products include 
     soil, climate, satellite, terrain and radiometric data layers. Also has 
     access to the Google Earth Engine Catalog.
+Config/reticulate:
+  list(
+    packages = list(
+      list(package = "geodata-harvester", pip = FALSE),
+      list(package = "eeharvest", pip = FALSE)
+    )
+  )
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     crayon,
     dplyr,
@@ -34,6 +41,7 @@ Imports:
 Suggests: 
     covr,
     knitr,
+    lifecycle,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
