@@ -222,7 +222,10 @@ map_ee <- function(object, bands = NULL, minmax = NULL, palette = NULL) {
   tempDir <- tempfile()
   dir.create(tempDir)
   htmlfile <- file.path(tempDir, "index.html")
-  object$map(bands, minmax, palette, save_to = htmlfile)
+  object$map(
+    bands = bands, minmax = minmax, palette = palette,
+    save_to = htmlfile
+  )
   rstudioapi::viewer(htmlfile)
   return(object)
 }
