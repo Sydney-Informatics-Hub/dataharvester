@@ -88,25 +88,48 @@
 #'
 #' @return a list of filenames (after files have been downloaded or processed)
 #' @export
-download_dea <- function(layer,
-                         bounding_box,
-                         out_path,
-                         years,
-                         resolution,
-                         crs = "EPSG:4326",
-                         format_out = "GeoTIFF") {
-  # Import module
-  dea <- harvester_module("getdata_dea")
-  # Run
-  out <- dea$get_dea_layers(
+download_dea <- function(
     layer,
-    years,
     bounding_box,
-    resolution,
     out_path,
-    crs,
-    format_out
-  )
+    years = deprecated(),
+    resolution,
+    crs = "EPSG:4326",
+    format_out = "GeoTIFF",
+    date_min = NULL,
+    date_max = NULL) {
+  # Import module
+  gd <- reticulate::import("geodata_harvester")
+
+  if (lifecycle::is_present(years)) {
+    lifecycle::deprecate_warn(
+      when = "1.0.0",
+      what = "download_dea(date)",
+      details = "`year` will be dropped in v2.0.0 - use `date_min` & `date_max` instead"
+    )
+    out <- gd$getdata_dea$get_dea_layers(
+      layernames = layer,
+      years = years,
+      bbox = bounding_box,
+      resolution = resolution,
+      outpath = out_path,
+      crs = crs,
+      format_out = format_out
+    )
+  } else {
+    out <-
+      gd$getdata_dea$get_dea_images_daterange(
+        layername = layer,
+        date_min = date_min,
+        date_max = date_max,
+        bbox = bounding_box,
+        resolution = resolution,
+        outpath = out_path,
+        crs = crs,
+        format_out = format_out
+      )
+  }
+
   class(out) <- append(class(out), "rasterPath")
   return(out)
 }
