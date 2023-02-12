@@ -141,9 +141,19 @@ collect_ee <- function(collection = NULL, coords = NULL, date_min = NULL,
 #'
 #' preprocess_ee(img, spectral = "NDVI")
 #'}
-preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
-                          spectral = NULL, clip = TRUE) {
-  object$preprocess(mask_clouds, reduce, spectral, clip)
+preprocess_ee <- function(
+    object, mask_clouds = TRUE, reduce = "median", spectral = NULL, clip = TRUE,
+    mask_probability = NULL) {
+  # Run preprocess()
+  # OOP object, no need to save as object
+  object$preprocess(
+    mask_clouds = mask_clouds,
+    mask_probability = mask_probability,
+    reduce = reduce,
+    spectral = spectral,
+    clip = clip
+  )
+
   return(object)
 }
 
