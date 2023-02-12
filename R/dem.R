@@ -18,8 +18,14 @@ download_dem <- function(layer,
                          out_path,
                          resolution = 1) {
   # Import module
-  dem <- harvester_module("getdata_dem")
-  out <- dem$get_dem_layers(as.list(layer), out_path, bounding_box)
+  gd <- reticulate::import("geodata_harvester")
+  out <-
+    gd$getdata_dem$get_dem_layers(
+      layernames = list(layer),
+      outpath = out_path,
+      bbox = bounding_box,
+      resolution = resolution
+    )
   class(out) <- append(class(out), "rasterPath")
   return(out)
 }
