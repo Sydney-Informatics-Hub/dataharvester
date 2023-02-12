@@ -7,47 +7,49 @@
 #'   "rstudiocloud", "binder"`), just named differently for context
 #'
 #' @export
-initialise_harvester <- function(envname = NULL, earthengine = FALSE,
-                                 auth_mode = "gcloud") {
-  # Check if conda exists
-  restart <- validate_conda()
-  if (restart) {
-    return(message(
-      crayon::bold("\u2691 Please restart R now (Session > Restart R)")
-    ))
+initialise_harvester <- function(
+    envname = NULL,
+    earthengine = FALSE,
+    auth_mode = NULL,
+    force_reinstall = FALSE) {
+  # Remove environment if force_reinstall = TRUE
+  if (force_reinstall) {
+    reticulate::conda_remove(envname)
   }
-  # Ensure an envname is specified
+  # Define environment to use
   if (is.null(envname)) {
-    stop(paste0(
-      "Argument `envname` must be specified, for example:\n",
-      "  initialise_harvester(envname = 'r-reticulate')"
-    ))
+    message("\u2299 Setting environment to `dataharvester`")
+    envname <- "dataharvester"
   }
-  # Check if environment can be loaded
-  message("\u2299 Verifying Python configuration...", "\r", appendLF = FALSE)
   tryCatch(
-    {
-      reticulate::use_condaenv(envname)
-      message("\u2714 Using Conda environment: ", envname)
+    # Try to activate conda environment
+    expr = {
+      message("\u2299 Activating conda environment...")
+      reticulate::use_condaenv(condaenv = envname)
     },
     error = function(e) {
-      message(
-        "\u2691 Environment '", envname,
-        "' not found, will create one now"
+      # If error occurs, create the environment instead
+      message("\n\u2757 Conda environment not found. Creating one now...")
+      Sys.sleep(2)
+      reticulate:::conda_create(
+        envname = envname,
+        # packages = c("geodata-harvester"),
+        python_version = "3.9"
       )
-      reticulate::conda_create(envname, python_version = "3.9")
-      install_dependencies(envname)
-      reticulate::use_condaenv(envname)
-      message("\u2299 Using Conda environment: ", envname)
+    },
+    finally = {
+      # Try to activate the env once more
+      reticulate::use_condaenv(condaenv = envname)
+      reticulate::import("geodata_harvester", delay_load = TRUE)
+      reticulate::import("eeharvest", delay_load = TRUE)
+      message(paste0("\u2714 Environment activated"))
     }
   )
-  validate_dependencies(envname)
+  # Activate GEE if earthengine = TRUE
   if (earthengine) {
     message("\u2299 Checking Google Earth Engine authentication")
-    authenticate_ee(auth_mode)
+    initialise_earthengine(auth_mode = auth_mode)
   }
-  return(invisible(TRUE))
-}
 
 #' Authenticate to Google Earth Engine API
 #'
