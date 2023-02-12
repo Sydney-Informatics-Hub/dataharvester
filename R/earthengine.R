@@ -131,7 +131,7 @@ collect_ee <- function(collection = NULL, coords = NULL, date_min = NULL,
 #' @export
 #'
 #' @examples
-#'\dontrun{
+#' \dontrun{
 #' img <- collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
@@ -140,7 +140,7 @@ collect_ee <- function(collection = NULL, coords = NULL, date_min = NULL,
 #' )
 #'
 #' preprocess_ee(img, spectral = "NDVI")
-#'}
+#' }
 preprocess_ee <- function(
     object, mask_clouds = TRUE, reduce = "median", spectral = NULL, clip = TRUE,
     mask_probability = NULL) {
@@ -175,7 +175,7 @@ preprocess_ee <- function(
 #' @export
 #'
 #' @examples
-#'\dontrun{
+#' \dontrun{
 #' img <- collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
@@ -185,7 +185,7 @@ preprocess_ee <- function(
 #'
 #' preprocess_ee(img, spectral = "NDVI")
 #' aggregate_ee(img, reduce_by = "median")
-#'}
+#' }
 aggregate_ee <- function(object, frequency = "month", reduce_by = NULL) {
   object$aggregate(frequency, reduce_by)
   return(object)
