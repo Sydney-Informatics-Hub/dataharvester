@@ -58,24 +58,44 @@ initialise_earthengine <- function(auth_mode = NULL) {
 #'
 #' @return an object containing attributes necessary to preprocess and and
 #'   download images for all other `*_ee()` functions
+#'
+#' @importFrom lifecycle deprecated
 #' @export
 #'
 #' @examples
-#'\dontrun{
+#' \dontrun{
 #' collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
 #'   date = "2021-06-01",
 #'   end_date = "2022-06-01"
 #' )
-#'}
-collect_ee <- function(collection = NULL, coords = NULL, date = NULL,
-                       end_date = NULL, buffer = NULL, bound = FALSE,
-                       config = NULL) {
-  ee <- harvester_module("getdata_ee")
+#' }
+collect_ee <- function(collection = NULL, coords = NULL, date_min = NULL,
+                       date_max = NULL, buffer = NULL, bound = FALSE,
+                       config = NULL, date = deprecated(),
+                       end_date = deprecated()) {
+  if (lifecycle::is_present(date)) {
+    lifecycle::deprecate_warn(
+      when = "1.0.0",
+      what = "collect_ee(date)",
+      with = "collect_ee(date_min)"
+    )
+    date_min <- date
+  }
+  if (lifecycle::is_present(end_date)) {
+    lifecycle::deprecate_warn(
+      when = "1.0.0",
+      what = "collect_ee(end_date)",
+      with = "collect_ee(dat_max)"
+    )
+    date_max <- end_date
+  }
+  # Import module
+  ee <- reticulate::import("eeharvest", delay_load = TRUE)
   out <- ee$collect(
-    collection, coords, date,
-    end_date, buffer, bound, config
+    collection = collection, coords = coords, date_min = date_min,
+    date_max = date_max, buffer = buffer, bound = bound, config = config
   )
   return(out)
 }
