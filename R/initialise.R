@@ -1,14 +1,18 @@
-#' Initialise and validate Data-Harvester, including dependencies
+#' Initialise and validate Data-Harvester, including dependencies 2
 #'
-#' @param envname Use this Conda environment. Defaults to `"r-reticulate"`
+#' @param envname Use this Conda environment. Defaults to `"r-harvester"`
 #' @param earthengine Initialise Earth Engine if `TRUE.` Defaults to `FALSE`
 #' @param auth_mode Authentication mode to access the GEE API. Using `"gcloud"`
 #'   normally works. The remaining three options are identical (`"notebook",
 #'   "rstudiocloud", "binder"`), just named differently for context
 #'
 #' @export
+
+library(reticulate)
+
 initialise_harvester <- function(envname = NULL, earthengine = FALSE,
                                  auth_mode = "gcloud") {
+  message("\u2714 Initialise harvester...")
   # Check if conda exists
   restart <- validate_conda()
   if (restart) {
@@ -20,7 +24,7 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
   if (is.null(envname)) {
     stop(paste0(
       "Argument `envname` must be specified, for example:\n",
-      "  initialise_harvester(envname = 'r-reticulate')"
+      "  initialise_harvester(envname = 'r-harvester')"
     ))
   }
   # Check if environment can be loaded
@@ -36,16 +40,28 @@ initialise_harvester <- function(envname = NULL, earthengine = FALSE,
         "' not found, will create one now"
       )
       reticulate::conda_create(envname, python_version = "3.9")
-      install_dependencies(envname)
-      reticulate::use_condaenv(envname)
+      use_condaenv(envname)
       message("\u2299 Using Conda environment: ", envname)
+      message("\u2299 Installing geodata-harvester package...")
+      reticulate::conda_install(
+        envname = envname,
+        packages = "geodata-harvester",
+        channel = "conda-forge"
+      )
     }
   )
+
   validate_dependencies(envname)
+
+  #import geodata-harvester and add to global environment
+  message("\u2299 Importing geodata-harvester Python package as gdh")
+  .GlobalEnv$gdh <- reticulate::import("geodata_harvester")
+
   if (earthengine) {
     message("\u2299 Checking Google Earth Engine authentication")
     authenticate_ee(auth_mode)
   }
+  message("\u2714 Harvester initialized.")
   return(invisible(TRUE))
 }
 
@@ -144,13 +160,6 @@ validate_conda <- function(reinstall = FALSE) {
 #' @noRd
 install_dependencies <- function(envname) {
   # Create environment first
-  # Horrible way to check if we are on RStudio Cloud by checking GDAL version
-  use_pygdal <- FALSE
-  if (terra::gdal() == "3.0.4") {
-    use_pygdal <- TRUE
-  }
-
-  # check if windows user - can't install google-cloud-sdk if so
 
   if (.Platform$OS.type == "windows") {
     windows <- TRUE
@@ -158,55 +167,13 @@ install_dependencies <- function(envname) {
     windows <- FALSE
   }
 
-  # Install dependencies
-  if (use_pygdal) {
-    reticulate::conda_install(
-      envname = envname,
-      packages = c("rasterio==1.2.10", "pygdal==3.0.4.11"),
-      pip = TRUE
-    )
-    reticulate::conda_install(
-      envname = envname,
-      packages = "google-cloud-sdk",
-      channel = "conda-forge"
-    )
-  } else {
-    reticulate::conda_install(
-      envname = envname,
-      packages = c("gdal", "rasterio"),
-      channel = "conda-forge"
-    )
-  }
-  # Install google-cloud-sdk as long as OS is not Windows
-  if (!windows) {
-    reticulate::conda_install(
-      envname = envname,
-      packages = c("google-cloud-sdk"),
-      channel = "conda-forge"
-    )
-  }
-
-  # remainder conda installs
+  # Install dependencies (geodata-harvester comes with all dependencies)
   reticulate::conda_install(
     envname = envname,
-    packages = c(
-      "alive-progress",
-      "eemont",
-      "geemap",
-      "geedim",
-      "geopandas",
-      "netcdf4",
-      "numba",
-      "owslib",
-      "ipykernel",
-      "ipywidgets==7.6.5",
-      "earthengine-api",
-      "rioxarray",
-      "wxee",
-      "termcolor"
-    ),
-    pip = TRUE
-  )
+    packages = c("geodata-harvester"),
+      channel = "conda-forge"
+    )
+
 }
 
 #' Validate Python dependencies for dataharvester
@@ -214,30 +181,12 @@ install_dependencies <- function(envname) {
 #' Better validations are needed, but this will do for now.
 #'
 #' @noRd
-validate_dependencies <- function(envname = "r-reticulate") {
+validate_dependencies <- function(envname = "r-harvester") {
   # Note: a Conda environment must be loaded first or this function will fail
   # List required packages
   message("\n\u2299 Validating dependencies...", "\r", appendLF = FALSE)
   checklist <- c(
-    # pip
-    "alive-progress",
-    "eemont",
-    "geemap",
-    "geedim",
-    "geopandas",
-    "netcdf4",
-    "numba",
-    "owslib",
-    "ipykernel",
-    "ipywidgets",
-    "earthengine-api",
-    "rioxarray",
-    "wxee",
-    "termcolor",
-    # conda
-    # "gdal", # TODO: will fail for cloud users
-    "rasterio"
-    # "google-cloud-sdk" # TODO: will fail for windows users
+    "geodata-harvester"
   )
   # Filter package list for checks
   py_avail_modules <-
