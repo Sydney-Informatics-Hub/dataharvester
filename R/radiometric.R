@@ -33,7 +33,7 @@ download_radiometric <- function(layer,
                                  crs = "EPSG:4326",
                                  format_out = "GeoTIFF") {
   # Import module
-  rad <- harvester_module("getdata_radiometric")
+  rad <- gdh$getdata_radiometric
   # Run
   out <- rad$get_radiometric_layers(
     out_path,
