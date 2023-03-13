@@ -1,7 +1,7 @@
 # This settings file works for Google Earth Engine functionality on
 # the Data Harvester notebook.
 
-infile: data/example-site_llara.csv
+infile: dataharvester/data/example-site_llara.csv
 outpath: results/
 colname_lat: Lat
 colname_lng: Long
