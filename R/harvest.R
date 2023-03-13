@@ -23,9 +23,19 @@ harvest <- function(path_to_config,
                     contour = FALSE) {
   # ensure that the full path is known when transferring to Python
   path_to_config <- normalizePath(path_to_config)
-  harvest <- harvester_module("harvest")
-  harvest$run(path_to_config, log_name, preview = FALSE)
+
+  # import harvest module from geodata-harvester
+  harvest <- gdh$harvest
+
+  # run harvest
+  harvest$run(path_to_config,
+              log_name,
+              preview = FALSE)
+
+  # load config settings (see yaml.R)
   config <- load_settings(path_to_config)
+
+  # plot rasters
   if (plot & !is.null(config$infile)) {
     samples <- read.csv(config$infile)
     x <- samples[[config$colname_lat]]

@@ -5,7 +5,8 @@
 #' @return A settings namespace object
 #' @export
 load_settings <- function(path_to_yaml) {
-  set <- harvester_module("settingshandler")
+  # import geodata-harvester settingshandler
+  set <- gdh$settingshandler
   out <- set$main(path_to_yaml, to_namespace = FALSE)
   return(out)
 }
