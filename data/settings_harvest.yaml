@@ -1,0 +1,44 @@
+# This settings file works for Google Earth Engine functionality on
+# the Data Harvester notebook.
+
+infile: data/example-site_llara.csv
+outpath: results/
+colname_lat: Lat
+colname_lng: Long
+
+# Bounding box: Left, Top, Right, Bottom
+target_bbox: [149.769345, -30.335861, 149.949173, -30.206271]
+# Reolution of data download in arcseconds
+target_res: 6.0
+#target_dates: 2021
+date_min : 2022-10-01
+time_intervals : 4
+date_max : 2022-11-30
+time_buffer : 7
+
+target_sources:
+  DEA:
+  - landsat_barest_earth
+  DEM:
+  - DEM
+  Landscape: [Slope, Aspect]
+  Radiometric:
+  - radmap2019_grid_dose_terr_awags_rad_2019
+  - radmap2019_grid_dose_terr_filtered_awags_rad_2019
+  SILO:
+    max_temp: median
+    min_temp: median
+    monthly_rain: sum
+  SLGA:
+    Bulk_Density: [0-5cm]
+    Clay: [0-5cm]
+  GEE:
+    preprocess:
+      collection: LANDSAT/LC09/C02/T1_L2
+      buffer: null
+      bound: null
+      mask_clouds: True
+      reduce: median
+      spectral: NDVI
+    download:
+      bands: NDVI
