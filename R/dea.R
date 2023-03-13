@@ -80,7 +80,8 @@
 #' @param layer `r params(layer)`
 #' @param bounding_box `r params(bounding_box)`
 #' @param out_path `r params(out_path)`
-#' @param years `r params(years)`
+#' @param date_min `r params(date_min)`
+#' @param date_max `r params(date_max)`
 #' @param resolution `r params(resolution)`
 #' @param crs `r params(crs)`
 #' @param format_out Output format, either "GeoTIFF" or "NetCDF". Defaults to
@@ -88,19 +89,21 @@
 #'
 #' @return a list of filenames (after files have been downloaded or processed)
 #' @export
-download_dea <- function(layer,
+download_dea <- function(layernames,
                          bounding_box,
                          out_path,
-                         years,
+                         date_min,
+                         date_max,
                          resolution,
                          crs = "EPSG:4326",
                          format_out = "GeoTIFF") {
   # Import module
-  dea <- harvester_module("getdata_dea")
+  dea <- gdh$getdata_dea
   # Run
-  out <- dea$get_dea_layers(
-    layer,
-    years,
+  out <- dea$get_dea_layers_daterange(
+    layernames,
+    date_min,
+    date_max,
     bounding_box,
     resolution,
     out_path,

@@ -19,7 +19,7 @@
 #' - `Depth_of_Regolith`
 #' - `Depth_of_Soil`
 #'
-#' @param layer `r params(layer)`
+#' @param layernames `r params(layernames)`
 #' @param bounding_box `r params(bounding_box)`
 #' @param out_path `r params(out_path)`
 #' @param resolution `r params(resolution)`
@@ -32,7 +32,7 @@
 #'
 #' @return a list of filenames (after files have been downloaded or processed)
 #' @export
-download_slga <- function(layer,
+download_slga <- function(layernames,
                           bounding_box,
                           out_path,
                           resolution = 3,
@@ -42,10 +42,10 @@ download_slga <- function(layer,
                           verbose = FALSE) {
 
   # Import module
-  slga <- harvester_module("getdata_slga")
+  slga <- gdh$getdata_slga
   # Run
   out <- slga$get_slga_layers(
-    layer,
+    layernames,
     bounding_box,
     out_path,
     resolution,
