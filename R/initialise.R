@@ -81,8 +81,12 @@ authenticate_ee <- function(auth_mode = "gcloud") {
   if (!(auth_mode %in% all_modes)) {
     stop('Argument `auth_mode` must be one of "gcloud", "notebook", "rstudiocloud", "binder"')
   }
-  path <- system.file("python", package = "dataharvester")
-  ee <- harvester_module("getdata_ee")
+
+  # import Google eartth engine garvetsre package eeharvets
+  message("\u2299 Importing eeharvester Python package as ee")
+  eeharvest <- reticulate::import("eeharvest")
+  .GlobalEnv$ee <- eeharvest$harvester
+
   # "gcloud", "notebook", "rstudiocloud", "binder"
   if (auth_mode %in% c("rstudiocloud", "binder")) {
     auth_mode <- "notebook"
