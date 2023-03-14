@@ -2,7 +2,7 @@
 % Please edit documentation in R/initialise.R
 \name{initialise_harvester}
 \alias{initialise_harvester}
-\title{Initialise and validate Data-Harvester, including dependencies}
+\title{Initialise and validate Data-Harvester, including all dependencies}
 \usage{
 initialise_harvester(envname = NULL, earthengine = FALSE, auth_mode = "gcloud")
 }
@@ -15,5 +15,5 @@ initialise_harvester(envname = NULL, earthengine = FALSE, auth_mode = "gcloud")
 normally works. The remaining three options are identical (\verb{"notebook", "rstudiocloud", "binder"}), just named differently for context}
 }
 \description{
-Initialise and validate Data-Harvester, including dependencies
+Initialise and validate Data-Harvester, including all dependencies
 }

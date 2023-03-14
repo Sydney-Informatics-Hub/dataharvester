@@ -21,7 +21,9 @@ download_dea(
 
 \item{out_path}{Path to an output/download folder, e.g. \code{'downloads/'}}
 
-\item{years}{Year(s) to download data from (if available), e.g. \code{2019:2021} or \code{c(2015, 2020)}}
+\item{date_min}{\code{string} Start date to download in YYYY-MM-DD, e.g. \code{2019-10-01}}
+
+\item{date_max}{\code{string} End date to download in YYYY-MM-DD, e.g. \code{2019-11-01}}
 
 \item{resolution}{An integer value for resolution, in arc seconds}
 

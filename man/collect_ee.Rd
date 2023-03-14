@@ -22,14 +22,9 @@ Collections can be found on the \href{https://developers.google.com/earth-engine
 one set of coordinates should be provided to create a point coordinate. If
 more than one set of coordinates is provided, a polygon will be created}
 
-\item{date}{\code{string}: Start date of image(s) to be collected in YYYY-MM-DD or
-YYYY format. If YYY-MM-DD is provided, will search the specific date only
-(which may not contain an image), unless \code{end_date} is also provided, which
-will collect images between the two dates. If YYYY is provided, all images
-within the specified year will be included in the collection}
+\item{date_min}{\code{string} Start date to download in YYYY-MM-DD, e.g. \code{2019-10-01}}
 
-\item{end_date}{\code{string}, \code{optional}:  When paired with \code{date} argument, can
-define a date range in YYYY-MM-DD or YYYY format}
+\item{date_max}{\code{string} End date to download in YYYY-MM-DD, e.g. \code{2019-11-01}}
 
 \item{buffer}{\code{integer}, \code{optional}: If \code{coords} is a single point, \code{buffer}
 can be used to create a circular buffer with the specific radius in metres.
