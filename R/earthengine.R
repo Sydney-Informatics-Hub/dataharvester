@@ -6,13 +6,13 @@
 #' @param coords `numeric`: GPS coordinates in WGS84 \[East, North\]. Minimum of
 #'   one set of coordinates should be provided to create a point coordinate. If
 #'   more than one set of coordinates is provided, a polygon will be created
-#' @param date `string`: Start date of image(s) to be collected in YYYY-MM-DD or
+#' @param date_min `string`: Start date of image(s) to be collected in YYYY-MM-DD or
 #'   YYYY format. If YYY-MM-DD is provided, will search the specific date only
 #'   (which may not contain an image), unless `end_date` is also provided, which
 #'   will collect images between the two dates. If YYYY is provided, all images
 #'   within the specified year will be included in the collection
-#' @param end_date `string`, `optional`:  When paired with `date` argument, can
-#'   define a date range in YYYY-MM-DD or YYYY format
+#' @param date_max `string`:  End date of image(s) to be collected in YYYY-MM-DD or
+#'   YYYY format.
 #' @param buffer `integer`, `optional`: If `coords` is a single point, `buffer`
 #'   can be used to create a circular buffer with the specific radius in metres.
 #'   If `coords` contains more than one set of coordinates, this argument does
@@ -33,8 +33,8 @@
 #' collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
-#'   date = "2021-06-01",
-#'   end_date = "2022-06-01"
+#'   date_min = "2021-06-01",
+#'   date_max = "2021-07-01"
 #' )
 #'}
 collect_ee <- function(collection = NULL, coords = NULL, date_min = NULL,
@@ -96,8 +96,8 @@ collect_ee <- function(collection = NULL, coords = NULL, date_min = NULL,
 #' img <- collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
-#'   date = "2021-06-01",
-#'   end_date = "2022-06-01"
+#'   date_min = "2021-06-01",
+#'   date_max = "2021-07-01"
 #' )
 #'
 #' preprocess_ee(img, spectral = "NDVI")
@@ -133,8 +133,8 @@ preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
 #' img <- collect_ee(
 #'   collection = "LANDSAT/LC09/C02/T1_L2",
 #'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
-#'   date = "2021-06-01",
-#'   end_date = "2022-06-01"
+#'   date_min = "2021-06-01",
+#'   date_max = "2021-07-01"
 #' )
 #'
 #' preprocess_ee(img, spectral = "NDVI")
@@ -220,16 +220,6 @@ download_ee <- function(object, bands = NULL, scale = NULL, out_path = NULL,
 #' @return an object containing attributes necessary to preprocess and and
 #'   download images for all other `*_ee()` functions
 #' @export
-#'
-#' @examples
-#'\dontrun{
-#' collect_ee(
-#'   collection = "LANDSAT/LC09/C02/T1_L2",
-#'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
-#'   date = "2021-06-01",
-#'   end_date = "2022-06-01"
-#' )
-#'}
 auto_ee <- function(path_to_config) {
   # check if object ee exists, if not install and initialise
   if( !exists("ee") )
