@@ -1,6 +1,28 @@
 #' Define Google Earth Engine data to collect
 #'
-#' @param path_to_config `string`: path to YAML config file
+#' @param collection `string`: name of a Google Earth Engine collection.
+#'   Collections can be found on the [Google Earth Engine
+#'   Catalog](https://developers.google.com/earth-engine/datasets)
+#' @param coords `numeric`: GPS coordinates in WGS84 \[East, North\]. Minimum of
+#'   one set of coordinates should be provided to create a point coordinate. If
+#'   more than one set of coordinates is provided, a polygon will be created
+#' @param date `string`: Start date of image(s) to be collected in YYYY-MM-DD or
+#'   YYYY format. If YYY-MM-DD is provided, will search the specific date only
+#'   (which may not contain an image), unless `end_date` is also provided, which
+#'   will collect images between the two dates. If YYYY is provided, all images
+#'   within the specified year will be included in the collection
+#' @param end_date `string`, `optional`:  When paired with `date` argument, can
+#'   define a date range in YYYY-MM-DD or YYYY format
+#' @param buffer `integer`, `optional`: If `coords` is a single point, `buffer`
+#'   can be used to create a circular buffer with the specific radius in metres.
+#'   If `coords` contains more than one set of coordinates, this argument does
+#'   nothing
+#' @param bound `logical`, `optional`: If `buffer` contains an integer value,
+#'   this agrument will convert the circular buffer to a bounding box instead.
+#'   Defaults to FALSE
+#' @param config `string`, `optional`: Path to a configuration file in .yaml
+#'   format. When this is provided, all arguments are ignored and the function
+#'   will refer to the configuration file to determine argument values
 #'
 #' @return an object containing attributes necessary to preprocess and and
 #'   download images for all other `*_ee()` functions
@@ -15,17 +37,28 @@
 #'   end_date = "2022-06-01"
 #' )
 #'}
-collect_ee <- function(path_to_config) {
+collect_ee <- function(collection = NULL, coords = NULL, date_min = NULL,
+                       date_max = NULL, buffer = NULL, bound = FALSE,
+                       config = NULL) {
   # check if object ee exists, if not install and initialise
   if( !exists("ee") )
   {stop(
-  message("Earth Engine not yet initialised,
+    message("Earth Engine not yet initialised,
   Call function initialise_harvester with argument earthengine = TRUE"))
-    }
+  }
   # run gee with settings file
-  out <- ee$auto(config=path_to_config)
+  out <- ee$collect(
+    collection,
+    coords,
+    date_min,
+    date_max,
+    buffer = buffer,
+    config = config,
+    bound = bound
+  )
   return(out)
 }
+
 
 
 #' Preprocess an Earth Engine Image or Image Collection
@@ -71,7 +104,10 @@ collect_ee <- function(path_to_config) {
 #'}
 preprocess_ee <- function(object, mask_clouds = TRUE, reduce = "median",
                           spectral = NULL, clip = TRUE) {
-  object$preprocess(mask_clouds, reduce, spectral, clip)
+  object$preprocess(mask_clouds = mask_clouds,
+                    reduce = reduce,
+                    spectral = spectral,
+                    clip = clip)
   return(object)
 }
 
@@ -170,7 +206,38 @@ map_ee <- function(object, bands = NULL, minmax = NULL, palette = NULL) {
 #' NULL
 download_ee <- function(object, bands = NULL, scale = NULL, out_path = NULL,
                         out_format = NULL, overwrite = TRUE) {
-  object$download(bands, scale, out_path, out_format, overwrite)
+  object$download(bands,
+                  scale =scale ,
+                  out_path = out_path,
+                  out_format = out_format,
+                  overwrite = overwrite)
   class(object) <- append(class(object), "getdata_ee.download")
   return(object)
+}
+
+#' @param path_to_config `string`: path to YAML config file
+#'
+#' @return an object containing attributes necessary to preprocess and and
+#'   download images for all other `*_ee()` functions
+#' @export
+#'
+#' @examples
+#'\dontrun{
+#' collect_ee(
+#'   collection = "LANDSAT/LC09/C02/T1_L2",
+#'   coords = c(149.769345, -30.335861, 149.949173, -30.206271),
+#'   date = "2021-06-01",
+#'   end_date = "2022-06-01"
+#' )
+#'}
+auto_ee <- function(path_to_config) {
+  # check if object ee exists, if not install and initialise
+  if( !exists("ee") )
+  {stop(
+    message("Earth Engine not yet initialised,
+  Call function initialise_harvester with argument earthengine = TRUE"))
+  }
+  # run gee with settings file
+  out <- ee$auto(config=path_to_config)
+  return(out)
 }
