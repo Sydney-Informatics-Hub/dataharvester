@@ -16,6 +16,12 @@
 #' )
 #'}
 collect_ee <- function(path_to_config) {
+  # check if object ee exists, if not install and initialise
+  if( !exists("ee") )
+  {stop(
+  message("Earth Engine not yet initialised,
+  Call function initialise_harvester with argument earthengine = TRUE"))
+    }
   # run gee with settings file
   out <- ee$auto(config=path_to_config)
   return(out)
