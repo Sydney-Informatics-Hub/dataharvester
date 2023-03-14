@@ -83,17 +83,12 @@ one set of coordinates should be provided to create a point coordinate. If
 more than one set of coordinates is provided, a polygon will be created</p></dd>
 
 
-<dt>date</dt>
-<dd><p><code>string</code>: Start date of image(s) to be collected in YYYY-MM-DD or
-YYYY format. If YYY-MM-DD is provided, will search the specific date only
-(which may not contain an image), unless <code>end_date</code> is also provided, which
-will collect images between the two dates. If YYYY is provided, all images
-within the specified year will be included in the collection</p></dd>
+<dt>date_min</dt>
+<dd><p><code>string</code> Start date to download in YYYY-MM-DD, e.g. <code>2019-10-01</code></p></dd>
 
 
-<dt>end_date</dt>
-<dd><p><code>string</code>, <code>optional</code>:  When paired with <code>date</code> argument, can
-define a date range in YYYY-MM-DD or YYYY format</p></dd>
+<dt>date_max</dt>
+<dd><p><code>string</code> End date to download in YYYY-MM-DD, e.g. <code>2019-11-01</code></p></dd>
 
 
 <dt>buffer</dt>
