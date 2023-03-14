@@ -22,9 +22,7 @@ undergoing active development. Please report any bugs in the
 [issues](https://github.com/Sydney-Informatics-Hub/dataharvester/issues)
 tab.**
 
-`dataharvester` is an R interface to the
-[AgReFed](https://www.agrefed.org.au/) Geodata-Harvester. Use
-`dataharvester` to preprocess, aggregate, visualise and download
+`dataharvester` is an R interface to the [Geodata-Harvester](https://github.com/Sydney-Informatics-Hub/geodata-harvester). Use `dataharvester` to preprocess, aggregate, visualise and download
 geospatial data from a range of **Australian** (and international) data
 sources, including:
 
@@ -71,8 +69,8 @@ configuration file, which downloads 16 images from 7 API sources:
 
 ``` r
 library(dataharvester)
-initialise_harvester("r-reticulate")
-harvest("~/Documents/democonfig.yaml", plot = TRUE, contour = FALSE)
+initialise_harvester("r-harvester")
+harvest("data/settings_harvest.yaml", plot = TRUE, contour = FALSE)
 ```
 
 ![](man/figures/harvestdemo.gif)
@@ -94,17 +92,14 @@ library(dataharvester) # load package
 ### “Headless” run
 
 Run `initialise_harvester()` after loading the package. The function
-helps you initialise the package, verifies package dependencies and
-connect to the Earth Engine API. Note that the default environment is
-`r-reticulate`, but you can provide a different name if this environment
-is being used in other projects.
+helps you initialise the package, verifies package dependencies, and optionally, connect to the Earth Engine API (if `initialise_harvester(earthengine = TRUE)` ). Note that the default environment is `r-harvester`, but you can provide a different name if this environment is being used in other projects.
 
 The first initialisation may take a few minutes if dependencies need to
 be installed.
 
 ``` r
 library(dataharvester)
-initialise_harvester("r-reticulate", earthengine = TRUE)
+initialise_harvester("r-harvester", earthengine = TRUE)
 ```
 
 **Note**: connecting to the Earth Engine API requires an existing Google
@@ -119,6 +114,8 @@ Then, run `harvest()`, which parses a YAML config file:
 ``` r
 harvest(path_to_config = "path/to/config.yaml")
 ```
+
+An example config file and data is provided in `data/settings_harvest.yaml`
 
 ### Manual downloads
 
@@ -139,6 +136,8 @@ slga <- download_slga(
 )
 ```
 
+For more examples, please see examples in `tests/test_functions.R`
+
 Access to the Google Earth Engine API is aimed at simplifying the most
 common tasks for beginners. For example, below is example code that
 performs all of the following (in 9 lines of code):
@@ -155,24 +154,30 @@ performs all of the following (in 9 lines of code):
 
 ``` r
 # Make sure that GEE API is initialised
-initialise_harvester("r-reticulate", earthengine = TRUE)
+initialise_harvester("r-harvester", earthengine = TRUE)
 # 1. Define dataset
 img <- collect_ee(
-  collection = "LANDSAT/LC09/C02/T1_L2",
-  coords = c(149.769345, -30.335861, 149.949173, -30.206271),
-  date = "2021-06-01",
-  end_date = "2022-06-01"
+  collection = "LANDSAT/LC08/C02/T1_L2",
+  coords = c(149.799, -30.31, 149.80, -30.309),
+  date_min = "2019-01-01",
+  date_max = "2019-02-01"
 )
 # 2. Preprocess (cloud masking, scale and offsetting enabled by default)
-img <- preprocess_ee(img, spectral = "NDVI")
+img <- preprocess_ee(img, mask_clouds=TRUE, reduce="median", spectral = "NDVI")
 # 3. Visualise (optional)
-img <- map_ee(img, bands = "NDVI")
+img <- map_ee(img, bands = "NDVI_median")
 # 4. Download at 100m/px resolution
 img <- download_ee(img, bands = "NDVI", scale = 100, out_path = "downloads/")
 ```
 
 Note that the above functions can be chained/simplified using native
 (`|>`) or `dplyr` (`%>%`) pipes.
+
+Alternatively, a config file can be provided (see e.g., `data/settings_harvest_gee.yaml`) and all steps are run automatically via 
+
+``` r
+img <- auto_ee(path/to/config.yaml)
+```
 
 These functions are not meant to provide full functionality from the GEE
 API. At any time, a user may take an Earth Engine object and process it
@@ -184,17 +189,6 @@ directly using the API - in this case, with
 gee_obj <- img$ee_image
 
 # Now use `gee_obj` anywhere that can process Earth Engine Object data...
-```
-
-## Spatial/temporal buffering
-
-**NEW** Once data is downloaded, `dataharvester` provides functions to
-assist in data aggregation over space and time. *This will be documented
-soon.*
-
-``` r
-
-#TODO
 ```
 
 ## Acknowledgments
@@ -225,7 +219,7 @@ Data-Harvester: [geemap](https://github.com/giswqs/geemap),
 
 ## License
 
-© 2022 The University of Sydney
+© 2023 The University of Sydney
 
 This is free software: you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License (LGPL version 3) as
