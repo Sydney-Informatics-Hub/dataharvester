@@ -13,7 +13,8 @@ test_that("download_dea: downloads work", {
     layer = "landsat_barest_earth",
     bounding_box = llara,
     out_path = tempDir,
-    years = 2021,
+    date_min = "2022-10-01",
+    date_max = "2022-11-01",
     resolution = 300
   )
   unlink(dea1)
@@ -21,7 +22,8 @@ test_that("download_dea: downloads work", {
     layer = c("landsat_barest_earth", "ga_ls_fc_pc_cyear_3"),
     bounding_box = llara,
     out_path = tempDir,
-    years = 2021,
+    date_min = "2022-10-01",
+    date_max = "2022-11-01",
     resolution = 300
   )
   expect_true("rasterPath" %in% class(dea2))
