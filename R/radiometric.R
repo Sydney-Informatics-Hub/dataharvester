@@ -28,7 +28,7 @@
 #' @export
 download_radiometric <- function(layer,
                                  bounding_box,
-                                 out_path,
+                                 outpath,
                                  resolution = 1,
                                  crs = "EPSG:4326",
                                  format_out = "GeoTIFF") {
@@ -36,12 +36,12 @@ download_radiometric <- function(layer,
   rad <- gdh$getdata_radiometric
   # Run
   out <- rad$get_radiometric_layers(
-    out_path,
+    outpath,
     layer,
     bounding_box,
-    resolution,
-    crs,
-    format_out
+    resolution = resolution,
+    crs = crs ,
+    format_out = format_out
   )
   class(out) <- append(class(out), "rasterPath")
   return(out)
